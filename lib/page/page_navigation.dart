@@ -1,5 +1,5 @@
 import 'package:comunique2024/page/page_annuaire.dart';
-import 'package:comunique2024/page/page_contactAdmin.dart';
+import 'package:comunique2024/page/page_contact_admin.dart';
 import 'package:comunique2024/page/page_header_footer.dart';
 import 'package:flutter/material.dart';
 

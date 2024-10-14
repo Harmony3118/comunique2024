@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:comunique2024/page/page_contactAdmin.dart';
+import 'package:comunique2024/page/page_contact_admin.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:comunique2024/page/page_navigation.dart';
