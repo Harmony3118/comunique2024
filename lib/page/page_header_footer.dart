@@ -1,3 +1,4 @@
+import 'package:comunique2024/page/page_navigation.dart';
 import 'package:flutter/material.dart';
 
 class Header extends StatefulWidget implements PreferredSizeWidget {
@@ -34,26 +35,32 @@ class _Header extends State<Header> {
 
 class Footer extends StatefulWidget {
   final int currentIndex;
+  final Function(int) changePage;
 
-  Footer({Key? key, required this.currentIndex}) : super(key: key);
+  Footer({Key? key, required this.currentIndex, required this.changePage})
+      : super(key: key);
 
   @override
-  _Footer createState() => _Footer(currentIndex: currentIndex);
+  _Footer createState() =>
+      _Footer(currentIndex: currentIndex, changePage: changePage);
 }
 
 class _Footer extends State<Footer> {
   int currentIndex;
+  Function(int) changePage;
 
-  _Footer({required this.currentIndex});
+  _Footer({required this.currentIndex, required this.changePage});
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       currentIndex: currentIndex,
-      onTap: (index) {
+      onTap: (newIndex) {
         setState(() {
-          currentIndex = index;
+          currentIndex = newIndex;
+          changePage(newIndex);
+
           // A ajouter ...
         });
       },
@@ -71,7 +78,7 @@ class _Footer extends State<Footer> {
     return BottomNavigationBarItem(
       icon: Icon(
         icon,
-        color: currentIndex == index
+        color: this.currentIndex == index
             ? Color.fromARGB(255, 100, 3, 41)
             : Color.fromARGB(255, 59, 58, 58),
       ),

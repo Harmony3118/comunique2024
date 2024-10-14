@@ -1,5 +1,6 @@
 import 'package:comunique2024/page/page_annuaire.dart';
 import 'package:comunique2024/page/page_contactAdmin.dart';
+import 'package:comunique2024/page/page_file_actualite.dart';
 import 'package:comunique2024/page/page_header_footer.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,15 @@ class _BasePageState extends State<BasePage> {
   void changePage(int newCurrentIndex) {
     setState(() {
       currentIndex = newCurrentIndex;
-      if (currentIndex == 3) {
+      if (currentIndex == 0) {
+        body = FileActualite();
+      } else if (currentIndex == 1) {
+        print("Calendrier pas encore codé");
+        // body = Calendrier();
+      } else if (currentIndex == 2) {
+        print("PageAjout pas encore codé");
+        // body = PageAjout();
+      } else if (currentIndex == 3) {
         body = const AnnuairePage();
       } else if (currentIndex == 4) {
         body = const ContactPage();
@@ -37,7 +46,8 @@ class _BasePageState extends State<BasePage> {
     return Scaffold(
       appBar: Header(),
       body: body,
-      bottomNavigationBar: Footer(currentIndex: currentIndex),
+      bottomNavigationBar:
+          Footer(currentIndex: currentIndex, changePage: changePage),
     );
   }
   //     bottomNavigationBar:
