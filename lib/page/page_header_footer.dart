@@ -1,4 +1,3 @@
-import 'package:comunique2024/page/page_navigation.dart';
 import 'package:flutter/material.dart';
 
 class Header extends StatefulWidget implements PreferredSizeWidget {
