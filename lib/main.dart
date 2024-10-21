@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:comunique2024/page/page_header_footer.dart';
 import 'package:comunique2024/page/page_navigation.dart';
 import 'package:comunique2024/page/page_file_actualite.dart';
+import 'package:comunique2024/page/page_form_crea_groupe.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,16 +35,16 @@ class MyApp extends StatelessWidget {
       // ******************************************************************************
       // ******************************************************************************
 
-      home: BasePage(
-        currentIndex: 0,
-        body: FileActualite(),
-      ),
-
-      // home: Scaffold(
-      //   appBar: Header(),
-      //   body: AnnuairePage(),
-      //   bottomNavigationBar: Footer(currentIndex: 3),
+      // home: BasePage(
+      //   currentIndex: 0,
+      //   body: FileActualite(),
       // ),
+
+      home: Scaffold(
+        appBar: Header(),
+        body: creaGroupe(),
+        bottomNavigationBar: Footer(currentIndex: 3),
+      ),
     );
   }
 }
