@@ -1,18 +1,5 @@
 import 'package:flutter/material.dart';
-import 'page_header_footer.dart';
 import 'page_file_actualite.dart'; // Importation de la page d'actualité, il faudra changer la page plus tard car il s'agit d'un redirigement du bouton Home "+"
-
-/*void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: EventCreationForm(),
-    );
-  }
-}*/
 
 class EventCreationForm extends StatefulWidget {
   @override
@@ -34,8 +21,6 @@ class _EventCreationFormState extends State<EventCreationForm> {
   TimeOfDay? _endTime;
   bool _inscriptionViaApp = false;
   bool _inscriptionViaHelloAsso = false;
-
-  int _currentIndex = 0;
 
   // Fonction pour sélectionner une date
   Future<void> _selectDate(BuildContext context) async {
@@ -65,14 +50,6 @@ class _EventCreationFormState extends State<EventCreationForm> {
           _endTime = picked;
         }
       });
-  }
-
-  // Fonction pour gérer les changements de page dans Footer
-  void _changePage(int index) {
-    setState(() {
-      _currentIndex = index;
-      // Gérer le changement de page ici...
-    });
   }
 
   Widget _buildInputRow(String label, TextEditingController controller) {
@@ -123,7 +100,6 @@ class _EventCreationFormState extends State<EventCreationForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Header(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
@@ -234,10 +210,6 @@ class _EventCreationFormState extends State<EventCreationForm> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: Footer(
-        currentIndex: _currentIndex,
-        changePage: _changePage,
       ),
     );
   }
