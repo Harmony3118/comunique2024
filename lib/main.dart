@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
       // ******************************************************************************
 
       home: BasePage(
+        // test
         currentIndex: 0,
         body: FileActualite(),
       ),
