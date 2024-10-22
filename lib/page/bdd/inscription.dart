@@ -17,7 +17,7 @@ class Inscription {
   Map<String, dynamic> toMap() {
     return {
       'idPost': event,
-      'idEleve': utilisateur,
+      'idUtilisateur': utilisateur,
       'nbPlaces': nbPlaces,
     };
   }
@@ -25,7 +25,7 @@ class Inscription {
   //Pour créer une instance à partir d'un Map
   factory Inscription.fromMap(Map<String, dynamic> map) => Inscription(
         map['idPost'],
-        map['idEleve'],
+        map['idUtilisateur'],
         map['nbPlaces'],
       );
 }

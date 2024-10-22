@@ -39,11 +39,9 @@ class Event {
   Map<String, dynamic> toMap() {
     return {
       'idPost': idPost,
-      'idEleve': utilisateur,
       'idGroupe': idGroupe,
       'objet': objet,
       'titre': titre,
-      'status': status,
       'date': date,
       'hDebut': hDebut,
       'hFin': hFin,
@@ -58,7 +56,7 @@ class Event {
   //Pour créer une instance à partir d'un Map
   factory Event.fromMap(Map<String, dynamic> map) => Event(
       map['idPost'],
-      map['idEleve'],
+      map['idUtilisateur'],
       map['idGroupe'],
       map['objet'],
       map['titre'],

@@ -32,13 +32,21 @@ class AppDataBase {
       join(await getDatabasesPath(),
           'AppDataBase.db'), // Chemin de la base de données
       onCreate: (db, version) {
-        // Création de la table "utilisateur" et "event" si elles n'existent pas encore
+        // Création des tables si elles n'existent pas encore
         db.execute(
-            "CREATE TABLE utilisateur (id INTEGER PRIMARY KEY, nom TEXT, prenom TEXT)");
-
+            "CREATE TABLE utilisateur (id INTEGER PRIMARY KEY, nom TEXT, prenom TEXT)"); // promotion ? email ? photo ?
+        db.execute("CREATE TABLE role (id INTEGER PRIMARY KEY, nom TEXT)");
         db.execute(
-          "CREATE TABLE event (IdPost INTEGER PRIMARY KEY, IdEleve INTEGER, Objet TEXT, Titre TEXT, Statut TEXT, Date TEXT, hDebut TEXT, hFin TEXT, Lieu TEXT, Tarif TEXT, Commentaire TEXT, Fichier TEXT, Inscription INTEGER)",
-        );
+            "CREATE TABLE organisateur (id INTEGER PRIMARY KEY, nom TEXT, prenom TEXT)");
+        db.execute(
+            "CREATE TABLE statuts (IdUtilisateur INTEGER, IdOrganisateur INTEGER, IdRole INTEGER, annee INTEGER, PRIMARY KEY (IdUtilisateur, IdOrganisateur, IdRole), FOREIGN KEY (IdUtilisateur) REFERENCES utilisateur(id), FOREIGN KEY (IdOrganisateur) REFERENCES organisateur(id), FOREIGN KEY (IdRole) REFERENCES role(id));");
+        db.execute(
+            "CREATE TABLE event (IdPost INTEGER PRIMARY KEY, IdGroupe INTEGER, Objet TEXT, Titre TEXT, Statut TEXT, Date TEXT, hDebut TEXT, hFin TEXT, Lieu TEXT, Tarif TEXT, Commentaire TEXT, Fichier TEXT, Inscription INTEGER)");
+        
+        db.execute(
+            "CREATE TABLE inscription ((IdPost INTEGER, IdUtilisateur INTEGER, Objet TEXT, Titre TEXT, Statut TEXT, Date TEXT, hDebut TEXT, hFin TEXT, Lieu TEXT, Tarif TEXT, Commentaire TEXT, Fichier TEXT, Inscription INTEGER)");
+        db.execute(
+            "CREATE TABLE grpDiffusion (IdGroupe INTEGER PRIMARY KEY, nom TEXT, Membre LIST<Utilisateur>, IdOrganisation INTEGER)");
       },
       version: 1,
     );
@@ -59,13 +67,14 @@ class AppDataBase {
   void updateUtilisateur(Utilisateur utilisateur) async {
     final Database db = await database;
     await db.update("utilisateur", utilisateur.toMap(),
-        where: "id = ?", whereArgs: [utilisateur.idEleve]);
+        where: "id = ?", whereArgs: [utilisateur.idUtilisateur]);
   }
 
   // Supprimer un utilisateur
   void deleteUtilisateur(Utilisateur utilisateur) async {
     final Database db = await database;
-    db.delete("utilisateur", where: "id = ?", whereArgs: [utilisateur.idEleve]);
+    db.delete("utilisateur",
+        where: "id = ?", whereArgs: [utilisateur.idUtilisateur]);
   }
 
   Future<List<Utilisateur>> utilisateur() async {
