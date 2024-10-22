@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
 
       home: Scaffold(
         appBar: Header(),
-        body: AnnuairePage(),
+        body: const AnnuairePage(),
         bottomNavigationBar: Footer(),
       ),
     );
