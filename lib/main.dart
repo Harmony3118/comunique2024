@@ -4,6 +4,7 @@ import 'package:comunique2024/page/page_navigation.dart';
 import 'package:comunique2024/page/page_file_actualite.dart';
 import 'package:comunique2024/page/page_form_crea_groupe.dart';
 import 'package:comunique2024/page/page_form_absence.dart';
+import 'package:comunique2024/page/page_annuaire.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,9 +44,11 @@ class MyApp extends StatelessWidget {
 
       home: Scaffold(
         appBar: Header(),
-        body: Absence(),
-        bottomNavigationBar: Footer(currentIndex: 3),
+        body: creaGroupe(),
+ //       bottomNavigationBar: Footer(currentIndex: 3),
       ),
     );
   }
 }
+
+//,changePage:(int index){}
