@@ -36,12 +36,21 @@ class Footer extends StatefulWidget {
   final int currentIndex;
   final Function(int) changePage;
 
-  Footer({Key? key, required this.currentIndex, required this.changePage})
-      : super(key: key);
+  Footer({
+    Key? key,
+    this.currentIndex = 0, // Valeur par défaut pour currentIndex
+    this.changePage = _defaultChangePage, // Valeur par défaut pour changePage
+  }) : super(key: key);
+
+  // Footer({Key? key, required this.currentIndex, required this.changePage})
+  //     : super(key: key);
 
   @override
   _Footer createState() =>
       _Footer(currentIndex: currentIndex, changePage: changePage);
+
+  // Fonction par défaut qui ne fait rien
+  static void _defaultChangePage(int index) {}
 }
 
 class _Footer extends State<Footer> {

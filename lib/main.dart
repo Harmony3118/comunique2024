@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:comunique2024/page/page_header_footer.dart';
 import 'package:comunique2024/page/page_annuaire.dart';
 import 'package:comunique2024/page/page_navigation.dart';
 import 'package:comunique2024/page/page_file_actualite.dart';
-import 'package:comunique2024/page/page_header_footer.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,9 +25,7 @@ class MyApp extends StatelessWidget {
       // ***************************** Tester votre code ******************************
       // ******************************************************************************
       // Pour tester votre code :
-      //    - mettre les 4 lignes suivantes (BasePage()) en commentaire
-      //    - enlever les 8 lignes suivantes pour les exécuter (Scaffold())
-      //    - changer AnnuairePage en votre class que vous voulez tester
+      //    - Changer AnnuairePage en votre class que vous voulez tester
       //    - importer votre page au début du document
 
       // ******************************************************************************
@@ -35,19 +33,16 @@ class MyApp extends StatelessWidget {
       // ******************************************************************************
       // ******************************************************************************
 
-      home: BasePage(
-        currentIndex: 0,
-        body: FileActualite(),
-      ),
-
-      // home: Scaffold(
-      //   appBar: Header(),
-      //   body: AnnuairePage(),
-      //   bottomNavigationBar: Footer(currentIndex: 3, changePage: (int index) {
-      //     // Logique de navigation ici, par exemple, utiliser "Navigator.push" ou "setState" pour changer la page
-      //     }
-      //   ),
+      // home: BasePage(
+      //   currentIndex: 0,
+      //   body: FileActualite(),
       // ),
+
+      home: Scaffold(
+        appBar: Header(),
+        body: AnnuairePage(),
+        bottomNavigationBar: Footer(),
+      ),
     );
   }
 }
