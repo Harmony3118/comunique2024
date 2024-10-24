@@ -1,10 +1,13 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
+/*
 class WidgetBouton extends StatefulWidget {
   final String texte;
   final int forme;
-  final int tailleHeight;
-  final int tailleWidth;
+  final double tailleHeight;
+  final double tailleWidth;
   const WidgetBouton({
     Key? key,
     required this.texte,
@@ -21,6 +24,11 @@ class _WidgetBouton extends State<WidgetBouton> {
   @override
   Widget build(BuildContext context) {
     return Container(
+        width: tailleWidth,
+        height: tailleHeight,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(32),
+        ),
         child: Center(
             child: FilledButton(
                 onPressed: forme,
@@ -40,3 +48,26 @@ class _WidgetBouton extends State<WidgetBouton> {
 // foregroundColor: Colors.white,
 // backgroundColor: const Color.fromRGBO(215, 215, 215, 1),
 // foregroundColor: Colors.black,
+
+*/
+
+class WidgetBouton extends StatelessWidget{
+  final int typeBouton = 1;
+  final String texte = "[Insérer Texte]";
+  final Container?  contenu = Container(child: const Text('[Insérer Texte]'));
+  // final MaterialPageRoute? page = null;
+  final MaterialPageRoute? page = MaterialPageRoute(builder: (context) => ,);
+  WidgetBouton({super.key})
+
+  @override
+  Widget build(BuildContext context){
+    return ElevatedButton(
+      onPressed:() {}, 
+      child: Container(
+        child: Text(
+          texte, 
+          style: TextStyle(
+            color: 
+          ),)),);
+  }
+}
