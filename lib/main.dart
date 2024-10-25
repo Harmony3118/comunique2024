@@ -1,8 +1,14 @@
+import 'package:comunique2024/page/page_header_footer.dart';
+import 'package:comunique2024/page/page_inscription.dart';
+import 'package:comunique2024/page/page_inscription_suite.dart';
 import 'package:flutter/material.dart';
 import 'package:comunique2024/page/page_header_footer.dart';
 import 'package:comunique2024/page/page_annuaire.dart';
 import 'package:comunique2024/page/page_navigation.dart';
 import 'package:comunique2024/page/page_file_actualite.dart';
+import 'package:comunique2024/page/page_connection.dart';
+
+
 
 void main() {
   runApp(const MyApp());
