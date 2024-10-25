@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
 
       home: Scaffold(
         appBar: Header(),
-        body: creaGroupe(),
+        body: CreaGroupe(),
  //       bottomNavigationBar: Footer(currentIndex: 3),
       ),
     );
