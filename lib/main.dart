@@ -35,16 +35,17 @@ class MyApp extends StatelessWidget {
       // ******************************************************************************
       // ******************************************************************************
 
-      // home: BasePage(
-      //   currentIndex: 0,
-      //   body: FileActualite(),
-      // ),
-
-      home: Scaffold(
-        appBar: Header(),
-        body: const AnnuairePage(),
-        bottomNavigationBar: Footer(),
+      home: BasePage(
+        // test
+        currentIndex: 0,
+        body: FileActualite(),
       ),
+
+      // home: Scaffold(
+      //   appBar: Header(),
+      //   body: AnnuairePage(),
+      //   bottomNavigationBar: Footer(),
+      // ),
     );
   }
 }
