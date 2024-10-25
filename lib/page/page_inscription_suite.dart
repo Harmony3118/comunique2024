@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:comunique2024/page/page_navigation.dart';
+import 'package:comunique2024/page/page_file_actualite.dart';
 
 class PageInscriptionSuite extends StatefulWidget {
   const PageInscriptionSuite({super.key});
 
- @override
+  @override
   _PageInscriptionSuiteState createState() => _PageInscriptionSuiteState();
 }
 
@@ -194,24 +196,33 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
   }
 
   Widget bulle_bordeaux(BuildContext context) {
-    return Container(
-      width: 299,
-      height: 43,
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 100, 3, 41),
-        borderRadius: BorderRadius.circular(19),
-      ),
-      child: const Center(
-        child: Text(
-          "Continuer",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+    return GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    BasePage(currentIndex: 0, body: FileActualite()),
+              ));
+        },
+        child: Container(
+          width: 299,
+          height: 43,
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 100, 3, 41),
+            borderRadius: BorderRadius.circular(19),
           ),
-        ),
-      ),
-    );
+          child: const Center(
+            child: Text(
+              "Continuer",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ));
   }
 
   Widget bulle_claire(BuildContext context) {
@@ -234,7 +245,7 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
     );
   }
 
- // Fonction pour choisir une image à partir de la galerie
+  // Fonction pour choisir une image à partir de la galerie
   Future<void> _pickImageFromGallery() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
@@ -254,7 +265,6 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
     }
   }
 }
-
 
 // case intéractive calendrier
 
@@ -328,4 +338,3 @@ class EmailTextField extends StatelessWidget {
     );
   }
 }
-

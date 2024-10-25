@@ -8,8 +8,6 @@ import 'package:comunique2024/page/page_navigation.dart';
 import 'package:comunique2024/page/page_file_actualite.dart';
 import 'package:comunique2024/page/page_connection.dart';
 
-
-
 void main() {
   runApp(const MyApp());
 }
@@ -31,8 +29,8 @@ class MyApp extends StatelessWidget {
       // ***************************** Tester votre code ******************************
       // ******************************************************************************
       // Pour tester votre code :
-      //    - mettre les 4 lignes suivantes (BasePage()) en commantaire
-      //    - enlever les 5 lignes suivantes pour les exécuter (Scaffold())
+      //    - mettre la ligne suivante (home: const PageConnection(),) en commantaire
+      //    - enlever les commentaires des 5 lignes suivantes pour les exécuter (Scaffold())
       //    - Changer AnnuairePage en votre class que vous voulez tester
       //    - importer votre page au début du document
 
@@ -41,12 +39,7 @@ class MyApp extends StatelessWidget {
       // ******************************************************************************
       // ******************************************************************************
 
-      home: BasePage(
-        // test
-        currentIndex: 0,
-        body: FileActualite(),
-      ),
-
+      home: const PageConnection(),
       // home: Scaffold(
       //   appBar: Header(),
       //   body: AnnuairePage(),
@@ -55,3 +48,11 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
+      // home: BasePage(
+      //   // test
+      //   currentIndex: 0,
+      //   body: const PageConnection(),
+      // ),
+
