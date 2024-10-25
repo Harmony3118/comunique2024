@@ -1,23 +1,20 @@
-import 'package:comunique2024/page/bdd/utilisateur.dart';
-import 'package:comunique2024/page/bdd/event.dart';
-
 class Inscription {
-  Event event;
-  Utilisateur utilisateur;
+  int idPost;
+  int idUtilisateur;
   int nbPlaces;
 
   // Constructeur
   Inscription(
-    this.event,
-    this.utilisateur,
+    this.idPost,
+    this.idUtilisateur,
     this.nbPlaces,
   );
 
   // Méthode pour convertir l'objet en Map
   Map<String, dynamic> toMap() {
     return {
-      'idPost': event,
-      'idUtilisateur': utilisateur,
+      'idPost': idPost,
+      'idUtilisateur': idUtilisateur,
       'nbPlaces': nbPlaces,
     };
   }

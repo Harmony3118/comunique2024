@@ -1,9 +1,4 @@
 class Role {
-  // int? idPres;
-  // int? idVicePres;
-  // int? idSecretaire;
-  // int? idMembre;
-  // int? idTresorier;
   int idRole;
   String nomRole;
 

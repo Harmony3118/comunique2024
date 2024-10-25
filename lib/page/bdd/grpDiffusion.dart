@@ -4,14 +4,12 @@ class GrpDiffusion {
   int idGroupe;
   String? nom;
   List<Utilisateur>? membre;
-  int? idOrganisation;
 
   // Constructeur
   GrpDiffusion({
     required this.idGroupe,
     this.nom,
     this.membre,
-    this.idOrganisation,
   });
 
   // Méthode pour convertir l'objet en Map
@@ -20,7 +18,6 @@ class GrpDiffusion {
       'idGroupe': idGroupe,
       'nom': nom,
       'membre': membre,
-      'idOrganisation': idOrganisation,
     };
   }
 
@@ -31,7 +28,6 @@ class GrpDiffusion {
       nom: map['nom'],
       membre: List<Utilisateur>.from(
           map['membre']?.map((x) => Utilisateur.fromMap(x))),
-      idOrganisation: map['idOrganisation'],
       );
   }
 }

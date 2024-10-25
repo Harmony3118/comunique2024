@@ -1,13 +1,10 @@
-import 'package:comunique2024/page/bdd/utilisateur.dart';
-import 'package:comunique2024/page/bdd/status.dart';
-
 class Event {
   int idPost;
-  Utilisateur utilisateur;
+  int idUtilisateur;
+  int status;
   int idGroupe;
-  String objet;
-  String titre;
-  Status status;
+  String objet; //
+  String titre; //
   String date;
   String hDebut;
   String hFin;
@@ -20,11 +17,11 @@ class Event {
   // Constructeur
   Event(
     this.idPost,
-    this.utilisateur,
+    this.idUtilisateur,
+    this.status,
     this.idGroupe,
     this.objet,
     this.titre,
-    this.status,
     this.date,
     this.hDebut,
     this.hFin,
@@ -39,6 +36,8 @@ class Event {
   Map<String, dynamic> toMap() {
     return {
       'idPost': idPost,
+      'idUtilisateur': idUtilisateur,
+      'status': status,
       'idGroupe': idGroupe,
       'objet': objet,
       'titre': titre,
@@ -57,10 +56,10 @@ class Event {
   factory Event.fromMap(Map<String, dynamic> map) => Event(
       map['idPost'],
       map['idUtilisateur'],
+      map['status'],
       map['idGroupe'],
       map['objet'],
       map['titre'],
-      map['status'],
       map['date'],
       map['hDebut'],
       map['hFin'],
