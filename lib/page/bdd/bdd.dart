@@ -3,6 +3,11 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:comunique2024/page/bdd/utilisateur.dart';
 import 'package:comunique2024/page/bdd/event.dart';
+import 'package:comunique2024/page/bdd/role.dart';
+import 'package:comunique2024/page/bdd/grpDiffusion.dart';
+import 'package:comunique2024/page/bdd/inscription.dart';
+import 'package:comunique2024/page/bdd/organisation.dart';
+import 'package:comunique2024/page/bdd/status.dart';
 
 class AppDataBase {
   AppDataBase._(); // Constructeur privé
@@ -11,43 +16,113 @@ class AppDataBase {
   static final AppDataBase instance = AppDataBase._();
 
   // Base de données SQLite
-  static Database?
-      _database; // Variable pour stocker la base de données, initialisée à null
+  static Database? _database; // Variable pour stocker BDD, init null
 
   // Méthode pour obtenir la base de données, en la créant si elle n'existe pas encore
   Future<Database> get database async {
     if (_database != null) return _database!;
-
-    // Si la base de données n'est pas encore initialisée, on l'initialise
-    _database = await initDB();
+    _database = await initDB(); // else
     return _database!;
   }
 
   // Méthode d'initialisation de la base de données
   initDB() async {
     WidgetsFlutterBinding.ensureInitialized();
-
     // Ouverture de la base de données avec sqflite
     return await openDatabase(
       join(await getDatabasesPath(),
           'AppDataBase.db'), // Chemin de la base de données
       onCreate: (db, version) {
-        // Création de la table "utilisateur" et "event" si elles n'existent pas encore
+        // Création des tables si elles n'existent pas encore
         db.execute(
-            "CREATE TABLE utilisateur (id INTEGER PRIMARY KEY, nom TEXT, prenom TEXT)");
-
+            "CREATE TABLE utilisateur (idUtilisateur INTEGER PRIMARY KEY, nom TEXT, prenom TEXT, email TEXT, promotion INTEGER)");
         db.execute(
-          "CREATE TABLE event (IdPost INTEGER PRIMARY KEY, IdEleve INTEGER, Objet TEXT, Titre TEXT, Statut TEXT, Date TEXT, hDebut TEXT, hFin TEXT, Lieu TEXT, Tarif TEXT, Commentaire TEXT, Fichier TEXT, Inscription INTEGER)",
-        );
+            "CREATE TABLE role (idRole INTEGER PRIMARY KEY, nomRole TEXT)");
+        db.execute(
+            "CREATE TABLE organisation (idOrga INTEGER PRIMARY KEY, nom TEXT)");
+        db.execute(
+            "CREATE TABLE statuts (idUtilisateur INTEGER, idOrganisation INTEGER, idRole INTEGER, annee INTEGER, PRIMARY KEY (idUtilisateur, idOrganisation, idRole), FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur), FOREIGN KEY (idOrganisation) REFERENCES organisation(idOrga), FOREIGN KEY (idRole) REFERENCES role(idRole))");
+        db.execute(
+            "CREATE TABLE event (idPost INTEGER PRIMARY KEY, idUtilisateur INTEGER, status INTEGER, idGroupe INTEGER, objet TEXT, titre TEXT, date TEXT, hDebut TEXT, hFin TEXT, lieu TEXT, tarif INTEGER, commentaire TEXT, fichier TEXT, inscription INTEGER, FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur), FOREIGN KEY (idGroupe) REFERENCES grpDiffusion(idGroupe), FOREIGN KEY (status) REFERENCES role(idRole))");
+        db.execute(
+            "CREATE TABLE inscription (idPost INTEGER, idUtilisateur INTEGER, nbPlaces INTEGER, PRIMARY KEY (idPost, idUtilisateur), FOREIGN KEY (idPost) REFERENCES event(idPost), FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur))");
+        // pour l'instant le nb de place n'est pas utilisé
+        db.execute(
+            "CREATE TABLE grpDiffusion (idGroupe INTEGER PRIMARY KEY, nom TEXT)");
+        // ajouter la liste des membres
+        db.execute(
+            "CREATE TABLE groupe_utilisateur (idGroupe INTEGER, idUtilisateur INTEGER, PRIMARY KEY (idGroupe, idUtilisateur), FOREIGN KEY (idGroupe) REFERENCES grpDiffusion(idGroupe), FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur))");
+        // pas de doc encore, il faut voir si c'est vraiment utile
       },
       version: 1,
+    );
+  }
+
+  void _preRemplirOrganisation(Database db) async {
+    List<Map<String, dynamic>> organisations = [
+      {'idOrga': 0, 'nom': 'BDE'},
+      {'idOrga': 1, 'nom': 'BDS'},
+      {'idOrga': 2, 'nom': 'BDA'},
+      {'idOrga': 3, 'nom': 'JE'},
+      {'idOrga': 4, 'nom': 'Binks'},
+      {'idOrga': 5, 'nom': 'Club Musique'},
+      // ajouter tous les clubs -> BDA, BDS, BDE
+      {'idOrga': 6, 'nom': 'Admisnistration'},
+      {'idOrga': 7, 'nom': 'Professeur'},
+      {'idOrga': 8, 'nom': 'Doctorant'},
+      {'idOrga': 9, 'nom': 'Alumnis'},
+      {'idOrga': 10, 'nom': 'Bordeaux Inp'},
+    ];
+
+    for (var org in organisations) {
+      await db.insert('org', org);
+    }
+  }
+
+  void _preRemplirRole(Database db) async {
+    List<Map<String, dynamic>> organisations = [
+      {'idRole': 0, 'nomRole': 'Président'},
+      {'idOrga': 1, 'nom': 'Vis-Président'},
+      {'idOrga': 2, 'nom': 'Secrétaire'},
+      {'idOrga': 3, 'nom': 'Trésorier'},
+      {'idOrga': 3, 'nom': 'Trésorier'},
+      {'idOrga': 3, 'nom': 'Trésorier'},
+      {'idOrga': 3, 'nom': 'Trésorier'},
+      {'idOrga': 3, 'nom': 'Trésorier'},
+      {'idOrga': 3, 'nom': 'Trésorier'},
+      {'idOrga': 3, 'nom': 'Trésorier'},
+      {'idOrga': 3, 'nom': 'Trésorier'},
+      {'idOrga': 3, 'nom': 'Trésorier'},
+      {'idOrga': 3, 'nom': 'Trésorier'},
+      // ajouter les bon rôles : bureaux, club, administration, professeur
+    ];
+
+    for (var org in organisations) {
+      await db.insert('org', org);
+    }
+  }
+
+  void insertOrganisation(Organisation orga) async {
+    final Database db = await database;
+    await db.insert(
+      'organisation',
+      orga.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  void insertRole(Role role) async {
+    final Database db = await database;
+    await db.insert(
+      'role',
+      role.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
   // Méthode pour insérer un utilisateur dans la base de données
   void insertUtilisateur(Utilisateur utilisateur) async {
     final Database db = await database;
-
     await db.insert(
       'utilisateur',
       utilisateur.toMap(),
@@ -59,13 +134,14 @@ class AppDataBase {
   void updateUtilisateur(Utilisateur utilisateur) async {
     final Database db = await database;
     await db.update("utilisateur", utilisateur.toMap(),
-        where: "id = ?", whereArgs: [utilisateur.idEleve]);
+        where: "id = ?", whereArgs: [utilisateur.idUtilisateur]);
   }
 
   // Supprimer un utilisateur
   void deleteUtilisateur(Utilisateur utilisateur) async {
     final Database db = await database;
-    db.delete("utilisateur", where: "id = ?", whereArgs: [utilisateur.idEleve]);
+    db.delete("utilisateur",
+        where: "id = ?", whereArgs: [utilisateur.idUtilisateur]);
   }
 
   Future<List<Utilisateur>> utilisateur() async {

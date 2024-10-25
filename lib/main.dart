@@ -2,6 +2,8 @@ import 'package:comunique2024/page/page_header_footer.dart';
 import 'package:comunique2024/page/page_inscription.dart';
 import 'package:comunique2024/page/page_inscription_suite.dart';
 import 'package:flutter/material.dart';
+import 'package:comunique2024/page/page_header_footer.dart';
+import 'package:comunique2024/page/page_annuaire.dart';
 import 'package:comunique2024/page/page_navigation.dart';
 import 'package:comunique2024/page/page_file_actualite.dart';
 import 'package:comunique2024/page/page_connection.dart';
@@ -39,16 +41,17 @@ class MyApp extends StatelessWidget {
       // ******************************************************************************
       // ******************************************************************************
 
-    //  home: BasePage(
-    //    currentIndex: 0,
-     //   body: FileActualite(),
-  //    ),
+      home: BasePage(
+        // test
+        currentIndex: 0,
+        body: FileActualite(),
+      ),
 
-        home: Scaffold(
-  //         appBar: Header(),
-         body: PageConnection(),
-    //     bottomNavigationBar: Footer(currentIndex: 3),
-       ),
+      // home: Scaffold(
+      //   appBar: Header(),
+      //   body: AnnuairePage(),
+      //   bottomNavigationBar: Footer(),
+      // ),
     );
   }
 }
