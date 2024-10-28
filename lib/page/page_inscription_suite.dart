@@ -22,18 +22,29 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
         color: Colors.white,
         child: Stack(
           children: <Widget>[
+            // Icône de retour en haut à gauche
+                  Positioned(
+                    top: 50, // Ajustez la position verticale selon vos besoins
+                    left: 20, // Ajustez la position horizontale selon vos besoins
+                    child: IconButton(
+                      icon: Icon(Icons.arrow_back, color: Colors.black),
+                      onPressed: () {
+                        Navigator.pop(context); // Action de retour à l'écran précédent
+                      },
+                    ),
+                  ),
             Positioned(
               top: 90,
               left: (MediaQuery.of(context).size.width - 157) / 2,
               child: image(context),
             ),
             Positioned(
-              top: 690,
+              top: 710,
               left: (MediaQuery.of(context).size.width - 299) / 2,
               child: bulle_bordeaux(context),
             ),
             Positioned(
-              top: 760,
+              top: 780,
               left: (MediaQuery.of(context).size.width - 299) / 2,
               child: bulle_claire(context),
             ),
@@ -43,7 +54,7 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
               child: mes_prefs(context),
             ),
             Positioned(
-              top: 420,
+              top: 390,
               left: (MediaQuery.of(context).size.width - 400) / 2,
               child: mes_donnees(context),
             ),
@@ -56,8 +67,8 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
   Widget image(BuildContext context) {
     return const Image(
       image: AssetImage('assets/Logo.png'),
-      width: 157,
-      height: 157,
+      width: 160,
+      height: 160,
       fit: BoxFit.cover,
     );
   }
@@ -158,13 +169,55 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
             child: Row(
               children: [
                 Text(
-                  "Mon année",
+                  "Mon nom",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontSize: 21,
+                  ),
+                ),
+                SizedBox(width: 73),
+                Expanded(child: YearTextField()),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          width: 400,
+          height: 50,
+          color: const Color.fromARGB(0, 255, 255, 255),
+          child: const Padding(
+            padding: EdgeInsets.only(left: 8.0),
+            child: Row(
+              children: [
+                Text(
+                  "Mon prénom",
                   style: TextStyle(
                     color: Color.fromARGB(255, 0, 0, 0),
                     fontSize: 21,
                   ),
                 ),
                 SizedBox(width: 40),
+                Expanded(child: YearTextField()),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          width: 400,
+          height: 50,
+          color: const Color.fromARGB(0, 255, 255, 255),
+          child: const Padding(
+            padding: EdgeInsets.only(left: 8.0),
+            child: Row(
+              children: [
+                Text(
+                  "Mon année",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontSize: 21,
+                  ),
+                ),
+                SizedBox(width: 55),
                 Expanded(child: YearTextField()),
               ],
             ),
