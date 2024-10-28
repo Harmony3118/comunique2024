@@ -39,12 +39,12 @@ class MyApp extends StatelessWidget {
       // ******************************************************************************
       // ******************************************************************************
 
-      home: const PageConnection(),
-      // home: Scaffold(
+     // home: const PageConnection(),
+       home: Scaffold(
       //   appBar: Header(),
-      //   body: AnnuairePage(),
-      //   bottomNavigationBar: Footer(),
-      // ),
+         body: PageConnection(),
+     //    bottomNavigationBar: Footer(),
+       ),
     );
   }
 }

@@ -7,68 +7,68 @@ class PageConnection extends StatelessWidget {
   const PageConnection({super.key});
 
   // Création d'une class pour que le code principal soit lisible (comme les fonctions)
-  @override
+   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        // Pour créer une boîte
-        color: Colors.white,
-        child: Stack(
-          children: <Widget>[
-            // Image centrée
-            Positioned(
-              top: 115,
-              left: (MediaQuery.of(context).size.width - 200) / 2,
-              child: image(context),
-            ),
-            // Bulle bordeaux
-            Positioned(
-              top: 690, // Positionnement à 633 pixels du haut
-              left: (MediaQuery.of(context).size.width - 299) /
-                  2, // Centrage horizontal
-              child: bulle_bordeaux(context),
-            ),
-            // Bulle claire
-            Positioned(
-              top: 760, // Positionnement à 633 pixels du haut
-              left: (MediaQuery.of(context).size.width - 299) /
-                  2, // Centrage horizontal
-              child: bulle_claire(context),
-            ),
-            // ID
-            Positioned(
-              top: 410, // Positionnement à 633 pixels du haut
-              left: (MediaQuery.of(context).size.width - 262) /
-                  2, // Centrage horizontal
-              child: id(context),
-            ),
-            // MDP
-            Positioned(
-              top: 510, // Positionnement à 633 pixels du haut
-              left: (MediaQuery.of(context).size.width - 262) /
-                  2, // Centrage horizontal
-              child: mdp(context),
-            ),
+    return  Scaffold(
+      body : Container(
+      // Pour créer une boîte
+      color: Colors.white,
+      child: Stack(
+        children: <Widget>[
+          // Image centrée
+          Positioned(
+            top: 115,
+            left: (MediaQuery.of(context).size.width - 200) / 2,
+            child: image(context),
+          ),
+          // Bulle bordeaux
+          Positioned(
+            top: 690, // Positionnement à 633 pixels du haut
+            left: (MediaQuery.of(context).size.width - 299) /
+                2, // Centrage horizontal
+            child: bulle_bordeaux(context),
+          ),
+          // Bulle claire
+          Positioned(
+            top: 760, // Positionnement à 633 pixels du haut
+            left: (MediaQuery.of(context).size.width - 299) /
+                2, // Centrage horizontal
+            child: bulle_claire(context),
+          ),
+          // ID
+          Positioned(
+            top: 410, // Positionnement à 633 pixels du haut
+            left: (MediaQuery.of(context).size.width - 262) /
+                2, // Centrage horizontal
+            child: id(context),
+          ),
+          // MDP
+          Positioned(
+            top: 510, // Positionnement à 633 pixels du haut
+            left: (MediaQuery.of(context).size.width - 262) /
+                2, // Centrage horizontal
+            child: mdp(context),
+          ),
             // Mdp oublié ???
-            Positioned(
-              top: 580, // Positionnement à 633 pixels du haut
-              left: (MediaQuery.of(context).size.width - 262) /
-                  2, // Centrage horizontal
-              child: const Text(
-                "Mot de passe oublié ?", // Le texte à afficher
-                style: TextStyle(
-                  color: Colors.black, // Couleur du texte
-                  fontSize: 17,
-                  decoration: TextDecoration.underline, // Souligner le texte
+              Positioned(
+                top: 580,
+                left: (MediaQuery.of(context).size.width - 262) / 2,
+                child: const Text(
+                  "Mot de passe oublié ?",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 17,
+                    decoration: TextDecoration.underline,
+                  ),
                 ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
+      ),
       ),
     );
   }
 
+  
   Widget image(BuildContext context) {
     return const Image(
       image: AssetImage('assets/Logo.png'),
@@ -241,6 +241,7 @@ class MdpTextField extends StatelessWidget {
     return Container(
       height: 30,
       child: const TextField(
+        obscureText: true,
         decoration: InputDecoration(
           hintText: 'Mot de passe',
           hintStyle: TextStyle(

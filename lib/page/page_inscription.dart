@@ -224,6 +224,7 @@ class MdpTextField extends StatelessWidget {
     return Container(
       height: 30,
     child: const TextField(
+      obscureText: true,
       decoration: InputDecoration(
         hintText: 'Mot de passe',
         hintStyle: TextStyle(
