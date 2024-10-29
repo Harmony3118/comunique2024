@@ -1,4 +1,6 @@
+import 'package:comunique2024/page/page_file_actualite.dart';
 import 'package:flutter/material.dart';
+
 
 class CardHome extends StatefulWidget {
   final String office;
@@ -21,6 +23,8 @@ class CardHome extends StatefulWidget {
     required this.imageUrl,
     required this.color,
   }) : super(key: key);
+
+  
 
   @override
   _CardHomeState createState() => _CardHomeState();

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Filter extends StatefulWidget {
-  const Filter({super.key});
+  final ValueChanged<List<String>> onFilterChanged;
+
+  const Filter({super.key, required this.onFilterChanged});
 
   @override
   _FilterState createState() => _FilterState();
@@ -14,11 +16,14 @@ class _FilterState extends State<Filter> {
   bool isObjectButtonSelected = false;
 
   void _toggleFilterOption(String option) {
-    if (selectedFilters.contains(option)) {
-      selectedFilters.remove(option);
-    } else {
-      selectedFilters.add(option);
-    }
+    setState(() {
+      if (selectedFilters.contains(option)) {
+        selectedFilters.remove(option);
+      } else {
+        selectedFilters.add(option);
+      }
+      widget.onFilterChanged(selectedFilters);
+    });
   }
 
   Widget _buildFilterOption(
@@ -59,14 +64,6 @@ class _FilterState extends State<Filter> {
 
   void _showFilterSheet(
       BuildContext context, List<String> options, String sheetTitle) {
-    setState(() {
-      if (sheetTitle == 'Organisateur') {
-        isStatusButtonSelected = true;
-      }
-      if (sheetTitle == 'Sujet') {
-        isObjectButtonSelected = true;
-      }
-    });
     showModalBottomSheet<String>(
       context: context,
       builder: (BuildContext context) {
@@ -125,18 +122,7 @@ class _FilterState extends State<Filter> {
           },
         );
       },
-    ).whenComplete(() {
-      if (sheetTitle == 'Organisateur') {
-        setState(() {
-          isStatusButtonSelected = false;
-        });
-      }
-      if (sheetTitle == 'Sujet') {
-        setState(() {
-          isObjectButtonSelected = false;
-        });
-      }
-    });
+    );
   }
 
   @override
