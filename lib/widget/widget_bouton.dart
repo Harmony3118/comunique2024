@@ -2,72 +2,38 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 
-/*
-class WidgetBouton extends StatefulWidget {
+class WidgetBouton extends StatelessWidget {
+  const WidgetBouton(
+      {Key? key,
+      required this.typeBouton,
+      required this.texte,
+      required this.maFonction})
+      : super(key: key);
+  final int typeBouton;
   final String texte;
-  final int forme;
-  final double tailleHeight;
-  final double tailleWidth;
-  const WidgetBouton({
-    Key? key,
-    required this.texte,
-    required this.forme,
-    required this.tailleHeight,
-    required this.tailleWidth,
-  }) : super(key: key);
+  final void Function()? maFonction;
+  static Color backgroundColor = const Color.fromRGBO(100, 3, 41, 1);
+  static Color foregroundColor = Colors.white;
 
-  @override
-  _WidgetBouton createState() => _WidgetBouton();
-}
+  void getCouleur() {
+    if (typeBouton == 2) {
+      backgroundColor = const Color.fromRGBO(215, 215, 215, 1);
+      foregroundColor = Colors.black;
+    } else if (typeBouton == 3) {
+      backgroundColor = const Color.fromRGBO(100, 3, 41, 0.6);
+    }
+  }
 
-class _WidgetBouton extends State<WidgetBouton> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: tailleWidth,
-        height: tailleHeight,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(32),
-        ),
-        child: Center(
-            child: FilledButton(
-                onPressed: forme,
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromRGBO(100, 3, 41, 1),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    )),
-                child: const Text(texte))));
-  }
-}
-
-// backgroundColor: const Color.fromRGBO(100, 3, 41, 1),
-// foregroundColor: Colors.white,
-// backgroundColor: const Color.fromRGBO(100, 3, 41, 0.6),
-// foregroundColor: Colors.white,
-// backgroundColor: const Color.fromRGBO(215, 215, 215, 1),
-// foregroundColor: Colors.black,
-
-*/
-
-class WidgetBouton extends StatelessWidget{
-  final int typeBouton = 1;
-  final String texte = "[Insérer Texte]";
-  final Container?  contenu = Container(child: const Text('[Insérer Texte]'));
-  // final MaterialPageRoute? page = null;
-  final MaterialPageRoute? page = MaterialPageRoute(builder: (context) => ,);
-  WidgetBouton({super.key})
-
-  @override
-  Widget build(BuildContext context){
+    getCouleur();
     return ElevatedButton(
-      onPressed:() {}, 
-      child: Container(
-        child: Text(
-          texte, 
-          style: TextStyle(
-            color: 
-          ),)),);
+      onPressed: maFonction,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: backgroundColor,
+        foregroundColor: foregroundColor,
+      ),
+      child: Text(texte),
+    );
   }
 }
