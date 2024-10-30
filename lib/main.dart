@@ -11,6 +11,7 @@ import 'package:comunique2024/page/page_connection.dart';
 import 'package:comunique2024/page/page_header_footer.dart';
 import 'package:comunique2024/page/page_inscription.dart';
 import 'package:comunique2024/page/page_inscription_suite.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   print("Lancement de l'application");
@@ -46,6 +47,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('fr', ''), // Français
+      ],
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
