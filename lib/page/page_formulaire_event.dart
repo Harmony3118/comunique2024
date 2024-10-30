@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'page_file_actualite.dart'; // Importation de la page d'actualité, il faudra changer la page plus tard car il s'agit d'un redirigement du bouton Home "+"
+import 'package:file_picker/file_picker.dart'; // Importation du package file_picker pour sélectionner un fichier
+import 'page_file_actualite.dart'; // Importation de la page d'actualité
 
 class EventCreationForm extends StatefulWidget {
   @override
@@ -15,12 +16,14 @@ class _EventCreationFormState extends State<EventCreationForm> {
   final TextEditingController _titreController = TextEditingController();
   final TextEditingController _tarifController = TextEditingController();
   final TextEditingController _placesController = TextEditingController();
+  final TextEditingController _infosComplementairesController = TextEditingController();
 
   DateTime? _selectedDate;
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
   bool _inscriptionViaApp = false;
   bool _inscriptionViaHelloAsso = false;
+  String? _selectedFile;
 
   // Fonction pour sélectionner une date
   Future<void> _selectDate(BuildContext context) async {
@@ -60,7 +63,13 @@ class _EventCreationFormState extends State<EventCreationForm> {
         children: [
           Container(
             width: 150,
-            child: Text(label + " *", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
+            child: Text(
+              label + " *",
+              style: TextStyle(
+                color: const Color.fromARGB(255, 0, 0, 0),
+                fontSize: 16, // Agrandit la taille du texte
+              ),
+            ),
           ),
           SizedBox(width: 20),
           Expanded(
@@ -97,6 +106,17 @@ class _EventCreationFormState extends State<EventCreationForm> {
     );
   }
 
+  // Fonction pour sélectionner un fichier
+  Future<void> _selectFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      setState(() {
+        _selectedFile = result.files.single.path; // Stocke le chemin du fichier sélectionné
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,7 +132,7 @@ class _EventCreationFormState extends State<EventCreationForm> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => FileActualite()), // Redirection vers page_file_actualite.dart, à changer plus tard
+                      MaterialPageRoute(builder: (context) => FileActualite()), // Redirection vers page_file_actualite.dart
                     );
                   },
                 ),
@@ -130,25 +150,34 @@ class _EventCreationFormState extends State<EventCreationForm> {
             _buildInputRow("Titre de l'info", _titreController),
             // Choisir la date
             ListTile(
-              title: Text(_selectedDate == null
-                  ? 'Sélectionner une date'
-                  : 'Date : ${_selectedDate!.toLocal()}'.split(' ')[0]),
+              title: Text(
+                _selectedDate == null
+                    ? 'Sélectionner une date'
+                    : 'Date : ${_selectedDate!.toLocal()}'.split(' ')[0],
+                style: TextStyle(fontSize: 16),
+              ),
               trailing: Icon(Icons.calendar_today),
               onTap: () => _selectDate(context),
             ),
             // Heure de début
             ListTile(
-              title: Text(_startTime == null
-                  ? 'Sélectionner une heure de début'
-                  : 'Heure de début : ${_startTime!.format(context)}'),
+              title: Text(
+                _startTime == null
+                    ? 'Sélectionner une heure de début'
+                    : 'Heure de début : ${_startTime!.format(context)}',
+                style: TextStyle(fontSize: 16),
+              ),
               trailing: Icon(Icons.access_time),
               onTap: () => _selectTime(context, true),
             ),
             // Heure de fin
             ListTile(
-              title: Text(_endTime == null
-                  ? 'Sélectionner une heure de fin'
-                  : 'Heure de fin : ${_endTime!.format(context)}'),
+              title: Text(
+                _endTime == null
+                    ? 'Sélectionner une heure de fin'
+                    : 'Heure de fin : ${_endTime!.format(context)}',
+                style: TextStyle(fontSize: 16),
+              ),
               trailing: Icon(Icons.access_time),
               onTap: () => _selectTime(context, false),
             ),
@@ -159,6 +188,7 @@ class _EventCreationFormState extends State<EventCreationForm> {
             Divider(),
             // Informations complémentaires
             TextField(
+              controller: _infosComplementairesController,
               maxLines: 4,
               decoration: InputDecoration(
                 labelText: 'Informations complémentaires',
@@ -177,10 +207,10 @@ class _EventCreationFormState extends State<EventCreationForm> {
             ListTile(
               title: Text('Sélectionner un fichier'),
               trailing: Icon(Icons.attach_file),
-              onTap: () {
-                // Implémentation du choix de fichier à faire
-              },
+              onTap: _selectFile, // Appel de la fonction pour sélectionner un fichier
             ),
+            if (_selectedFile != null) // Afficher le chemin du fichier sélectionné
+              Text('Fichier sélectionné : $_selectedFile'),
             Divider(),
             // Inscriptions
             CheckboxListTile(
