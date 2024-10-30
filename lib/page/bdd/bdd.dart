@@ -4,10 +4,10 @@ import 'package:path/path.dart';
 import 'package:comunique2024/page/bdd/utilisateur.dart';
 import 'package:comunique2024/page/bdd/event.dart';
 import 'package:comunique2024/page/bdd/role.dart';
-import 'package:comunique2024/page/bdd/grpDiffusion.dart';
-import 'package:comunique2024/page/bdd/inscription.dart';
+//import 'package:comunique2024/page/bdd/grpDiffusion.dart';
+//import 'package:comunique2024/page/bdd/inscription.dart';
 import 'package:comunique2024/page/bdd/organisation.dart';
-import 'package:comunique2024/page/bdd/status.dart';
+//import 'package:comunique2024/page/bdd/status.dart';
 
 class AppDataBase {
   AppDataBase._(); // Constructeur privé
@@ -27,38 +27,41 @@ class AppDataBase {
 
   // Méthode d'initialisation de la base de données
   initDB() async {
-    WidgetsFlutterBinding.ensureInitialized();
     // Ouverture de la base de données avec sqflite
     return await openDatabase(
       join(await getDatabasesPath(),
           'AppDataBase.db'), // Chemin de la base de données
-      onCreate: (db, version) {
+      version: 1,
+      onCreate: (db, version) async {
         // Création des tables si elles n'existent pas encore
-        db.execute(
+        await db.execute(
             "CREATE TABLE utilisateur (idUtilisateur INTEGER PRIMARY KEY, nom TEXT, prenom TEXT, email TEXT, promotion INTEGER)");
-        db.execute(
+        await db.execute(
             "CREATE TABLE role (idRole INTEGER PRIMARY KEY, nomRole TEXT)");
-        db.execute(
+        await db.execute(
             "CREATE TABLE organisation (idOrga INTEGER PRIMARY KEY, nom TEXT)");
-        db.execute(
+        await db.execute(
             "CREATE TABLE statuts (idUtilisateur INTEGER, idOrganisation INTEGER, idRole INTEGER, annee INTEGER, PRIMARY KEY (idUtilisateur, idOrganisation, idRole), FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur), FOREIGN KEY (idOrganisation) REFERENCES organisation(idOrga), FOREIGN KEY (idRole) REFERENCES role(idRole))");
-        db.execute(
+        await db.execute(
             "CREATE TABLE event (idPost INTEGER PRIMARY KEY, idUtilisateur INTEGER, status INTEGER, idGroupe INTEGER, objet TEXT, titre TEXT, date TEXT, hDebut TEXT, hFin TEXT, lieu TEXT, tarif INTEGER, commentaire TEXT, fichier TEXT, inscription INTEGER, FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur), FOREIGN KEY (idGroupe) REFERENCES grpDiffusion(idGroupe), FOREIGN KEY (status) REFERENCES role(idRole))");
-        db.execute(
+        await db.execute(
             "CREATE TABLE inscription (idPost INTEGER, idUtilisateur INTEGER, nbPlaces INTEGER, PRIMARY KEY (idPost, idUtilisateur), FOREIGN KEY (idPost) REFERENCES event(idPost), FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur))");
         // pour l'instant le nb de place n'est pas utilisé
-        db.execute(
+        await db.execute(
             "CREATE TABLE grpDiffusion (idGroupe INTEGER PRIMARY KEY, nom TEXT)");
         // ajouter la liste des membres
-        db.execute(
+        await db.execute(
             "CREATE TABLE groupe_utilisateur (idGroupe INTEGER, idUtilisateur INTEGER, PRIMARY KEY (idGroupe, idUtilisateur), FOREIGN KEY (idGroupe) REFERENCES grpDiffusion(idGroupe), FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur))");
         // pas de doc encore, il faut voir si c'est vraiment utile
+
+        // pré remplir les tables
+        await _preRemplirOrganisation(db);
+        await _preRemplirRole(db);
       },
-      version: 1,
     );
   }
 
-  void _preRemplirOrganisation(Database db) async {
+  Future<void> _preRemplirOrganisation(Database db) async {
     List<Map<String, dynamic>> organisations = [
       {'idOrga': 0, 'nom': 'BDE'},
       {'idOrga': 1, 'nom': 'BDS'},
@@ -75,30 +78,27 @@ class AppDataBase {
     ];
 
     for (var org in organisations) {
-      await db.insert('org', org);
+      await db.insert('organisation', org);
     }
   }
 
-  void _preRemplirRole(Database db) async {
-    List<Map<String, dynamic>> organisations = [
+  Future<void> _preRemplirRole(Database db) async {
+    List<Map<String, dynamic>> listRole = [
       {'idRole': 0, 'nomRole': 'Président'},
-      {'idOrga': 1, 'nom': 'Vis-Président'},
-      {'idOrga': 2, 'nom': 'Secrétaire'},
-      {'idOrga': 3, 'nom': 'Trésorier'},
-      {'idOrga': 3, 'nom': 'Trésorier'},
-      {'idOrga': 3, 'nom': 'Trésorier'},
-      {'idOrga': 3, 'nom': 'Trésorier'},
-      {'idOrga': 3, 'nom': 'Trésorier'},
-      {'idOrga': 3, 'nom': 'Trésorier'},
-      {'idOrga': 3, 'nom': 'Trésorier'},
-      {'idOrga': 3, 'nom': 'Trésorier'},
-      {'idOrga': 3, 'nom': 'Trésorier'},
-      {'idOrga': 3, 'nom': 'Trésorier'},
+      {'idRole': 1, 'nomRole': 'Vis-président'},
+      {'idRole': 2, 'nomRole': 'Secrétaire'},
+      {'idRole': 3, 'nomRole': 'Trésorier'},
+      {'idRole': 4, 'nomRole': 'Vis-trésorier'},
+      {'idRole': 5, 'nomRole': 'Respo clubs'},
+      {'idRole': 6, 'nomRole': 'Respo partenariats'},
+      {'idRole': 7, 'nomRole': 'Pole events'},
+      {'idRole': 8, 'nomRole': 'Pole communications'},
+      {'idRole': 9, 'nomRole': 'Pole logistique'},
       // ajouter les bon rôles : bureaux, club, administration, professeur
     ];
 
-    for (var org in organisations) {
-      await db.insert('org', org);
+    for (var r in listRole) {
+      await db.insert('role', r);
     }
   }
 
