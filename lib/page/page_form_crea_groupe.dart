@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CreaGroupe extends StatefulWidget {  //j'ai changé a statefull pour pouvoir utiliser la class _LesInfosDesText
+class CreaGroupe extends StatelessWidget {  //j'ai changé a statefull pour pouvoir utiliser la class _LesInfosDesText
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +73,7 @@ class CreaGroupe extends StatefulWidget {  //j'ai changé a statefull pour pouvo
               child: SizedBox(
                 height: 40,
                 child: TextField(    
-                controller: _controller,           
+   //             controller: _controller,           
                 decoration: InputDecoration(
                 //  contentPadding: EdgeInsets.symmetric(vertical: 0.5),  utiliser methode avec container à la place
                   enabledBorder: OutlineInputBorder(
@@ -143,7 +143,7 @@ class CreaGroupe extends StatefulWidget {  //j'ai changé a statefull pour pouvo
 //les deux dernier divider plutot faire une class a part avec un container avec bout arrondis à la place
 
 
-class _LesInfosDesText extends State<CreaGroupe> {
+//class _LesInfosDesText extends State<CreaGroupe> {
   // Step 1: Initialize a TextEditingController
-  final TextEditingController _controller = TextEditingController();
-}
+ // final TextEditingController _controller = TextEditingController();
+//}
