@@ -1,14 +1,14 @@
 import 'package:comunique2024/page/bdd/utilisateur.dart';
 
 class GrpDiffusion {
-  int idGroupe;
-  String? nom;
+  int? idGroupe;
+  String nom;
   List<Utilisateur>? membre;
 
   // Constructeur
   GrpDiffusion({
-    required this.idGroupe,
-    this.nom,
+    this.idGroupe,
+    required this.nom,
     this.membre,
   });
 
@@ -28,6 +28,6 @@ class GrpDiffusion {
       nom: map['nom'],
       membre: List<Utilisateur>.from(
           map['membre']?.map((x) => Utilisateur.fromMap(x))),
-      );
+    );
   }
 }

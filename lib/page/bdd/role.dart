@@ -1,17 +1,16 @@
 class Role {
-  int idRole;
+  int? idRole;
   String nomRole;
 
   // Constructeur
   Role({
-    required this.idRole,
+    this.idRole,
     required this.nomRole,
   });
 
   // Méthode pour convertir l'objet en Map
   Map<String, dynamic> toMap() {
     return {
-      'idRole': idRole,
       'nomRole': nomRole,
     };
   }

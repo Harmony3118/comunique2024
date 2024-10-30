@@ -35,20 +35,20 @@ class AppDataBase {
       onCreate: (db, version) async {
         // Création des tables si elles n'existent pas encore
         await db.execute(
-            "CREATE TABLE utilisateur (idUtilisateur INTEGER PRIMARY KEY, nom TEXT, prenom TEXT, email TEXT, promotion INTEGER)");
+            "CREATE TABLE utilisateur (idUtilisateur INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT, prenom TEXT, email TEXT, promotion INTEGER)");
         await db.execute(
-            "CREATE TABLE role (idRole INTEGER PRIMARY KEY, nomRole TEXT)");
+            "CREATE TABLE role (idRole INTEGER PRIMARY KEY AUTOINCREMENT, nomRole TEXT)");
         await db.execute(
-            "CREATE TABLE organisation (idOrga INTEGER PRIMARY KEY, nom TEXT)");
+            "CREATE TABLE organisation (idOrga INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT)");
         await db.execute(
             "CREATE TABLE statuts (idUtilisateur INTEGER, idOrganisation INTEGER, idRole INTEGER, annee INTEGER, PRIMARY KEY (idUtilisateur, idOrganisation, idRole), FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur), FOREIGN KEY (idOrganisation) REFERENCES organisation(idOrga), FOREIGN KEY (idRole) REFERENCES role(idRole))");
         await db.execute(
-            "CREATE TABLE event (idPost INTEGER PRIMARY KEY, idUtilisateur INTEGER, status INTEGER, idGroupe INTEGER, objet TEXT, titre TEXT, date TEXT, hDebut TEXT, hFin TEXT, lieu TEXT, tarif INTEGER, commentaire TEXT, fichier TEXT, inscription INTEGER, FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur), FOREIGN KEY (idGroupe) REFERENCES grpDiffusion(idGroupe), FOREIGN KEY (status) REFERENCES role(idRole))");
+            "CREATE TABLE event (idPost INTEGER PRIMARY KEY AUTOINCREMENT, idUtilisateur INTEGER, status INTEGER, idGroupe INTEGER, objet TEXT, titre TEXT, date TEXT, hDebut TEXT, hFin TEXT, lieu TEXT, tarif INTEGER, commentaire TEXT, fichier TEXT, inscription INTEGER, FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur), FOREIGN KEY (idGroupe) REFERENCES grpDiffusion(idGroupe), FOREIGN KEY (status) REFERENCES role(idRole))");
         await db.execute(
             "CREATE TABLE inscription (idPost INTEGER, idUtilisateur INTEGER, nbPlaces INTEGER, PRIMARY KEY (idPost, idUtilisateur), FOREIGN KEY (idPost) REFERENCES event(idPost), FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur))");
         // pour l'instant le nb de place n'est pas utilisé
         await db.execute(
-            "CREATE TABLE grpDiffusion (idGroupe INTEGER PRIMARY KEY, nom TEXT)");
+            "CREATE TABLE grpDiffusion (idGroupe INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT)");
         // ajouter la liste des membres
         await db.execute(
             "CREATE TABLE groupe_utilisateur (idGroupe INTEGER, idUtilisateur INTEGER, PRIMARY KEY (idGroupe, idUtilisateur), FOREIGN KEY (idGroupe) REFERENCES grpDiffusion(idGroupe), FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur))");
@@ -63,18 +63,18 @@ class AppDataBase {
 
   Future<void> _preRemplirOrganisation(Database db) async {
     List<Map<String, dynamic>> organisations = [
-      {'idOrga': 0, 'nom': 'BDE'},
-      {'idOrga': 1, 'nom': 'BDS'},
-      {'idOrga': 2, 'nom': 'BDA'},
-      {'idOrga': 3, 'nom': 'JE'},
-      {'idOrga': 4, 'nom': 'Binks'},
-      {'idOrga': 5, 'nom': 'Club Musique'},
+      {'nom': 'BDE'},
+      {'nom': 'BDS'},
+      {'nom': 'BDA'},
+      {'nom': 'JE'},
+      {'nom': 'Binks'},
+      {'nom': 'Club Musique'},
       // ajouter tous les clubs -> BDA, BDS, BDE
-      {'idOrga': 6, 'nom': 'Admisnistration'},
-      {'idOrga': 7, 'nom': 'Professeur'},
-      {'idOrga': 8, 'nom': 'Doctorant'},
-      {'idOrga': 9, 'nom': 'Alumnis'},
-      {'idOrga': 10, 'nom': 'Bordeaux Inp'},
+      {'nom': 'Admisnistration'},
+      {'nom': 'Professeur'},
+      {'nom': 'Doctorant'},
+      {'nom': 'Alumnis'},
+      {'nom': 'Bordeaux Inp'},
     ];
 
     for (var org in organisations) {
@@ -84,16 +84,16 @@ class AppDataBase {
 
   Future<void> _preRemplirRole(Database db) async {
     List<Map<String, dynamic>> listRole = [
-      {'idRole': 0, 'nomRole': 'Président'},
-      {'idRole': 1, 'nomRole': 'Vis-président'},
-      {'idRole': 2, 'nomRole': 'Secrétaire'},
-      {'idRole': 3, 'nomRole': 'Trésorier'},
-      {'idRole': 4, 'nomRole': 'Vis-trésorier'},
-      {'idRole': 5, 'nomRole': 'Respo clubs'},
-      {'idRole': 6, 'nomRole': 'Respo partenariats'},
-      {'idRole': 7, 'nomRole': 'Pole events'},
-      {'idRole': 8, 'nomRole': 'Pole communications'},
-      {'idRole': 9, 'nomRole': 'Pole logistique'},
+      {'nomRole': 'Président'},
+      {'nomRole': 'Vis-président'},
+      {'nomRole': 'Secrétaire'},
+      {'nomRole': 'Trésorier'},
+      {'nomRole': 'Vis-trésorier'},
+      {'nomRole': 'Respo clubs'},
+      {'nomRole': 'Respo partenariats'},
+      {'nomRole': 'Pole events'},
+      {'nomRole': 'Pole communications'},
+      {'nomRole': 'Pole logistique'},
       // ajouter les bon rôles : bureaux, club, administration, professeur
     ];
 
@@ -203,11 +203,11 @@ class AppDataBase {
   // Liste d'utilisateurs par défaut
   final List<Utilisateur> defaultUtilisateur = [
     Utilisateur(
-      1,
-      "Lolie",
-      "Reydellet",
-      "lreydellet@ensc.fr",
-      2025,
+      idUtilisateur: 1,
+      nom: "Lolie",
+      prenom: "Reydellet",
+      email: "lreydellet@ensc.fr",
+      promotion: 2025,
     ),
   ];
 /*

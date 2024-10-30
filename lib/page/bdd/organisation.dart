@@ -1,16 +1,15 @@
 class Organisation {
-  int idOrga;
+  int? idOrga;
   String nom;
 
   // Constructeur
   Organisation({
-    required this.idOrga,
+    this.idOrga,
     required this.nom,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'idOrga': idOrga,
       'nom': nom,
     };
   }

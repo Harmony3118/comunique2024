@@ -39,11 +39,10 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
   void saveUser() async {
     if (formKey.currentState!.validate()) {
       final Utilisateur utilisateur = Utilisateur(
-        2,
-        nomController.text,
-        prenomController.text,
-        emailController.text,
-        int.parse(promotionController.text),
+        nom: nomController.text,
+        prenom: prenomController.text,
+        email: emailController.text,
+        promotion: int.parse(promotionController.text),
       );
 
       await AppDataBase.instance.insertUtilisateur(utilisateur);
