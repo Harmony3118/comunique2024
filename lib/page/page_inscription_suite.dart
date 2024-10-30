@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:comunique2024/page/bdd/utilisateur.dart';
+import 'package:comunique2024/page/bdd/bdd.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:comunique2024/page/page_navigation.dart';
 import 'package:comunique2024/page/page_file_actualite.dart';
@@ -15,39 +17,86 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
   File? _image; // Variable pour stocker l'image sélectionnée
   final ImagePicker _picker = ImagePicker();
 
+  // Controller pour récupoérer le champs du form
+  final TextEditingController nomController = TextEditingController();
+  final TextEditingController prenomController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController promotionController = TextEditingController();
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    // libère les controlleurs : qu'est ce que c'est ?
+    nomController.dispose();
+    prenomController.dispose();
+    emailController.dispose();
+    promotionController.dispose();
+    super.dispose();
+  }
+
+  // insérer un utilisateur
+  void saveUser() async {
+    if (formKey.currentState!.validate()) {
+      final Utilisateur utilisateur = Utilisateur(
+        2,
+        nomController.text,
+        prenomController.text,
+        emailController.text,
+        int.parse(promotionController.text),
+      );
+
+      await AppDataBase.instance.insertUtilisateur(utilisateur);
+
+      // Affiche le message de succès
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Utilisateur ajouté !")),
+      );
+
+      // Réinitialiser les champs
+      nomController.clear();
+      prenomController.clear();
+      emailController.clear();
+      promotionController.clear();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        color: Colors.white,
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-              top: 90,
-              left: (MediaQuery.of(context).size.width - 157) / 2,
-              child: image(context),
-            ),
-            Positioned(
-              top: 690,
-              left: (MediaQuery.of(context).size.width - 299) / 2,
-              child: bulle_bordeaux(context),
-            ),
-            Positioned(
-              top: 760,
-              left: (MediaQuery.of(context).size.width - 299) / 2,
-              child: bulle_claire(context),
-            ),
-            Positioned(
-              top: 280,
-              left: (MediaQuery.of(context).size.width - 400) / 2,
-              child: mes_prefs(context),
-            ),
-            Positioned(
-              top: 420,
-              left: (MediaQuery.of(context).size.width - 400) / 2,
-              child: mes_donnees(context),
-            ),
-          ],
+      body: Form(
+        key: formKey,
+        child: Container(
+          color: Colors.white,
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                top: 90,
+                left: (MediaQuery.of(context).size.width - 157) / 2,
+                child: image(context),
+              ),
+              Positioned(
+                top: 690,
+                left: (MediaQuery.of(context).size.width - 299) / 2,
+                child: bulle_bordeaux(context),
+              ),
+              Positioned(
+                top: 760,
+                left: (MediaQuery.of(context).size.width - 299) / 2,
+                child: bulle_claire(context),
+              ),
+              Positioned(
+                top: 280,
+                left: (MediaQuery.of(context).size.width - 400) / 2,
+                child: mes_prefs(context),
+              ),
+              Positioned(
+                top: 420,
+                left: (MediaQuery.of(context).size.width - 400) / 2,
+                child: mes_donnees(context),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -153,19 +202,23 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
           width: 400,
           height: 50,
           color: const Color.fromARGB(0, 255, 255, 255),
-          child: const Padding(
-            padding: EdgeInsets.only(left: 8.0),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
             child: Row(
               children: [
-                Text(
-                  "Mon année",
+                const Text(
+                  "Mon nom",
                   style: TextStyle(
                     color: Color.fromARGB(255, 0, 0, 0),
                     fontSize: 21,
                   ),
                 ),
-                SizedBox(width: 40),
-                Expanded(child: YearTextField()),
+                const SizedBox(width: 73),
+                Expanded(
+                    child: YearTextField(
+                  controller: nomController,
+                  type: TextInputType.name,
+                )),
               ],
             ),
           ),
@@ -174,19 +227,74 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
           width: 400,
           height: 50,
           color: const Color.fromARGB(0, 255, 255, 255),
-          child: const Padding(
-            padding: EdgeInsets.only(left: 8.0),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
             child: Row(
               children: [
-                Text(
+                const Text(
+                  "Mon prénom",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontSize: 21,
+                  ),
+                ),
+                const SizedBox(width: 40),
+                Expanded(
+                    child: YearTextField(
+                  controller: prenomController,
+                  type: TextInputType.name,
+                )),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          width: 400,
+          height: 50,
+          color: const Color.fromRGBO(255, 255, 255, 0),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Row(
+              children: [
+                const Text(
+                  "Mon année",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontSize: 21,
+                  ),
+                ),
+                const SizedBox(width: 55),
+                Expanded(
+                    child: YearTextField(
+                  controller: promotionController,
+                  type: TextInputType.number,
+                )),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          width: 400,
+          height: 50,
+          color: const Color.fromARGB(0, 255, 255, 255),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Row(
+              children: [
+                const Text(
                   "Mail",
                   style: TextStyle(
                     color: Color.fromARGB(255, 0, 0, 0),
                     fontSize: 21,
                   ),
                 ),
-                SizedBox(width: 40),
-                Expanded(child: EmailTextField()),
+                const SizedBox(width: 40),
+                Expanded(
+                  child: YearTextField(
+                    controller: emailController,
+                    type: TextInputType.emailAddress,
+                  ),
+                ),
               ],
             ),
           ),
@@ -197,7 +305,16 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
 
   Widget bulle_bordeaux(BuildContext context) {
     return GestureDetector(
-        onTap: () {
+        onTap: () async {
+          saveUser();
+
+          // test print
+          final db = await AppDataBase.instance.database;
+          List<Map<String, dynamic>> utilisateurs =
+              await db.query('utilisateur');
+          print(utilisateurs);
+          // fin test
+
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -301,19 +418,29 @@ class _DropdownExampleState extends State<DropdownExample> {
 
 // Classe pour le TextField d'année
 class YearTextField extends StatelessWidget {
-  const YearTextField({super.key});
+  TextEditingController controller;
+  TextInputType type;
+  YearTextField({super.key, required this.controller, required this.type});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 30,
-      child: TextField(
+      child: TextFormField(
         decoration: InputDecoration(
           border: OutlineInputBorder(),
           hintText: '',
           fillColor: Colors.grey[200],
           filled: true,
         ),
+        controller: controller,
+        keyboardType: type,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Veuillez remplir le champs';
+          }
+          return null;
+        },
       ),
     );
   }
@@ -321,19 +448,28 @@ class YearTextField extends StatelessWidget {
 
 // Classe pour le TextField d'email
 class EmailTextField extends StatelessWidget {
-  const EmailTextField({super.key});
+  TextEditingController controller;
+  EmailTextField({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 30,
-      child: TextField(
+      child: TextFormField(
         decoration: InputDecoration(
           border: OutlineInputBorder(),
           hintText: '',
           fillColor: Colors.grey[200],
           filled: true,
         ),
+        controller: controller,
+        keyboardType: TextInputType.emailAddress,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Veuillez remplir le champs';
+          }
+          return null;
+        },
       ),
     );
   }

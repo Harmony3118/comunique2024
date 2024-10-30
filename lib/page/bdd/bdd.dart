@@ -121,7 +121,7 @@ class AppDataBase {
   }
 
   // Méthode pour insérer un utilisateur dans la base de données
-  void insertUtilisateur(Utilisateur utilisateur) async {
+  Future<void> insertUtilisateur(Utilisateur utilisateur) async {
     final Database db = await database;
     await db.insert(
       'utilisateur',

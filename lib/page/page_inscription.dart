@@ -7,48 +7,48 @@ class PageInscription extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      body : Container(
-      // Pour créer une boîte
-      color: Colors.white,
-      child: Stack(
-        children: <Widget>[
-          // Image centrée
-          Positioned(
-            top: 115,
-            left: (MediaQuery.of(context).size.width - 200) / 2,
-            child: image(context),
-          ),
-          // Bulle bordeaux
-          Positioned(
-            top: 690, // Positionnement à 633 pixels du haut
-            left: (MediaQuery.of(context).size.width - 299) /
-                2, // Centrage horizontal
-            child: bulle_bordeaux(context),
-          ),
-          // Bulle claire
-          Positioned(
-            top: 760, // Positionnement à 633 pixels du haut
-            left: (MediaQuery.of(context).size.width - 299) /
-                2, // Centrage horizontal
-            child: bulle_claire(context),
-          ),
-          // ID
-          Positioned(
-            top: 410, // Positionnement à 633 pixels du haut
-            left: (MediaQuery.of(context).size.width - 262) /
-                2, // Centrage horizontal
-            child: id(context),
-          ),
-          // MDP
-          Positioned(
-            top: 510, // Positionnement à 633 pixels du haut
-            left: (MediaQuery.of(context).size.width - 262) /
-                2, // Centrage horizontal
-            child: mdp(context),
-          ),
-        ],
-      ),
+    return Scaffold(
+      body: Container(
+        // Pour créer une boîte
+        color: Colors.white,
+        child: Stack(
+          children: <Widget>[
+            // Image centrée
+            Positioned(
+              top: 115,
+              left: (MediaQuery.of(context).size.width - 200) / 2,
+              child: image(context),
+            ),
+            // Bulle bordeaux
+            Positioned(
+              top: 690, // Positionnement à 633 pixels du haut
+              left: (MediaQuery.of(context).size.width - 299) /
+                  2, // Centrage horizontal
+              child: bulle_bordeaux(context),
+            ),
+            // Bulle claire
+            Positioned(
+              top: 760, // Positionnement à 633 pixels du haut
+              left: (MediaQuery.of(context).size.width - 299) /
+                  2, // Centrage horizontal
+              child: bulle_claire(context),
+            ),
+            // ID
+            Positioned(
+              top: 410, // Positionnement à 633 pixels du haut
+              left: (MediaQuery.of(context).size.width - 262) /
+                  2, // Centrage horizontal
+              child: id(context),
+            ),
+            // MDP
+            Positioned(
+              top: 510, // Positionnement à 633 pixels du haut
+              left: (MediaQuery.of(context).size.width - 262) /
+                  2, // Centrage horizontal
+              child: mdp(context),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -64,60 +64,60 @@ class PageInscription extends StatelessWidget {
 
   Widget bulle_bordeaux(BuildContext context) {
     return GestureDetector(
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => PageInscriptionSuite()),
-      );
-    },
-    child : Container(
-      width: 299,
-      height: 43,
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 100, 3, 41),
-        borderRadius: BorderRadius.circular(19), // Bords arrondis
-      ),
-      child: const Center(
-        // Centrage du texte
-        child: Text(
-          "S'inscrire", // Le texte à afficher
-          style: TextStyle(
-            color: Colors.white, // Couleur du texte
-            fontSize: 24,
-            fontWeight: FontWeight.bold, // Met le texte en gras
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PageInscriptionSuite()),
+        );
+      },
+      child: Container(
+        width: 299,
+        height: 43,
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 100, 3, 41),
+          borderRadius: BorderRadius.circular(19), // Bords arrondis
+        ),
+        child: const Center(
+          // Centrage du texte
+          child: Text(
+            "S'inscrire", // Le texte à afficher
+            style: TextStyle(
+              color: Colors.white, // Couleur du texte
+              fontSize: 24,
+              fontWeight: FontWeight.bold, // Met le texte en gras
+            ),
           ),
         ),
-      ),
       ),
     );
   }
 
   Widget bulle_claire(BuildContext context) {
     return GestureDetector(
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => PageConnection()),
-      );
-    },
-    child : Container(
-      width: 299,
-      height: 43,
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 215, 215, 215),
-        borderRadius: BorderRadius.circular(19), // Bords arrondis
-      ),
-      child: const Center(
-        // Centrage du texte
-        child: Text(
-          "Se connecter", // Le texte à afficher
-          style: const TextStyle(
-            color: Colors.black, // Couleur du texte
-            fontSize: 24,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PageConnection()),
+        );
+      },
+      child: Container(
+        width: 299,
+        height: 43,
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 215, 215, 215),
+          borderRadius: BorderRadius.circular(19), // Bords arrondis
+        ),
+        child: const Center(
+          // Centrage du texte
+          child: Text(
+            "Se connecter", // Le texte à afficher
+            style: const TextStyle(
+              color: Colors.black, // Couleur du texte
+              fontSize: 24,
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 
@@ -147,7 +147,7 @@ class PageInscription extends StatelessWidget {
                 size: 50, // Taille de l'icône
               ),
               const SizedBox(width: 20), // Ajustez la valeur selon vos besoins
-              Expanded(child: EmailTextField()), 
+              Expanded(child: EmailTextField()),
             ],
           ),
         ),
@@ -198,22 +198,21 @@ class EmailTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 30,
-    child: const TextField(
-      decoration: InputDecoration(
-        hintText: 'E-mail',
-        hintStyle: TextStyle(
+      child: const TextField(
+        decoration: InputDecoration(
+          hintText: 'E-mail',
+          hintStyle: TextStyle(
             color: Color.fromARGB(127, 0, 0, 0),
             fontSize: 24, // Taille de la police pour le texte d'indication
+          ),
+          fillColor: Color.fromARGB(0, 0, 0, 0),
+          filled: true,
+          border: InputBorder.none,
         ),
-        fillColor: Color.fromARGB(0, 0, 0, 0),
-        filled: true,
-        border: InputBorder.none,
       ),
-    ),
     );
   }
 }
-
 
 // Classe pour le TextField du mdp
 class MdpTextField extends StatelessWidget {
@@ -223,18 +222,18 @@ class MdpTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 30,
-    child: const TextField(
-      decoration: InputDecoration(
-        hintText: 'Mot de passe',
-        hintStyle: TextStyle(
+      child: const TextField(
+        decoration: InputDecoration(
+          hintText: 'Mot de passe',
+          hintStyle: TextStyle(
             color: Color.fromARGB(127, 0, 0, 0),
             fontSize: 24, // Taille de la police pour le texte d'indication
+          ),
+          fillColor: Color.fromARGB(0, 0, 0, 0),
+          filled: true,
+          border: InputBorder.none,
         ),
-        fillColor: Color.fromARGB(0, 0, 0, 0),
-        filled: true,
-        border: InputBorder.none,
       ),
-    ),
     );
   }
 }
