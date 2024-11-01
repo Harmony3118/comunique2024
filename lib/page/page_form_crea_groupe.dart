@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+// il faut importer le package du widget bouton 
 class CreaGroupe extends StatelessWidget {  //j'ai changé a statefull pour pouvoir utiliser la class _LesInfosDesText
   @override
   Widget build(BuildContext context) {
@@ -211,6 +211,14 @@ class CreaGroupe extends StatelessWidget {  //j'ai changé a statefull pour pouv
              
               
             ),
+             WidgetBouton(
+            typeBouton: 3, // Set the button type
+            texte: 'Créer', // Text to display on the button
+            maFonction: () {
+              // Define the action on button press
+              print('Button pressed!');
+            },
+          ),
           // bouton créer
           ],
         ),
@@ -270,6 +278,45 @@ class _DateSelectorState extends State<DateSelector> {
   // Step 1: Initialize a TextEditingController
  // final TextEditingController _controller = TextEditingController();
 //}
+
+// j'ai copié collé le widget bouton il sera à enlever apres le merge 
+
+
+class WidgetBouton extends StatelessWidget {
+  const WidgetBouton(
+      {Key? key,
+      required this.typeBouton,
+      required this.texte,
+      required this.maFonction})
+      : super(key: key);
+  final int typeBouton;
+  final String texte;
+  final void Function()? maFonction;
+  static Color backgroundColor = const Color.fromRGBO(100, 3, 41, 1);
+  static Color foregroundColor = Colors.white;
+
+  void getCouleur() {
+    if (typeBouton == 2) {
+      backgroundColor = const Color.fromRGBO(215, 215, 215, 1);
+      foregroundColor = Colors.black;
+    } else if (typeBouton == 3) {
+      backgroundColor = const Color.fromRGBO(100, 3, 41, 0.6);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    getCouleur();
+    return ElevatedButton(
+      onPressed: maFonction,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: backgroundColor,
+        foregroundColor: foregroundColor,
+      ),
+      child: Text(texte),
+    );
+  }
+}
 
 
 
