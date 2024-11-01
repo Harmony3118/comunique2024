@@ -17,7 +17,7 @@ class CreaGroupe extends StatelessWidget {  //j'ai changé a statefull pour pouv
             
                 const Text(
                   "Nouveau groupe de diffusion",
-                  style: TextStyle(fontSize: 14),
+                  style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),
                   //FontWeight(400),
                 ),
               ],
@@ -33,35 +33,57 @@ class CreaGroupe extends StatelessWidget {  //j'ai changé a statefull pour pouv
             style: TextStyle(fontSize:16, fontWeight: FontWeight.bold),
             ), // Astérisque
 
-            // Conteneur avec bordures et arrondis
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40.0),
-            child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 10),
-              decoration: BoxDecoration(
-                color: const Color(0xFFD9D9D9),
-                borderRadius: BorderRadius.circular(10.0),
-                border: Border.all(
-                  color: const Color.fromARGB(255, 100, 3, 42),
-                  width: 2.0,
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: SizedBox(
+                height: 40,
+                child: FractionallySizedBox(
+                  widthFactor: 0.8,
+
+                  child: TextField(
+                    maxLines: 1,
+                    scrollPhysics: const BouncingScrollPhysics(),
+                    style: const TextStyle(fontSize: 16), // Ensures consistent font size
+                    textAlign: TextAlign.start,
+                    textInputAction: TextInputAction.next, // Controls how the keyboard interacts
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10), 
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 100, 3, 42),
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 100, 3, 42),
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      filled: true,
+                      fillColor: const Color(0xFFD9D9D9),
+                    ),
+                  )
+
                 ),
               ),
-              child: Center(
-                child: Container(
-                  width: 400,
-                  height: 40,
-                  color: Colors.white30,
-                ),
-              ),
-            ),
+             
+              
             ),
 
             // Divider pour séparer les sections
-            const Divider(
-              thickness: 2,
-              color: Color.fromARGB(255, 100, 3, 42),
-              indent: 50,
-              endIndent: 50,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0), // Vertical padding of 20
+              child: Container(
+                height: 3, // Thickness of the divider
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 100, 3, 42), // Divider color
+                  borderRadius: BorderRadius.circular(10.0), // Rounded corners
+                ),
+                margin: const EdgeInsets.symmetric(horizontal: 50), // Indent from the sides
+              ),
             ),
             const Text("Participants *",
               style: TextStyle(fontSize:16, fontWeight: FontWeight.bold),
@@ -72,66 +94,124 @@ class CreaGroupe extends StatelessWidget {  //j'ai changé a statefull pour pouv
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: SizedBox(
                 height: 40,
-                child: TextField(    
-   //             controller: _controller,           
-                decoration: InputDecoration(
-                //  contentPadding: EdgeInsets.symmetric(vertical: 0.5),  utiliser methode avec container à la place
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                      color: Color.fromARGB(255, 100, 3, 42), // Border color
-                      width: 2.0, // Thickness of the border
+                child: FractionallySizedBox(
+                  widthFactor: 0.98,
+                  child: TextField(  
+                    maxLines: 1,  
+                    scrollPhysics: const BouncingScrollPhysics(),
+                    style: const TextStyle(fontSize: 16),
+                    textAlign: TextAlign.start,
+                    textInputAction: TextInputAction.next,     
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 12), // Adjusted padding for control
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 100, 3, 42),
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 100, 3, 42),
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.circular(10.0),                  
+                      ),
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: Color.fromARGB(255, 100, 3, 42),
+                      ),
+                      labelText: "",
+                      filled: true,
+                      fillColor: const Color(0xFFD9D9D9),
                     ),
-                    borderRadius: BorderRadius.circular(10.0),
                   ),
-
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                    color: Color.fromARGB(255, 100, 3, 42), // Border color
-                    width: 2.0, // Thickness of the border
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),                  
-                  ),
-                  
-                  prefixIcon: const Icon(
-                    Icons.search,
-                    color: Color.fromARGB(255, 100, 3, 42),
-                  ),
-                  labelText: "Rechercher",
-                  filled: true,
-                  fillColor:const Color(0xFFD9D9D9),
                 ),
-              
               ),
-              ),
-             
-              
             ),
+
 
             // Divider pour séparer les sections
-            const Divider(
-              thickness: 2,
-              color: Color.fromARGB(255, 100, 3, 42),
-              indent: 50,
-              endIndent: 50,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0), // Vertical padding of 20
+              child: Container(
+                height: 3, // Thickness of the divider
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 100, 3, 42), // Divider color
+                  borderRadius: BorderRadius.circular(10.0), // Rounded corners
+                ),
+                margin: const EdgeInsets.symmetric(horizontal: 50), // Indent from the sides
+              ),
             ),
-            const Text("Date de fin du groupe *"),
+
+            const Text("Date de fin du groupe *",
+              style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),
+            ),
 
             // Ajouter un bouton ou un widget pour sélectionner une date
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: ElevatedButton.icon(
-                onPressed: () {
-                  // Ajouter la fonction pour choisir une date
-                },
-                icon: const Icon(Icons.calendar_today),
-                label: const Text("Sélectionner une date"),
+                onPressed: () { DateSelector();},  // faire fonctionner la fonction 
+
+                icon: const Icon(Icons.calendar_today),  
+                label: const Text("Sélectionner une date",  
+                  style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor:  Colors.white,
                   foregroundColor: const Color.fromARGB(255, 100, 3, 42),
                   side: const BorderSide(color: Color.fromARGB(255, 100, 3, 42)),
                 ),
+
+
               ),
             ), 
+          const Text("Diffusion d'infos *",
+            style: TextStyle(fontSize:16, fontWeight: FontWeight.bold),
+            ), // Astérisque
+
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: SizedBox(
+                height: 40,
+                child: FractionallySizedBox(
+                  widthFactor: 0.8,
+
+                  child: TextField(
+                    maxLines: 1,
+                    scrollPhysics: const BouncingScrollPhysics(),
+                    style: const TextStyle(fontSize: 16), // Ensures consistent font size
+                    textAlign: TextAlign.start,
+                    textInputAction: TextInputAction.next, // Controls how the keyboard interacts
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10), 
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 100, 3, 42),
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 100, 3, 42),
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      filled: true,
+                      fillColor: const Color(0xFFD9D9D9),
+                    ),
+                  )
+
+                ),
+              ),
+             
+              
+            ),
+          // bouton créer
           ],
         ),
       ),
@@ -140,10 +220,57 @@ class CreaGroupe extends StatelessWidget {  //j'ai changé a statefull pour pouv
 }
 
 
-//les deux dernier divider plutot faire une class a part avec un container avec bout arrondis à la place
+class DateSelector extends StatefulWidget {
+  @override
+  _DateSelectorState createState() => _DateSelectorState();
+}
 
+class _DateSelectorState extends State<DateSelector> {
+  DateTime? selectedDate;
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        selectedDate = pickedDate; // Update the selected date
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: ElevatedButton.icon(
+        onPressed: () => _selectDate(context), // Trigger date picker
+        icon: const Icon(Icons.calendar_today),
+        label: Text(
+          selectedDate == null
+              ? "Select Date"
+              : "${selectedDate!.toLocal()}".split(' ')[0], // Format as YYYY-MM-DD
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          foregroundColor: const Color.fromARGB(255, 100, 3, 42),
+          side: const BorderSide(color: Color.fromARGB(255, 100, 3, 42)),
+        ),
+      ),
+    );
+  }
+}
 
 //class _LesInfosDesText extends State<CreaGroupe> {
   // Step 1: Initialize a TextEditingController
  // final TextEditingController _controller = TextEditingController();
 //}
+
+
+
+
