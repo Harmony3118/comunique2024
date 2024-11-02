@@ -2,6 +2,7 @@ import 'package:comunique2024/page/page_annuaire.dart';
 import 'package:comunique2024/page/page_file_actualite.dart';
 import 'package:comunique2024/page/page_contact_admin.dart';
 import 'package:comunique2024/page/page_header_footer.dart';
+import 'package:comunique2024/page/page_ajout.dart';
 import 'package:comunique2024/page/mois.dart';
 import 'package:flutter/material.dart';
 
@@ -32,8 +33,7 @@ class _BasePageState extends State<BasePage> {
         // il faudra rajouter le choix de paramètre
         body = HomePage();
       } else if (currentIndex == 2) {
-        print("PageAjout pas encore codé");
-        // body = PageAjout();
+        body = const AjoutPage();
       } else if (currentIndex == 3) {
         body = const AnnuairePage();
       } else if (currentIndex == 4) {
