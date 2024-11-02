@@ -29,62 +29,21 @@ class CreaGroupe extends StatelessWidget {  //j'ai changé a statefull pour pouv
               thickness: 1,
               color: Colors.black,
             ),
+
             const Text("Nom du groupe *",
             style: TextStyle(fontSize:16, fontWeight: FontWeight.bold),
             ), // Astérisque
 
-          Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: SizedBox(
-                height: 40,
-                child: FractionallySizedBox(
-                  widthFactor: 0.8,
-
-                  child: TextField(
-                    maxLines: 1,
-                    scrollPhysics: const BouncingScrollPhysics(),
-                    style: const TextStyle(fontSize: 16), // Ensures consistent font size
-                    textAlign: TextAlign.start,
-                    textInputAction: TextInputAction.next, // Controls how the keyboard interacts
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10), 
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 100, 3, 42),
-                          width: 2.0,
-                        ),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 100, 3, 42),
-                          width: 2.0,
-                        ),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      filled: true,
-                      fillColor: const Color(0xFFD9D9D9),
-                    ),
-                  )
-
-                ),
-              ),
-             
-              
+            PetiteBoite(
+              hintText: "",//on veut pas d'inscription en particulier 
+              onChanged: (text) {
+                    // fonction pour ramasser les inscription 
+              },
             ),
 
-            // Divider pour séparer les sections
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0), // Vertical padding of 20
-              child: Container(
-                height: 3, // Thickness of the divider
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 100, 3, 42), // Divider color
-                  borderRadius: BorderRadius.circular(10.0), // Rounded corners
-                ),
-                margin: const EdgeInsets.symmetric(horizontal: 50), // Indent from the sides
-              ),
-            ),
+            const Diviseur(),
+            
+
             const Text("Participants *",
               style: TextStyle(fontSize:16, fontWeight: FontWeight.bold),
             ), // Asterisk
@@ -133,92 +92,52 @@ class CreaGroupe extends StatelessWidget {  //j'ai changé a statefull pour pouv
 
 
             // Divider pour séparer les sections
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0), // Vertical padding of 20
-              child: Container(
-                height: 3, // Thickness of the divider
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 100, 3, 42), // Divider color
-                  borderRadius: BorderRadius.circular(10.0), // Rounded corners
-                ),
-                margin: const EdgeInsets.symmetric(horizontal: 50), // Indent from the sides
-              ),
-            ),
+            const Diviseur(),
+          
 
-            const Text("Date de fin du groupe *",
+            Row(
+              children: [
+             const Text("Date de fin du groupe *",
               style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),
             ),
 
-            // Ajouter un bouton ou un widget pour sélectionner une date
+              // calendrier 
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: ElevatedButton.icon(
-                onPressed: () { DateSelector();},  // faire fonctionner la fonction 
-
-                icon: const Icon(Icons.calendar_today),  
-                label: const Text("Sélectionner une date",  
-                  style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:  Colors.white,
-                  foregroundColor: const Color.fromARGB(255, 100, 3, 42),
-                  side: const BorderSide(color: Color.fromARGB(255, 100, 3, 42)),
-                ),
-
-
+              padding: const EdgeInsets.fromLTRB(0.0, 0.0, 80.0, 0),
+              child: CalendarIcon(
+                onDateSelected: (selectedDate) {
+                      // Use the selected date here 
+                  },
+              ),   
               ),
-            ), 
+             
+            ],
+            ),
+           
+            // Ajouter un bouton ou un widget pour sélectionner une date
+
           const Text("Diffusion d'infos *",
             style: TextStyle(fontSize:16, fontWeight: FontWeight.bold),
             ), // Astérisque
 
-          Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: SizedBox(
-                height: 40,
-                child: FractionallySizedBox(
-                  widthFactor: 0.8,
-
-                  child: TextField(
-                    maxLines: 1,
-                    scrollPhysics: const BouncingScrollPhysics(),
-                    style: const TextStyle(fontSize: 16), // Ensures consistent font size
-                    textAlign: TextAlign.start,
-                    textInputAction: TextInputAction.next, // Controls how the keyboard interacts
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10), 
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 100, 3, 42),
-                          width: 2.0,
-                        ),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 100, 3, 42),
-                          width: 2.0,
-                        ),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      filled: true,
-                      fillColor: const Color(0xFFD9D9D9),
-                    ),
-                  )
-
-                ),
-              ),
-             
-              
+            PetiteBoite(
+              hintText: "",//on veut pas d'inscription en particulier 
+              onChanged: (text) {
+                    // fonction pour ramasser les inscription 
+              },
             ),
-             WidgetBouton(
+            // rajouter un petit snackbar apres le bouton créer 
+            Padding(
+              padding: const EdgeInsets.fromLTRB(100.0, 10, 0.0, 0),
+            child: WidgetBouton(
             typeBouton: 3, // Set the button type
             texte: 'Créer', // Text to display on the button
             maFonction: () {
               // Define the action on button press
-              print('Button pressed!');
+              // faire la fonction qui renvoie à une page confirmant la creation du groupe
             },
           ),
+            ),
           // bouton créer
           ],
         ),
@@ -228,56 +147,151 @@ class CreaGroupe extends StatelessWidget {  //j'ai changé a statefull pour pouv
 }
 
 
-class DateSelector extends StatefulWidget {
+
+class CalendarIcon extends StatefulWidget {
+  final Function(DateTime?) onDateSelected; // Callback to retrieve selected date
+
+  const CalendarIcon({Key? key, required this.onDateSelected}) : super(key: key);
+
   @override
-  _DateSelectorState createState() => _DateSelectorState();
+  _CalendarIconState createState() => _CalendarIconState();
 }
 
-class _DateSelectorState extends State<DateSelector> {
-  DateTime? selectedDate;
+class _CalendarIconState extends State<CalendarIcon> {
+  DateTime? _selectedDate;
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
+  Future<void> _pickDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDate ?? DateTime.now(),
+      initialDate: _selectedDate ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-
-    if (pickedDate != null) {
+    if (picked != null && picked != _selectedDate) {
       setState(() {
-        selectedDate = pickedDate; // Update the selected date
+        _selectedDate = picked;
       });
+      widget.onDateSelected(picked); // Pass the selected date back
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: ElevatedButton.icon(
-        onPressed: () => _selectDate(context), // Trigger date picker
-        icon: const Icon(Icons.calendar_today),
-        label: Text(
-          selectedDate == null
-              ? "Select Date"
-              : "${selectedDate!.toLocal()}".split(' ')[0], // Format as YYYY-MM-DD
-          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+    return Row(
+      children: [
+        IconButton(
+          icon: const Icon(Icons.calendar_today),
+          onPressed: () => _pickDate(context),
+          color: const Color.fromARGB(255, 100, 3, 42), // Customize color
         ),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          foregroundColor: const Color.fromARGB(255, 100, 3, 42),
-          side: const BorderSide(color: Color.fromARGB(255, 100, 3, 42)),
+        Text(
+          _selectedDate != null ? "${_selectedDate!.toLocal()}".split(' ')[0] : "",
+          style: const TextStyle(fontSize: 16),
+        ),
+      ],
+    );
+  }
+}
+
+
+//class _LesInfosDesText extends State<CreaGroupe> {
+  // Step 1: Initialize a TextEditingController
+ // final TextEditingController _controller = TextEditingController();
+//}
+
+//les divider qui sont reutilisé 
+
+class Diviseur extends StatelessWidget {
+  final double thickness;
+  final Color color;
+  final EdgeInsetsGeometry margin;
+
+  const Diviseur({
+    Key? key,
+    this.thickness = 3.0,
+    this.color = const Color.fromARGB(255, 100, 3, 42),
+    this.margin = const EdgeInsets.symmetric(horizontal: 50),
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20.0),
+      child: Container(
+        height: thickness,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        margin: margin,
+      ),
+    );
+  }
+}
+
+// les textField petit qui sont utilisé deux fois 
+
+class PetiteBoite extends StatelessWidget {
+  final double widthFactor;
+  final double height;
+  final EdgeInsetsGeometry padding;
+  final String hintText;
+  final TextEditingController? controller;
+  final Function(String)? onChanged;
+
+  const PetiteBoite({
+    Key? key,
+    this.widthFactor = 0.8,
+    this.height = 40,
+    this.padding = const EdgeInsets.symmetric(horizontal: 20.0),
+    this.hintText = '',
+    this.controller,
+    this.onChanged,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: padding,
+      child: SizedBox(
+        height: height,
+        child: FractionallySizedBox(
+          widthFactor: widthFactor,
+          child: TextField(
+            maxLines: 1,
+            scrollPhysics: const BouncingScrollPhysics(),
+            style: const TextStyle(fontSize: 16),
+            textAlign: TextAlign.start,
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              enabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(
+                  color: Color.fromARGB(255, 100, 3, 42),
+                  width: 2.0,
+                ),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(
+                  color: Color.fromARGB(255, 100, 3, 42),
+                  width: 2.0,
+                ),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              filled: true,
+              fillColor: const Color(0xFFD9D9D9),
+              hintText: hintText,
+            ),
+            onChanged: onChanged, // Callback to capture text input
+          ),
         ),
       ),
     );
   }
 }
 
-//class _LesInfosDesText extends State<CreaGroupe> {
-  // Step 1: Initialize a TextEditingController
- // final TextEditingController _controller = TextEditingController();
-//}
+
 
 // j'ai copié collé le widget bouton il sera à enlever apres le merge 
 
@@ -318,6 +332,46 @@ class WidgetBouton extends StatelessWidget {
   }
 }
 
+/*      À revoir pour recuperer le text
+
+class InfoTexte extends StatefulWidget {
+  @override
+  _InfoTexte createState() => _<InfoTexte();
+}
+
+class _InfoTexte  extends State<InfoTexte> {
+  final TextEditingController _nomDuGroupeController = TextEditingController();
+  final TextEditingController _diffusionDinfoController = TextEditingController();
+
+  void _retrieveText() {
+    String entreNomDuGroupe = _nomDuGroupeController.text;
+    String entreDiffusionDinfo = _diffusionDinfoController.text;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        InfoTexte(
+          hintText: "Enter text here",
+          controller: _nomDuGroupeController,
+        ),
+        ElevatedButton(
+          onPressed: _retrieveText,
+          child: Text("Retrieve Text"),
+        ),
+      ],
+    );
+  }
+
+  @override
+  void dispose() {
+    _nomDuGroupeController.dispose();
+    super.dispose();
+  }
+}
+
+*/
 
 
 
