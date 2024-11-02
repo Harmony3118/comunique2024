@@ -2,6 +2,7 @@ import 'package:comunique2024/page/page_annuaire.dart';
 import 'package:comunique2024/page/page_file_actualite.dart';
 import 'package:comunique2024/page/page_contact_admin.dart';
 import 'package:comunique2024/page/page_header_footer.dart';
+import 'package:comunique2024/page/mois.dart';
 import 'package:flutter/material.dart';
 
 class BasePage extends StatefulWidget {
@@ -28,8 +29,8 @@ class _BasePageState extends State<BasePage> {
       if (currentIndex == 0) {
         body = FileActualite();
       } else if (currentIndex == 1) {
-        print("Calendrier pas encore codé");
-        // body = Calendrier();
+        // il faudra rajouter le choix de paramètre
+        body = HomePage();
       } else if (currentIndex == 2) {
         print("PageAjout pas encore codé");
         // body = PageAjout();

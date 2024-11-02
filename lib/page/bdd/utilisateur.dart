@@ -1,5 +1,5 @@
 class Utilisateur {
-  int idEleve;
+  int? idUtilisateur;
   String nom;
   String prenom;
   String email;
@@ -7,18 +7,17 @@ class Utilisateur {
   // photo ;
 
   // Constructeur avec des valeurs par défaut pour les paramètres facultatifs
-  Utilisateur(
-    this.idEleve,
-    this.nom,
-    this.prenom,
-    this.email,
-    this.promotion,
-  );
+  Utilisateur({
+    this.idUtilisateur,
+    required this.nom,
+    required this.prenom,
+    required this.email,
+    required this.promotion,
+  });
 
   // Méthode pour convertir l'objet en Map
   Map<String, dynamic> toMap() {
     return {
-      'idEleve': idEleve,
       'nom': nom,
       'prenom': prenom,
       'email': email,
@@ -28,9 +27,9 @@ class Utilisateur {
 
   // Pour créer une instance à partir d'un Map
   factory Utilisateur.fromMap(Map<String, dynamic> map) => Utilisateur(
-      map['idEleve'],
-      map['nom'],
-      map['prenom'],
-      map['email'],
-      map['promotion']);
+      idUtilisateur: map['idUtilisateur'],
+      nom: map['nom'],
+      prenom: map['prenom'],
+      email: map['email'],
+      promotion: map['promotion']);
 }

@@ -2,13 +2,13 @@ import 'package:comunique2024/page/bdd/utilisateur.dart';
 
 class GrpDiffusion {
   int? idGroupe;
-  String? nom;
+  String nom;
   List<Utilisateur>? membre;
 
   // Constructeur
   GrpDiffusion({
     this.idGroupe,
-    this.nom,
+    required this.nom,
     this.membre,
   });
 
