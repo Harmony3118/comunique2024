@@ -227,20 +227,3 @@ class _FilterState extends State<Filter> {
     );
   }
 }
-/*
-              Padding(
-              padding: const EdgeInsets.all(6.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    isPinButtonSelected = !isPinButtonSelected;
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: isPinButtonSelected
-                      ? const Color.fromRGBO(100, 3, 41, 1)
-                      : const Color.fromRGBO(100, 3, 41, 0.6),
-                  foregroundColor: Colors.white,
-                ),
-                child: const Icon(Icons.push_pin),
-                */
