@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 // il faut importer le package du widget bouton 
-class CreaGroupe extends StatelessWidget {  //j'ai changé a statefull pour pouvoir utiliser la class _LesInfosDesText
+class CreaGroupe extends StatelessWidget {  // j'ai changé a statefull pour pouvoir utiliser la class _LesInfosDesText
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -8,21 +8,20 @@ class CreaGroupe extends StatelessWidget {  //j'ai changé a statefull pour pouv
         child: Column(
           children: [
             Row(
-              children:[
+              children: [
                 Padding(padding: EdgeInsets.fromLTRB(20, 0, 0, 0)),
                 Icon(
                   Icons.arrow_back_ios,
                   color: Colors.black,
-                 ),
-            
+                ),
                 const Text(
                   "Nouveau groupe de diffusion",
-                  style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   //FontWeight(400),
                 ),
               ],
             ),
-         
+
             // faire un truc pour que quand on appui dessus ca nous envoie en arrière
 
             const Divider(
@@ -30,37 +29,32 @@ class CreaGroupe extends StatelessWidget {  //j'ai changé a statefull pour pouv
               color: Colors.black,
             ),
 
-            const Text("Nom du groupe *",
-            style: TextStyle(fontSize:16, fontWeight: FontWeight.bold),
-            ), // Astérisque
+            const TitresTextes(text: "Nom du groupe *"),
 
             PetiteBoite(
-              hintText: "",//on veut pas d'inscription en particulier 
+              hintText: "", // on veut pas d'inscription en particulier 
               onChanged: (text) {
-                    // fonction pour ramasser les inscription 
+                // fonction pour ramasser les inscription 
               },
             ),
 
             const Diviseur(),
-            
 
-            const Text("Participants *",
-              style: TextStyle(fontSize:16, fontWeight: FontWeight.bold),
-            ), // Asterisk
+            const TitresTextes(text: "Participants *"),
 
             // Champ de recherche avec TextField
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              padding: const EdgeInsets.fromLTRB(20.0, 5, 20.0, 0),
               child: SizedBox(
                 height: 40,
                 child: FractionallySizedBox(
                   widthFactor: 0.98,
-                  child: TextField(  
-                    maxLines: 1,  
+                  child: TextField(
+                    maxLines: 1,
                     scrollPhysics: const BouncingScrollPhysics(),
                     style: const TextStyle(fontSize: 16),
                     textAlign: TextAlign.start,
-                    textInputAction: TextInputAction.next,     
+                    textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(vertical: 12), // Adjusted padding for control
                       enabledBorder: OutlineInputBorder(
@@ -75,7 +69,7 @@ class CreaGroupe extends StatelessWidget {  //j'ai changé a statefull pour pouv
                           color: Color.fromARGB(255, 100, 3, 42),
                           width: 2.0,
                         ),
-                        borderRadius: BorderRadius.circular(10.0),                  
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
                       prefixIcon: const Icon(
                         Icons.search,
@@ -90,62 +84,63 @@ class CreaGroupe extends StatelessWidget {  //j'ai changé a statefull pour pouv
               ),
             ),
 
-
             // Divider pour séparer les sections
             const Diviseur(),
-          
 
             Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-             const Text("Date de fin du groupe *",
-              style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10.0), // Removed the extra const keyword
+                  child: TitresTextes(text: "Date de fin du groupe *"), // Removed the extra const keyword
+                ),
+
+                // calendrier 
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: CalendarIcon(
+                        onDateSelected: (selectedDate) {
+                          // Use the selected date here 
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
 
-              // calendrier 
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0.0, 0.0, 80.0, 0),
-              child: CalendarIcon(
-                onDateSelected: (selectedDate) {
-                      // Use the selected date here 
-                  },
-              ),   
-              ),
-             
-            ],
-            ),
-           
             // Ajouter un bouton ou un widget pour sélectionner une date
-
-          const Text("Diffusion d'infos *",
-            style: TextStyle(fontSize:16, fontWeight: FontWeight.bold),
-            ), // Astérisque
-
+            const Padding(
+              padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10), // Removed the extra const keyword
+              child: TitresTextes(text: "Nom du groupe *"), // Removed the extra const keyword
+            ),
             PetiteBoite(
-              hintText: "",//on veut pas d'inscription en particulier 
+              hintText: "", // on veut pas d'inscription en particulier 
               onChanged: (text) {
-                    // fonction pour ramasser les inscription 
+                // fonction pour ramasser les inscription 
               },
             ),
             // rajouter un petit snackbar apres le bouton créer 
             Padding(
               padding: const EdgeInsets.fromLTRB(100.0, 10, 0.0, 0),
-            child: WidgetBouton(
-            typeBouton: 3, // Set the button type
-            texte: 'Créer', // Text to display on the button
-            maFonction: () {
-              // Define the action on button press
-              // faire la fonction qui renvoie à une page confirmant la creation du groupe
-            },
-          ),
+              child: WidgetBouton(
+                typeBouton: 3, // Set the button type
+                texte: 'Créer', // Text to display on the button
+                maFonction: () {
+                  // Define the action on button press
+                  // faire la fonction qui renvoie à une page confirmant la creation du groupe
+                },
+              ),
             ),
-          // bouton créer
+            // bouton créer
           ],
         ),
       ),
     );
   }
 }
-
 
 
 class CalendarIcon extends StatefulWidget {
@@ -194,10 +189,34 @@ class _CalendarIconState extends State<CalendarIcon> {
 }
 
 
-//class _LesInfosDesText extends State<CreaGroupe> {
-  // Step 1: Initialize a TextEditingController
- // final TextEditingController _controller = TextEditingController();
-//}
+
+//les titres des parties 
+
+class TitresTextes extends StatelessWidget {
+  final String text; // Required text to display
+
+  const TitresTextes({
+    Key? key,
+    required this.text,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.8,
+        child: Text(
+          text,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.left,
+        ),
+      ),
+    );
+  }
+}
+
+
+
 
 //les divider qui sont reutilisé 
 
@@ -243,7 +262,7 @@ class PetiteBoite extends StatelessWidget {
     Key? key,
     this.widthFactor = 0.8,
     this.height = 40,
-    this.padding = const EdgeInsets.symmetric(horizontal: 20.0),
+    this.padding = const EdgeInsets.fromLTRB(20.0, 5, 20.0, 0),
     this.hintText = '',
     this.controller,
     this.onChanged,
