@@ -162,9 +162,8 @@ class AppDataBase {
   }
 
   // Méthodes pour la table "event"
-  void insertEvent(Event event) async {
+  Future<void> insertEvent(Event event) async {
     final Database db = await database;
-
     await db.insert(
       'event',
       event.toMap(),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart'; // Importation du package file_picker pour sélectionner un fichier
 import 'page_file_actualite.dart'; // Importation de la page d'actualité
+import 'bdd/event.dart';
+import 'bdd/bdd.dart';
 
 class EventCreationForm extends StatefulWidget {
   @override
@@ -16,14 +18,77 @@ class _EventCreationFormState extends State<EventCreationForm> {
   final TextEditingController _titreController = TextEditingController();
   final TextEditingController _tarifController = TextEditingController();
   final TextEditingController _placesController = TextEditingController();
-  final TextEditingController _infosComplementairesController = TextEditingController();
+  final TextEditingController _infosComplementairesController =
+      TextEditingController();
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   DateTime? _selectedDate;
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
   bool _inscriptionViaApp = false;
   bool _inscriptionViaHelloAsso = false;
+  // on fera plus tard
   String? _selectedFile;
+
+  @override
+  void dispose() {
+    // libère les controlleurs : qu'est ce que c'est ?
+    _expediteurController.dispose();
+    _roleController.dispose();
+    _destinataireController.dispose();
+    _objetController.dispose();
+    _organisateurController.dispose();
+    _titreController.dispose();
+    _tarifController.dispose();
+    _placesController.dispose();
+    _infosComplementairesController.dispose();
+    super.dispose();
+  }
+/*
+  // insérer un utilisateur
+  void saveUser() async {
+    if (formKey.currentState!.validate()) {
+      // récupérer l'id de l'utilisateur
+      // récupérer l'id du groupe
+      // récupérer l'id du status (du role)
+      final Event evenement = Event(
+          idUtilisateur: 1,
+          status: 1, // c'est le role
+          idGroupe: 1,
+          objet: _objetController.text,
+          // organisateur ?
+          titre: _titreController.text,
+  // pb avec les types, comment faire la convertion ?
+          // date: String.parse(_selectedDate),
+          // hDebut: _startTime,
+          // hFin: _endTime,
+          // lieu: map['lieu'], //-->  pas de choix du lieu dans le form
+          tarif: double.parse(_tarifController.text),
+          // nb de places
+          commentaire: _infosComplementairesController.text,
+          fichier: _selectedFile,
+          inscription: _inscriptionViaApp);
+
+      await AppDataBase.instance.insertEvent(evenement);
+
+      // Affiche le message de succès
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Évènement ajouté !")),
+      );
+
+      // Réinitialiser les champs
+      _expediteurController.clear();
+      _roleController.clear();
+      _destinataireController.clear();
+      _objetController.clear();
+      _organisateurController.clear();
+      _titreController.clear();
+      _tarifController.clear();
+      _placesController.clear();
+      _infosComplementairesController.clear();
+    }
+  }*/
 
   // Fonction pour sélectionner une date
   Future<void> _selectDate(BuildContext context) async {
@@ -79,10 +144,12 @@ class _EventCreationFormState extends State<EventCreationForm> {
                 filled: true,
                 fillColor: Colors.grey[200],
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: const Color.fromRGBO(155, 3, 63, 1)),
+                  borderSide:
+                      BorderSide(color: const Color.fromRGBO(155, 3, 63, 1)),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: const Color.fromRGBO(155, 3, 63, 1)),
+                  borderSide:
+                      BorderSide(color: const Color.fromRGBO(155, 3, 63, 1)),
                 ),
               ),
             ),
@@ -98,7 +165,8 @@ class _EventCreationFormState extends State<EventCreationForm> {
       children: [
         Text(
           title,
-          style: TextStyle(color: const Color.fromRGBO(155, 3, 63, 1), fontSize: 20),
+          style: TextStyle(
+              color: const Color.fromRGBO(155, 3, 63, 1), fontSize: 20),
           textAlign: TextAlign.center,
         ),
         Divider(color: Colors.grey, thickness: 1),
@@ -112,7 +180,8 @@ class _EventCreationFormState extends State<EventCreationForm> {
 
     if (result != null) {
       setState(() {
-        _selectedFile = result.files.single.path; // Stocke le chemin du fichier sélectionné
+        _selectedFile =
+            result.files.single.path; // Stocke le chemin du fichier sélectionné
       });
     }
   }
@@ -128,11 +197,14 @@ class _EventCreationFormState extends State<EventCreationForm> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 IconButton(
-                  icon: Icon(Icons.arrow_back, color: const Color.fromRGBO(155, 3, 63, 1)),
+                  icon: Icon(Icons.arrow_back,
+                      color: const Color.fromRGBO(155, 3, 63, 1)),
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => FileActualite()), // Redirection vers page_file_actualite.dart
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              FileActualite()), // Redirection vers page_file_actualite.dart
                     );
                   },
                 ),
@@ -196,10 +268,12 @@ class _EventCreationFormState extends State<EventCreationForm> {
                 filled: true,
                 fillColor: Colors.grey[200],
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: const Color.fromRGBO(155, 3, 63, 1)),
+                  borderSide:
+                      BorderSide(color: const Color.fromRGBO(155, 3, 63, 1)),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: const Color.fromRGBO(155, 3, 63, 1)),
+                  borderSide:
+                      BorderSide(color: const Color.fromRGBO(155, 3, 63, 1)),
                 ),
               ),
             ),
@@ -207,9 +281,11 @@ class _EventCreationFormState extends State<EventCreationForm> {
             ListTile(
               title: Text('Sélectionner un fichier'),
               trailing: Icon(Icons.attach_file),
-              onTap: _selectFile, // Appel de la fonction pour sélectionner un fichier
+              onTap:
+                  _selectFile, // Appel de la fonction pour sélectionner un fichier
             ),
-            if (_selectedFile != null) // Afficher le chemin du fichier sélectionné
+            if (_selectedFile !=
+                null) // Afficher le chemin du fichier sélectionné
               Text('Fichier sélectionné : $_selectedFile'),
             Divider(),
             // Inscriptions
