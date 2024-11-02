@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 // import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -75,20 +76,23 @@ class MyApp extends StatelessWidget {
       // ******************************************************************************
       // ******************************************************************************
 
+      // home: BasePage(
+      //   currentIndex: 0,
+      //   body: FileActualite(),
+
       home: const PageConnection(),
       // home: Scaffold(
       //   appBar: Header(),
       //   body: AnnuairePage(),
       //   bottomNavigationBar: Footer(),
       // ),
+
+      home: Scaffold(
+        appBar: Header(),
+        body: AnnuairePage(),
+        bottomNavigationBar: Footer(),
+      ),
     );
   }
 }
-
-
-      // home: BasePage(
-      //   // test
-      //   currentIndex: 0,
-      //   body: const PageConnection(),
-      // ),
 
