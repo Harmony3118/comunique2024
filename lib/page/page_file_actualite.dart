@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:comunique2024/widget/filter_homeScreen.dart';
 import 'package:comunique2024/widget/card_home.dart';
 
-
 // Classe modèle pour un événement
 class Event {
   final String office;
@@ -13,6 +12,7 @@ class Event {
   final String eventLocation;
   final String imageUrl;
   final Color color;
+  bool isPinned;
 
   Event({
     required this.office,
@@ -23,7 +23,10 @@ class Event {
     required this.eventLocation,
     required this.imageUrl,
     required this.color,
+    this.isPinned = false,
   });
+
+
 }
 
 class FileActualite extends StatefulWidget {
@@ -33,6 +36,7 @@ class FileActualite extends StatefulWidget {
 
 class _FileActualiteState extends State<FileActualite> {
   List<String> activeFilters = [];
+  bool isPinFilterActive = false;
 
 // Liste statique d'événements
   final List<Event> events = [
@@ -75,19 +79,37 @@ class _FileActualiteState extends State<FileActualite> {
     });
   }
 
+  void _togglePinFilter() {
+    setState(() {
+      isPinFilterActive = !isPinFilterActive;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Filtrer les événements en fonction des filtres actifs
-    List<Event> filteredEvents = activeFilters.isEmpty
-        ? events
-        : events.where((event) => activeFilters.contains(event.office)).toList();
+    // Filtrer les événements en fonction des filtres actifs et du filtre épingle
+    List<Event> filteredEvents = events;
+
+    // Appliquer les filtres par office
+    if (activeFilters.isNotEmpty) {
+      filteredEvents = filteredEvents.where((event) => activeFilters.contains(event.office)).toList();
+    }
+
+    // Appliquer le filtre épingle si actif
+    if (isPinFilterActive) {
+      filteredEvents = filteredEvents.where((event) => event.isPinned).toList();
+    }
 
     return SafeArea(
       child: Column(
         children: [
           SizedBox(
             height: 60,
-            child: Filter(onFilterChanged: _onFilterChanged),
+            child: Filter(
+              onFilterChanged: _onFilterChanged,
+              isPinFilterActive: isPinFilterActive,
+              onPinFilterToggle: _togglePinFilter,
+          ),
           ),
           Expanded(
             child: ListView(
@@ -101,6 +123,13 @@ class _FileActualiteState extends State<FileActualite> {
                   eventLocation: event.eventLocation,
                   imageUrl: event.imageUrl,
                   color: event.color,
+                  // Gérer l'état de l'épingle pour chaque carte
+                  isPinned: event.isPinned,
+                  onPinToggle: () {
+                    setState(() {
+                      event.isPinned = !event.isPinned;
+                    });
+                  },
                 );
               }).toList(),
             ),

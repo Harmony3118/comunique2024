@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 
 class Filter extends StatefulWidget {
   final ValueChanged<List<String>> onFilterChanged;
+  final bool isPinFilterActive;
+  final VoidCallback onPinFilterToggle;
 
-  const Filter({super.key, required this.onFilterChanged});
+ Filter({
+    required this.onFilterChanged,
+    required this.isPinFilterActive,
+    required this.onPinFilterToggle,
+  });
 
   @override
   _FilterState createState() => _FilterState();
@@ -14,6 +20,10 @@ class _FilterState extends State<Filter> {
   bool isPinButtonSelected = false;
   bool isStatusButtonSelected = false;
   bool isObjectButtonSelected = false;
+  
+  get isPinFilterActive => null;
+  
+  get onPinFilterToggle => null;
 
   void _toggleFilterOption(String option) {
     setState(() {
@@ -191,7 +201,34 @@ class _FilterState extends State<Filter> {
                 ),
               ),
             ),
-            Padding(
+          Padding(
+              padding: const EdgeInsets.all(6.0),
+              child: ElevatedButton(
+                onPressed: widget.onPinFilterToggle,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: widget.isPinFilterActive
+                      ? const Color.fromRGBO(100, 3, 41, 1)
+                      : const Color.fromRGBO(100, 3, 41, 0.6),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30), // même rayon que les autres boutons
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                ),
+                child: Icon(
+                  widget.isPinFilterActive ? Icons.push_pin : Icons.push_pin_outlined,
+                  color: widget.isPinFilterActive ? Colors.white : Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+/*
+              Padding(
               padding: const EdgeInsets.all(6.0),
               child: ElevatedButton(
                 onPressed: () {
@@ -206,11 +243,4 @@ class _FilterState extends State<Filter> {
                   foregroundColor: Colors.white,
                 ),
                 child: const Icon(Icons.push_pin),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+                */
