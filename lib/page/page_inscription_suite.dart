@@ -20,45 +20,42 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
     return Scaffold(
       body: Container(
         color: Colors.white,
-        child: Stack(
+        child: SingleChildScrollView( // Permet le défilement
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             // Icône de retour en haut à gauche
-                  Positioned(
-                    top: 50, // Ajustez la position verticale selon vos besoins
-                    left: 20, // Ajustez la position horizontale selon vos besoins
-                    child: IconButton(
-                      icon: Icon(Icons.arrow_back, color: Colors.black),
-                      onPressed: () {
-                        Navigator.pop(context); // Action de retour à l'écran précédent
-                      },
-                    ),
-                  ),
-            Positioned(
-              top: 90,
-              left: (MediaQuery.of(context).size.width - 157) / 2,
-              child: image(context),
+            Padding(
+              padding: const EdgeInsets.only(top: 50, right: 350),
+              child: IconButton(
+                icon: Icon(Icons.arrow_back, color: Colors.black),
+                onPressed: () {
+                  Navigator.pop(context); // Action de retour à l'écran précédent
+                },
+              ),
             ),
-            Positioned(
-              top: 710,
-              left: (MediaQuery.of(context).size.width - 299) / 2,
-              child: bulle_bordeaux(context),
+            Center(
+              child: image(context), // Centered image
             ),
-            Positioned(
-              top: 780,
-              left: (MediaQuery.of(context).size.width - 299) / 2,
-              child: bulle_claire(context),
-            ),
-            Positioned(
-              top: 280,
-              left: (MediaQuery.of(context).size.width - 400) / 2,
-              child: mes_prefs(context),
-            ),
-            Positioned(
-              top: 390,
-              left: (MediaQuery.of(context).size.width - 400) / 2,
-              child: mes_donnees(context),
-            ),
-          ],
+            const SizedBox(height: 10), // Espace entre l'image et "Mes préférences"
+            
+              // Mes préférences
+              mes_prefs(context),
+              const SizedBox(height: 20), // Espace entre les sections
+
+              // Mes données
+              mes_donnees(context),
+              const SizedBox(height: 60), // Espace avant les boutons
+              
+              // Bulle bordeaux
+              bulle_bordeaux(context),
+              const SizedBox(height: 30), // Espace entre les deux boutons
+              
+              // Bulle claire
+              bulle_claire(context),
+              const SizedBox(height: 200), // Espace en bas pour le défilement
+            ],
+          ),
         ),
       ),
     );
@@ -132,6 +129,7 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
             ),
           ),
         ),
+        // Photo de profil
         Container(
           width: 400,
           height: 50,
@@ -160,91 +158,39 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
             ),
           ),
         ),
-        Container(
-          width: 400,
-          height: 50,
-          color: const Color.fromARGB(0, 255, 255, 255),
-          child: const Padding(
-            padding: EdgeInsets.only(left: 8.0),
-            child: Row(
-              children: [
-                Text(
-                  "Mon nom",
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 0, 0, 0),
-                    fontSize: 21,
-                  ),
-                ),
-                SizedBox(width: 73),
-                Expanded(child: YearTextField()),
-              ],
-            ),
-          ),
-        ),
-        Container(
-          width: 400,
-          height: 50,
-          color: const Color.fromARGB(0, 255, 255, 255),
-          child: const Padding(
-            padding: EdgeInsets.only(left: 8.0),
-            child: Row(
-              children: [
-                Text(
-                  "Mon prénom",
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 0, 0, 0),
-                    fontSize: 21,
-                  ),
-                ),
-                SizedBox(width: 40),
-                Expanded(child: YearTextField()),
-              ],
-            ),
-          ),
-        ),
-        Container(
-          width: 400,
-          height: 50,
-          color: const Color.fromARGB(0, 255, 255, 255),
-          child: const Padding(
-            padding: EdgeInsets.only(left: 8.0),
-            child: Row(
-              children: [
-                Text(
-                  "Mon année",
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 0, 0, 0),
-                    fontSize: 21,
-                  ),
-                ),
-                SizedBox(width: 55),
-                Expanded(child: YearTextField()),
-              ],
-            ),
-          ),
-        ),
-        Container(
-          width: 400,
-          height: 50,
-          color: const Color.fromARGB(0, 255, 255, 255),
-          child: const Padding(
-            padding: EdgeInsets.only(left: 8.0),
-            child: Row(
-              children: [
-                Text(
-                  "Mail",
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 0, 0, 0),
-                    fontSize: 21,
-                  ),
-                ),
-                SizedBox(width: 40),
-                Expanded(child: EmailTextField()),
-              ],
-            ),
-          ),
-        )
+        // Mon nom
+        buildTextFieldRow("Mon nom", YearTextField()),
+        // Mon prénom
+        buildTextFieldRow("Mon prénom", YearTextField()),
+        // Mon année
+        buildTextFieldRow("Mon année", YearTextField()),
+        // Email
+        buildTextFieldRow("Mail", EmailTextField()),
       ],
+    );
+  }
+
+  Widget buildTextFieldRow(String label, Widget textField) {
+    return Container(
+      width: 400,
+      height: 50,
+      color: const Color.fromARGB(0, 255, 255, 255),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 8.0),
+        child: Row(
+          children: [
+            Text(
+              label,
+              style: const TextStyle(
+                color: Color.fromARGB(255, 0, 0, 0),
+                fontSize: 21,
+              ),
+            ),
+            const SizedBox(width: 40),
+            Expanded(child: textField),
+          ],
+        ),
+      ),
     );
   }
 
@@ -318,6 +264,7 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
     }
   }
 }
+
 
 // case intéractive calendrier
 

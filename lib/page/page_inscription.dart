@@ -5,50 +5,38 @@ import 'package:flutter/material.dart';
 class PageInscription extends StatelessWidget {
   const PageInscription({super.key});
 
-  @override
+ @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      body : Container(
-      // Pour créer une boîte
-      color: Colors.white,
-      child: Stack(
-        children: <Widget>[
-          // Image centrée
-          Positioned(
-            top: 115,
-            left: (MediaQuery.of(context).size.width - 200) / 2,
-            child: image(context),
+    return Scaffold(
+      body: Container(
+        color: Colors.white,
+        child: SingleChildScrollView( // Permet le défilement
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              // Image centrée
+              Padding(
+                padding: const EdgeInsets.only(top: 115), // Espace au-dessus de l'image
+                child: Center(
+                  child: image(context),
+                ),
+              ),
+              const SizedBox(height: 90), // Espace entre l'image et le champ ID
+              // ID
+              id(context),
+              const SizedBox(height: 20), // Espace entre ID et MDP
+              // MDP
+              mdp(context),
+              const SizedBox(height: 112), // Espace avant les boutons
+              // Bulle bordeaux
+              bulle_bordeaux(context),
+              const SizedBox(height: 30), // Espace entre les deux boutons
+              // Bulle claire
+              bulle_claire(context),
+              const SizedBox(height: 200), // Espace en bas pour le défilement
+            ],
           ),
-          // Bulle bordeaux
-          Positioned(
-            top: 690, // Positionnement à 633 pixels du haut
-            left: (MediaQuery.of(context).size.width - 299) /
-                2, // Centrage horizontal
-            child: bulle_bordeaux(context),
-          ),
-          // Bulle claire
-          Positioned(
-            top: 760, // Positionnement à 633 pixels du haut
-            left: (MediaQuery.of(context).size.width - 299) /
-                2, // Centrage horizontal
-            child: bulle_claire(context),
-          ),
-          // ID
-          Positioned(
-            top: 410, // Positionnement à 633 pixels du haut
-            left: (MediaQuery.of(context).size.width - 262) /
-                2, // Centrage horizontal
-            child: id(context),
-          ),
-          // MDP
-          Positioned(
-            top: 510, // Positionnement à 633 pixels du haut
-            left: (MediaQuery.of(context).size.width - 262) /
-                2, // Centrage horizontal
-            child: mdp(context),
-          ),
-        ],
-      ),
+        ),
       ),
     );
   }
