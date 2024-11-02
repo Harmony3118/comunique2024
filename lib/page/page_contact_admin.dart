@@ -11,7 +11,7 @@ class ContactPage extends StatelessWidget {
       body: Center(
         child:
             Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-          const Text("Je souhaite contacter l'administration",
+          const Text("Contacter l'administration",
               style: TextStyle(fontSize: 25)),
           Container(
               width: 289,
