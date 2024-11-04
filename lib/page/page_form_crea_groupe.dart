@@ -49,37 +49,7 @@ class CreaGroupe extends StatelessWidget {  // j'ai changé a statefull pour pou
                 height: 40,
                 child: FractionallySizedBox(
                   widthFactor: 0.98,
-                  child: TextField(
-                    maxLines: 1,
-                    scrollPhysics: const BouncingScrollPhysics(),
-                    style: const TextStyle(fontSize: 16),
-                    textAlign: TextAlign.start,
-                    textInputAction: TextInputAction.next,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(vertical: 12), // Adjusted padding for control
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 100, 3, 42),
-                          width: 2.0,
-                        ),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 100, 3, 42),
-                          width: 2.0,
-                        ),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      prefixIcon: const Icon(
-                        Icons.search,
-                        color: Color.fromARGB(255, 100, 3, 42),
-                      ),
-                      labelText: "",
-                      filled: true,
-                      fillColor: const Color(0xFFD9D9D9),
-                    ),
-                  ),
+                  child: AutoCompleteExample(), 
                 ),
               ),
             ),
@@ -90,26 +60,27 @@ class CreaGroupe extends StatelessWidget {  // j'ai changé a statefull pour pou
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10.0), // Removed the extra const keyword
-                  child: TitresTextes(text: "Date de fin du groupe *"), // Removed the extra const keyword
+                Padding(
+                  padding:  EdgeInsets.fromLTRB( MediaQuery.of(context).size.width * 0.1, 1.5,0.0, 1.5), //bidouille car le calendrier juste après faisait que je ne pouvais pas utiliser la class TitresText
+                  child: const Text("Date de fin du groupe *",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.left,
+                  ),
                 ),
-
                 // calendrier 
                 Flexible(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: CalendarIcon(
-                        onDateSelected: (selectedDate) {
-                          // Use the selected date here 
-                        },
-                      ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: CalendarIcon(
+                      onDateSelected: (selectedDate) {
+                        // Use the selected date here
+                      },
                     ),
                   ),
                 ),
               ],
             ),
+
 
             // Ajouter un bouton ou un widget pour sélectionner une date
             const Padding(
@@ -391,6 +362,129 @@ class _InfoTexte  extends State<InfoTexte> {
 }
 
 */
+
+class AutoCompleteExample extends StatefulWidget {
+  @override
+  _AutoCompleteExampleState createState() => _AutoCompleteExampleState();
+}
+
+class _AutoCompleteExampleState extends State<AutoCompleteExample> {
+  TextEditingController _controller = TextEditingController();
+  List<String> _options = [];
+  List<String> _allOptions = [
+    'Bob Rose',
+    'Alice Pasrugeux',
+    'Justin Time',
+    'Justin Case',
+    'Jamel Case',
+    'Pascal Case',
+    'Tom De Lasuite',
+    'Charlie Quide',
+  ];
+
+  void _onTextChanged(String text) {
+    setState(() {
+      if (text.isEmpty) {
+        _options.clear();
+      } else {
+        _options = _allOptions
+            .where((option) => option.toLowerCase().contains(text.toLowerCase()))
+            .toList();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20.0, 5, 20.0, 0),
+          child: SingleChildScrollView( // Wrap Column in SingleChildScrollView
+            child: Column(
+              mainAxisSize: MainAxisSize.min, // This helps it fit the content size
+              children: [
+                SizedBox(
+                  height: 40,
+                  child: FractionallySizedBox(
+                    widthFactor: 0.98,
+                    child: TextField(
+                      controller: _controller,
+                      onChanged: _onTextChanged,
+                      scrollPhysics: const BouncingScrollPhysics(),
+                      style: const TextStyle(fontSize: 16),
+                      textAlign: TextAlign.start,
+                      textInputAction: TextInputAction.next,
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Color.fromARGB(255, 100, 3, 42),
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Color.fromARGB(255, 100, 3, 42),
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        prefixIcon: const Icon(
+                          Icons.search,
+                          color: Color.fromARGB(255, 100, 3, 42),
+                        ),
+                        labelText: "",
+                        filled: true,
+                        fillColor: const Color(0xFFD9D9D9),
+                      ),
+                    ),
+                  ),
+                ),
+                if (_options.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20.0, 5, 20.0, 0),
+                    child: Container(
+                      height: _options.isNotEmpty ? 200 : 0, // Adjust height as needed
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10.0),
+                        border: Border.all(
+                          color: Color.fromARGB(255, 100, 3, 42),
+                          width: 2.0,
+                        ),
+                      ),
+                      child: Expanded(
+                        child: ListView.builder(
+                          itemCount: _options.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(_options[index]),
+                              onTap: () {
+                                _controller.text = _options[index];
+                                setState(() {
+                                  _options.clear(); // Clear options after selection
+                                });
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+
+  }
+  }
+
+
 
 
 
