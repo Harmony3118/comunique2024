@@ -5,6 +5,7 @@ class CreaGroupe extends StatelessWidget {  // j'ai changé a statefull pour pou
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
+
         child: Column(
           children: [
             Row(
@@ -41,7 +42,7 @@ class CreaGroupe extends StatelessWidget {  // j'ai changé a statefull pour pou
             const Diviseur(),
 
             const TitresTextes(text: "Participants *"),
-
+            
             // Champ de recherche avec TextField
             Padding(
               padding: const EdgeInsets.fromLTRB(20.0, 5, 20.0, 0.0),
@@ -107,6 +108,7 @@ class CreaGroupe extends StatelessWidget {  // j'ai changé a statefull pour pou
             
           ],
         ),
+        
       ),
     );
   }
@@ -410,10 +412,10 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
         top: offset.dy + renderBox.size.height + 5,
         width: renderBox.size.width,
         child: Material(
-          elevation: 4.0,
+          elevation: 0.0,
           child: Container(
             height: 200,
-            color: Colors.white,
+            color: Theme.of(context).scaffoldBackgroundColor,
             child: ListView.builder(
               itemCount: _filteredOptions.length,
               itemBuilder: (context, index) {
