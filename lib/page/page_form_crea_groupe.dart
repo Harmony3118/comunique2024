@@ -44,16 +44,15 @@ class CreaGroupe extends StatelessWidget {  // j'ai changé a statefull pour pou
 
             // Champ de recherche avec TextField
             Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 5, 20.0, 0),
-              child: SizedBox(
-                height: 40,
+              padding: const EdgeInsets.fromLTRB(20.0, 5, 20.0, 0.0),
+
                 child: FractionallySizedBox(
                   widthFactor: 0.98,
-                  child: AutoCompleteExample(), 
+                  child: FloatingSearchBar(), 
                 ),
-              ),
+              
             ),
-
+// on enleve ce qui est en dessous car c'est mtn dans la class AutocompletExample car sinon les widgets en dessous cachent la liste des options
             // Divider pour séparer les sections
             const Diviseur(),
 
@@ -105,7 +104,7 @@ class CreaGroupe extends StatelessWidget {  // j'ai changé a statefull pour pou
                 },
               ),
             ),
-            // bouton créer
+            
           ],
         ),
       ),
@@ -363,14 +362,16 @@ class _InfoTexte  extends State<InfoTexte> {
 
 */
 
-class AutoCompleteExample extends StatefulWidget {
+
+class FloatingSearchBar extends StatefulWidget {
   @override
-  _AutoCompleteExampleState createState() => _AutoCompleteExampleState();
+  _FloatingSearchBarState createState() => _FloatingSearchBarState();
 }
 
-class _AutoCompleteExampleState extends State<AutoCompleteExample> {
-  TextEditingController _controller = TextEditingController();
-  List<String> _options = [];
+class _FloatingSearchBarState extends State<FloatingSearchBar> {
+  final TextEditingController _controller = TextEditingController();
+  OverlayEntry? _overlayEntry;
+  List<String> _filteredOptions = [];
   List<String> _allOptions = [
     'Bob Rose',
     'Alice Pasrugeux',
@@ -382,109 +383,105 @@ class _AutoCompleteExampleState extends State<AutoCompleteExample> {
     'Charlie Quide',
   ];
 
-  void _onTextChanged(String text) {
-    setState(() {
-      if (text.isEmpty) {
-        _options.clear();
-      } else {
-        _options = _allOptions
-            .where((option) => option.toLowerCase().contains(text.toLowerCase()))
-            .toList();
-      }
-    });
+  @override
+  void dispose() {
+    _controller.dispose();
+    _removeOverlay();
+    super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20.0, 5, 20.0, 0),
-          child: SingleChildScrollView( // Wrap Column in SingleChildScrollView
-            child: Column(
-              mainAxisSize: MainAxisSize.min, // This helps it fit the content size
-              children: [
-                SizedBox(
-                  height: 40,
-                  child: FractionallySizedBox(
-                    widthFactor: 0.98,
-                    child: TextField(
-                      controller: _controller,
-                      onChanged: _onTextChanged,
-                      scrollPhysics: const BouncingScrollPhysics(),
-                      style: const TextStyle(fontSize: 16),
-                      textAlign: TextAlign.start,
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 100, 3, 42),
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 100, 3, 42),
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        prefixIcon: const Icon(
-                          Icons.search,
-                          color: Color.fromARGB(255, 100, 3, 42),
-                        ),
-                        labelText: "",
-                        filled: true,
-                        fillColor: const Color(0xFFD9D9D9),
-                      ),
-                    ),
-                  ),
-                ),
-                if (_options.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20.0, 5, 20.0, 0),
-                    child: Container(
-                      height: _options.isNotEmpty ? 200 : 0, // Adjust height as needed
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
-                        border: Border.all(
-                          color: Color.fromARGB(255, 100, 3, 42),
-                          width: 2.0,
-                        ),
-                      ),
-                      child: Expanded(
-                        child: ListView.builder(
-                          itemCount: _options.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text(_options[index]),
-                              onTap: () {
-                                _controller.text = _options[index];
-                                setState(() {
-                                  _options.clear(); // Clear options after selection
-                                });
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
+  void _showOverlay() {
+    _overlayEntry = _createOverlayEntry();
+    Overlay.of(context).insert(_overlayEntry!);
+  }
+
+  void _removeOverlay() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
+
+  OverlayEntry _createOverlayEntry() {
+    RenderBox renderBox = context.findRenderObject() as RenderBox;
+    var offset = renderBox.localToGlobal(Offset.zero);
+
+    return OverlayEntry(
+      builder: (context) => Positioned(
+        left: offset.dx,
+        top: offset.dy + renderBox.size.height + 5,
+        width: renderBox.size.width,
+        child: Material(
+          elevation: 4.0,
+          child: Container(
+            height: 200,
+            color: Colors.white,
+            child: ListView.builder(
+              itemCount: _filteredOptions.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(_filteredOptions[index]),
+                  onTap: () {
+                    _controller.text = _filteredOptions[index];
+                    _removeOverlay();
+                  },
+                );
+              },
             ),
           ),
         ),
       ),
     );
-
-
-  }
   }
 
+  void _onTextChanged(String text) {
+    setState(() {
+      _filteredOptions = _allOptions
+          .where((option) => option.toLowerCase().contains(text.toLowerCase()))
+          .toList();
+    });
+    if (_filteredOptions.isNotEmpty && _overlayEntry == null) {
+      _showOverlay();
+    } else if (_filteredOptions.isEmpty) {
+      _removeOverlay();
+    }
+  }
 
-
-
-
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: SizedBox(
+        height: 40,
+        child: FractionallySizedBox(
+          widthFactor: 0.98,
+          child: TextField(
+            controller: _controller,
+            onChanged: _onTextChanged,
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(vertical: 12),
+              enabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(
+                  color: Color.fromARGB(255, 100, 3, 42),
+                  width: 2.0,
+                ),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(
+                  color: Color.fromARGB(255, 100, 3, 42),
+                  width: 2.0,
+                ),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              prefixIcon: const Icon(
+                Icons.search,
+                color: Color.fromARGB(255, 100, 3, 42),
+              ),
+              filled: true,
+              fillColor: const Color(0xFFD9D9D9),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
