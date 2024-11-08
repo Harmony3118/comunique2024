@@ -15,6 +15,7 @@ import 'package:comunique2024/page/page_inscription_suite.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
+  /*
   print("Lancement de l'application");
   // Nécessaire pour les opérations async dans main()
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +38,7 @@ void main() async {
   final List<Map<String, dynamic>> organisations =
       await db.query('organisation');
   print(organisations);
-
+*/
   runApp(const MyApp());
 }
 
@@ -86,13 +87,12 @@ class MyApp extends StatelessWidget {
       //   body: AnnuairePage(),
       //   bottomNavigationBar: Footer(),
       // ),
-
+/*
       home: Scaffold(
         appBar: Header(),
         body: AnnuairePage(),
         bottomNavigationBar: Footer(),
-      ),
+      ),*/
     );
   }
 }
-
