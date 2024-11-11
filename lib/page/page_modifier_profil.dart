@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';  // Importation nécessaire pour ImagePicker
 import 'package:file_picker/file_picker.dart';    // Importation nécessaire pour FilePicker
+import 'dart:io';  // Pour utiliser la classe File
 
 class ProfileEditForm extends StatefulWidget {
   @override
@@ -22,7 +23,10 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
 
   final ImagePicker _picker = ImagePicker();  // Correctement défini maintenant
 
-  // Fonction pour afficher le menu de sélection de photo (remplacée par celle du code 2)
+  // Variable pour stocker la photo de profil sélectionnée
+  XFile? _profileImage;
+
+  // Fonction pour afficher le menu de sélection de photo
   void _showPhotoOptions() {
     showModalBottomSheet(
       context: context,
@@ -89,7 +93,7 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
           color: Colors.grey.shade300,
         ),
         child: Center(
-          child: Text(label, style: TextStyle(color: customPurple)),
+          child: Text(label, style: TextStyle(color: customPurple), textAlign: TextAlign.center),
         ),
       ),
     );
@@ -99,8 +103,10 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
   Future<void> _takePhoto() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
+      setState(() {
+        _profileImage = pickedFile;
+      });
       print("Photo prise: ${pickedFile.path}");
-      // Implémentez le traitement de la photo si nécessaire
     }
   }
 
@@ -108,8 +114,10 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
   Future<void> _chooseFromGallery() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
+      setState(() {
+        _profileImage = pickedFile;
+      });
       print("Photo choisie depuis la galerie: ${pickedFile.path}");
-      // Implémentez le traitement de la photo si nécessaire
     }
   }
 
@@ -120,8 +128,10 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
       allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
     );
     if (result != null) {
+      setState(() {
+        _profileImage = XFile(result.files.single.path!);
+      });
       print("Fichier image sélectionné: ${result.files.single.path}");
-      // Implémentez le traitement de l'image si nécessaire
     }
   }
 
@@ -196,7 +206,12 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                   child: CircleAvatar(
                     radius: 40,
                     backgroundColor: Colors.grey.shade300,
-                    child: Icon(Icons.person, size: 50, color: Colors.grey),
+                    backgroundImage: _profileImage != null
+                        ? FileImage(File(_profileImage!.path))
+                        : null,  // Affiche la photo sélectionnée
+                    child: _profileImage == null
+                        ? Icon(Icons.person, size: 50, color: Colors.grey)
+                        : null,  // Affiche une icône si pas d'image
                   ),
                 ),
               ),
