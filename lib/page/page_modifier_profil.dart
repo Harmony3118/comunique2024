@@ -13,10 +13,78 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
   String? roleEcole;
   String? promotion;
   String? email;
-  bool stage2A = false;
-  bool stage3A = false;
   bool stage2A_etranger = false;
   bool stage3A_etranger = false;
+
+  final Color customPurple = Color.fromRGBO(155, 3, 63, 1);
+
+  // Fonction pour afficher le menu de sélection de photo
+  void _showPhotoOptions() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildPhotoOption("Faire une photo"),
+                  _buildPhotoOption("Choisir dans la photothèque"),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildPhotoOption("Choisir un fichier"),
+                  _buildPhotoOption("Alumnis"),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildPhotoOption("Doctorants"),
+                  _buildPhotoOption("Bordeaux INP"),
+                ],
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    side: BorderSide(color: customPurple),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context); // Fermer le menu
+                },
+                child: Text(
+                  "Valider",
+                  style: TextStyle(color: customPurple),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // Widget pour créer chaque option de photo
+  Widget _buildPhotoOption(String label) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: customPurple),
+        borderRadius: BorderRadius.circular(5.0),
+        color: Colors.grey.shade300,
+      ),
+      child: Text(label, style: TextStyle(color: customPurple)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,13 +116,12 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(color: Colors.purple),
+                          borderSide: BorderSide(color: customPurple),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(color: Colors.purple),
+                          borderSide: BorderSide(color: customPurple),
                         ),
-                        hintText: '2A, 3A, etc.',
                       ),
                       onChanged: (value) => anneeEtude = value,
                     ),
@@ -70,10 +137,11 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                     onPressed: () {
                       // Action pour ajouter un rôle
                     },
+                    color: customPurple,
                   ),
                 ],
               ),
-              Divider(color: Colors.purple),  // Barre horizontale violette
+              Divider(color: customPurple),  // Barre horizontale customisée
 
               // Section "Photo de profil"
               Center(
@@ -84,13 +152,16 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
               ),
               SizedBox(height: 10),
               Center(
-                child: CircleAvatar(
-                  radius: 40,
-                  backgroundColor: Colors.grey.shade300,
-                  child: Icon(Icons.person, size: 50, color: Colors.grey),
+                child: GestureDetector(
+                  onTap: _showPhotoOptions,
+                  child: CircleAvatar(
+                    radius: 40,
+                    backgroundColor: Colors.grey.shade300,
+                    child: Icon(Icons.person, size: 50, color: Colors.grey),
+                  ),
                 ),
               ),
-              Divider(color: Colors.purple),  // Barre horizontale violette
+              Divider(color: customPurple),  // Barre horizontale customisée
 
               // Section "Autres informations"
               Center(
@@ -103,7 +174,7 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
               Text("Stages", style: TextStyle(fontSize: 16)),
               SizedBox(height: 10),
 
-              // Input pour 2A et 3A avec checkbox "À l'étranger"
+              // Champs pour les stages 2A et 3A avec checkbox "À l'étranger"
               Row(
                 children: [
                   Expanded(
@@ -113,11 +184,11 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                         labelText: '2A',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(color: Colors.purple),
+                          borderSide: BorderSide(color: customPurple),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(color: Colors.purple),
+                          borderSide: BorderSide(color: customPurple),
                         ),
                       ),
                       onChanged: (value) {
@@ -133,6 +204,7 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                         stage2A_etranger = value!;
                       });
                     },
+                    activeColor: customPurple,
                   ),
                   Text("À l'étranger"),
                 ],
@@ -147,11 +219,11 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                         labelText: '3A',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(color: Colors.purple),
+                          borderSide: BorderSide(color: customPurple),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(color: Colors.purple),
+                          borderSide: BorderSide(color: customPurple),
                         ),
                       ),
                       onChanged: (value) {
@@ -167,6 +239,7 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                         stage3A_etranger = value!;
                       });
                     },
+                    activeColor: customPurple,
                   ),
                   Text("À l'étranger"),
                 ],
@@ -184,11 +257,11 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(color: Colors.purple),
+                          borderSide: BorderSide(color: customPurple),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(color: Colors.purple),
+                          borderSide: BorderSide(color: customPurple),
                         ),
                       ),
                       onChanged: (value) => promotion = value,
@@ -207,11 +280,11 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(color: Colors.purple),
+                          borderSide: BorderSide(color: customPurple),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(color: Colors.purple),
+                          borderSide: BorderSide(color: customPurple),
                         ),
                       ),
                       onChanged: (value) => email = value,
@@ -221,26 +294,24 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
               ),
               SizedBox(height: 20),
 
-              // Bouton Enregistrer stylisé comme les autres champs
+              // Bouton Enregistrer stylisé
               Center(
                 child: Container(
-                  width: double.infinity,
+                  width: MediaQuery.of(context).size.width * 0.5, // Réduction des marges
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5.0),
-                        side: BorderSide(color: Colors.purple),
+                        side: BorderSide(color: customPurple),
                       ),
                     ),
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        // Enregistrer les modifications du profil
-                      }
+                      // Action pour enregistrer
                     },
                     child: Text(
                       "Enregistrer",
-                      style: TextStyle(color: Colors.purple),
+                      style: TextStyle(color: customPurple),
                     ),
                   ),
                 ),
