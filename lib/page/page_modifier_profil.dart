@@ -10,6 +10,7 @@ class ProfileEditForm extends StatefulWidget {
 
 class _ProfileEditFormState extends State<ProfileEditForm> {
   final _formKey = GlobalKey<FormState>();
+  final ImagePicker _picker = ImagePicker();
 
   // Variables pour stocker les informations du formulaire
   String? anneeEtude;
@@ -20,8 +21,6 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
   bool stage3A_etranger = false;
 
   final Color customPurple = Color.fromRGBO(155, 3, 63, 1);
-
-  final ImagePicker _picker = ImagePicker();  // Correctement défini maintenant
 
   // Variable pour stocker la photo de profil sélectionnée
   XFile? _profileImage;
@@ -47,7 +46,7 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                 shrinkWrap: true,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
-                childAspectRatio: 2.5, // Pour rendre les cases plus homogènes
+                childAspectRatio: 2.5,
                 children: [
                   _buildPhotoOption("Prendre une photo", _takePhoto),
                   _buildPhotoOption("Choisir dans la photothèque", _chooseFromGallery),
@@ -190,7 +189,7 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                   ),
                 ],
               ),
-              Divider(color: customPurple),  // Barre horizontale customisée
+              Divider(color: customPurple),  // Barre horizontale
 
               // Section "Photo de profil"
               Center(
@@ -215,7 +214,7 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                   ),
                 ),
               ),
-              Divider(color: customPurple),  // Barre horizontale customisée
+              Divider(color: customPurple),  // Barre horizontale
 
               // Section "Autres informations"
               Center(
@@ -300,7 +299,7 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
               ),
               SizedBox(height: 20),
 
-              // Promotion et Adresse mail
+              // Promotion et adresse mail
               Row(
                 children: [
                   Expanded(child: Text("Promotion")),
@@ -348,10 +347,10 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
               ),
               SizedBox(height: 20),
 
-              // Bouton Enregistrer stylisé
+              // Bouton Enregistrer
               Center(
                 child: Container(
-                  width: MediaQuery.of(context).size.width * 0.5, // Réduction des marges
+                  width: MediaQuery.of(context).size.width * 0.5,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
