@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';  // Importation nécessaire pour ImagePicker
+import 'package:file_picker/file_picker.dart';    // Importation nécessaire pour FilePicker
 
 class ProfileEditForm extends StatefulWidget {
   @override
@@ -18,7 +20,9 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
 
   final Color customPurple = Color.fromRGBO(155, 3, 63, 1);
 
-  // Fonction pour afficher le menu de sélection de photo
+  final ImagePicker _picker = ImagePicker();  // Correctement défini maintenant
+
+  // Fonction pour afficher le menu de sélection de photo (remplacée par celle du code 2)
   void _showPhotoOptions() {
     showModalBottomSheet(
       context: context,
@@ -28,25 +32,25 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildPhotoOption("Faire une photo"),
-                  _buildPhotoOption("Choisir dans la photothèque"),
-                ],
+              Text(
+                "Changer la photo de profil",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: customPurple),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+              SizedBox(height: 20),
+              GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 2.5, // Pour rendre les cases plus homogènes
                 children: [
-                  _buildPhotoOption("Choisir un fichier"),
-                  _buildPhotoOption("Alumnis"),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildPhotoOption("Doctorants"),
-                  _buildPhotoOption("Bordeaux INP"),
+                  _buildPhotoOption("Prendre une photo", _takePhoto),
+                  _buildPhotoOption("Choisir dans la photothèque", _chooseFromGallery),
+                  _buildPhotoOption("Choisir un fichier", _chooseFromFile),
+                  _buildPhotoOption("Alumnis", () {}),
+                  _buildPhotoOption("Doctorants", () {}),
+                  _buildPhotoOption("Bordeaux INP", () {}),
                 ],
               ),
               SizedBox(height: 20),
@@ -73,17 +77,52 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
     );
   }
 
-  // Widget pour créer chaque option de photo
-  Widget _buildPhotoOption(String label) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-      decoration: BoxDecoration(
-        border: Border.all(color: customPurple),
-        borderRadius: BorderRadius.circular(5.0),
-        color: Colors.grey.shade300,
+  // Fonction pour créer chaque option de photo
+  Widget _buildPhotoOption(String label, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 16.0),
+        decoration: BoxDecoration(
+          border: Border.all(color: customPurple),
+          borderRadius: BorderRadius.circular(5.0),
+          color: Colors.grey.shade300,
+        ),
+        child: Center(
+          child: Text(label, style: TextStyle(color: customPurple)),
+        ),
       ),
-      child: Text(label, style: TextStyle(color: customPurple)),
     );
+  }
+
+  // Méthode pour prendre une photo avec la caméra
+  Future<void> _takePhoto() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      print("Photo prise: ${pickedFile.path}");
+      // Implémentez le traitement de la photo si nécessaire
+    }
+  }
+
+  // Méthode pour choisir une photo depuis la galerie
+  Future<void> _chooseFromGallery() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      print("Photo choisie depuis la galerie: ${pickedFile.path}");
+      // Implémentez le traitement de la photo si nécessaire
+    }
+  }
+
+  // Méthode pour choisir un fichier image depuis l'explorateur de fichiers
+  Future<void> _chooseFromFile() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+    );
+    if (result != null) {
+      print("Fichier image sélectionné: ${result.files.single.path}");
+      // Implémentez le traitement de l'image si nécessaire
+    }
   }
 
   @override
