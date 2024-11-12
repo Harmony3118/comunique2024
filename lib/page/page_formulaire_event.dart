@@ -16,6 +16,7 @@ class _EventCreationFormState extends State<EventCreationForm> {
   final TextEditingController _objetController = TextEditingController();
   final TextEditingController _organisateurController = TextEditingController();
   final TextEditingController _titreController = TextEditingController();
+  final TextEditingController _lieuController = TextEditingController();
   final TextEditingController _tarifController = TextEditingController();
   final TextEditingController _placesController = TextEditingController();
   final TextEditingController _infosComplementairesController =
@@ -40,6 +41,7 @@ class _EventCreationFormState extends State<EventCreationForm> {
     _objetController.dispose();
     _organisateurController.dispose();
     _titreController.dispose();
+    _lieuController.dispose();
     _tarifController.dispose();
     _placesController.dispose();
     _infosComplementairesController.dispose();
@@ -255,6 +257,7 @@ class _EventCreationFormState extends State<EventCreationForm> {
             ),
             Divider(),
             _buildCenteredTitle("Autres infos"),
+            _buildInputRow("Lieu", _lieuController),
             _buildInputRow("Tarif", _tarifController),
             _buildInputRow("Nombre de places", _placesController),
             Divider(),
