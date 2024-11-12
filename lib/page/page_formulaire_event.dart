@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart'; // Importation du package file_picker pour sélectionner un fichier
+import 'page_navigation.dart';
 import 'page_file_actualite.dart'; // Importation de la page d'actualité
 import 'bdd/event.dart';
 import 'bdd/bdd.dart';
@@ -45,50 +46,52 @@ class _EventCreationFormState extends State<EventCreationForm> {
     _infosComplementairesController.dispose();
     super.dispose();
   }
-/*
+
   // insérer un utilisateur
-  void saveUser() async {
-    if (formKey.currentState!.validate()) {
-      // récupérer l'id de l'utilisateur
-      // récupérer l'id du groupe
-      // récupérer l'id du status (du role)
-      final Event evenement = Event(
-          idUtilisateur: 1,
-          status: 1, // c'est le role
-          idGroupe: 1,
-          objet: _objetController.text,
-          // organisateur ?
-          titre: _titreController.text,
-  // pb avec les types, comment faire la convertion ?
-          // date: String.parse(_selectedDate),
-          // hDebut: _startTime,
-          // hFin: _endTime,
-          // lieu: map['lieu'], //-->  pas de choix du lieu dans le form
-          tarif: double.parse(_tarifController.text),
-          // nb de places
-          commentaire: _infosComplementairesController.text,
-          fichier: _selectedFile,
-          inscription: _inscriptionViaApp);
+  void saveEvent() async {
+    print("ok0");
+    //if (formKey.currentState!.validate()) {
+    print("ok1");
+    // récupérer l'id de l'utilisateur
+    // récupérer l'id du groupe
+    // récupérer l'id du status (du role)
+    final Event evenement = Event(
+        idUtilisateur: 1,
+        status: 1, // c'est le role
+        idGroupe: 1,
+        objet: _objetController.text,
+        // organisateur ?
+        titre: _titreController.text,
+        // pb avec les types, comment faire la convertion ?
+        date: _selectedDate.toString(),
+        hDebut: _startTime.toString(),
+        hFin: _endTime.toString(),
+        lieu: "École", //-->  pas de choix du lieu dans le form
+        tarif: double.parse(_tarifController.text),
+        // nb de places
+        commentaire: _infosComplementairesController.text,
+        fichier: _selectedFile,
+        inscription: _inscriptionViaApp);
 
-      await AppDataBase.instance.insertEvent(evenement);
+    await AppDataBase.instance.insertEvent(evenement);
 
-      // Affiche le message de succès
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Évènement ajouté !")),
-      );
+    // Affiche le message de succès
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Évènement ajouté !")),
+    );
 
-      // Réinitialiser les champs
-      _expediteurController.clear();
-      _roleController.clear();
-      _destinataireController.clear();
-      _objetController.clear();
-      _organisateurController.clear();
-      _titreController.clear();
-      _tarifController.clear();
-      _placesController.clear();
-      _infosComplementairesController.clear();
-    }
-  }*/
+    // Réinitialiser les champs
+    _expediteurController.clear();
+    _roleController.clear();
+    _destinataireController.clear();
+    _objetController.clear();
+    _organisateurController.clear();
+    _titreController.clear();
+    _tarifController.clear();
+    _placesController.clear();
+    _infosComplementairesController.clear();
+    //}
+  }
 
   // Fonction pour sélectionner une date
   Future<void> _selectDate(BuildContext context) async {
@@ -309,8 +312,23 @@ class _EventCreationFormState extends State<EventCreationForm> {
             ),
             // Bouton Publier
             ElevatedButton(
-              onPressed: () {
-                // Implémentation de la publication à faire
+              onPressed: () async {
+                saveEvent();
+
+                // test print
+                final db = await AppDataBase.instance.database;
+                List<Map<String, dynamic>> events = await db.query('event');
+                print("Liste des évènements prévus");
+                print(events);
+                print("Fin de la liste");
+                // fin test
+
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          BasePage(currentIndex: 0, body: FileActualite()),
+                    ));
               },
               child: Text('Publier'),
             ),
