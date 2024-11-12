@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart'; // Importation du package file_pi
 import 'page_file_actualite.dart'; // Importation de la page d'actualité
 import 'bdd/event.dart';
 import 'bdd/bdd.dart';
+import 'package:flutter/services.dart'; // Pour utiliser FilteringTextInputFormatter
 
 class EventCreationForm extends StatefulWidget {
   @override
@@ -161,6 +162,90 @@ class _EventCreationFormState extends State<EventCreationForm> {
     );
   }
 
+  // Widget de saisie pour le champ de tarif (float uniquement)
+  Widget _buildTarifInputRow(String label, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: 150,
+            child: Text(
+              "$label *",
+              style: TextStyle(
+                color: const Color.fromARGB(255, 0, 0, 0),
+                fontSize: 16,
+              ),
+            ),
+          ),
+          SizedBox(width: 20),
+          Expanded(
+            child: TextField(
+              controller: controller,
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')), // Autorise les décimales
+              ],
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.grey[200],
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: const Color.fromRGBO(155, 3, 63, 1)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: const Color.fromRGBO(155, 3, 63, 1)),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Widget de saisie pour le champ de nombre de places (entiers uniquement)
+  Widget _buildPlacesInputRow(String label, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: 150,
+            child: Text(
+              "$label *",
+              style: TextStyle(
+                color: const Color.fromARGB(255, 0, 0, 0),
+                fontSize: 16,
+              ),
+            ),
+          ),
+          SizedBox(width: 20),
+          Expanded(
+            child: TextField(
+              controller: controller,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly, // Autorise uniquement les entiers
+              ],
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.grey[200],
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: const Color.fromRGBO(155, 3, 63, 1)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: const Color.fromRGBO(155, 3, 63, 1)),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   // Widget titre avec ligne horizontale
   Widget _buildCenteredTitle(String title) {
     return Column(
@@ -258,8 +343,8 @@ class _EventCreationFormState extends State<EventCreationForm> {
             Divider(),
             _buildCenteredTitle("Autres infos"),
             _buildInputRow("Lieu", _lieuController),
-            _buildInputRow("Tarif", _tarifController),
-            _buildInputRow("Nombre de places", _placesController),
+            _buildTarifInputRow("Tarif", _tarifController),
+            _buildPlacesInputRow("Nombre de places", _placesController),
             Divider(),
             // Informations complémentaires
             TextField(
