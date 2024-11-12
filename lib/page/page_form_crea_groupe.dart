@@ -364,7 +364,6 @@ class _InfoTexte  extends State<InfoTexte> {
 
 */
 
-
 class FloatingSearchBar extends StatefulWidget {
   @override
   _FloatingSearchBarState createState() => _FloatingSearchBarState();
@@ -372,6 +371,7 @@ class FloatingSearchBar extends StatefulWidget {
 
 class _FloatingSearchBarState extends State<FloatingSearchBar> {
   final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
   OverlayEntry? _overlayEntry;
   List<String> _filteredOptions = [];
   List<String> _allOptions = [
@@ -386,8 +386,21 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+
+    // Listen to focus changes to hide overlay when focus is lost
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus) {
+        _removeOverlay();
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
+    _focusNode.dispose();
     _removeOverlay();
     super.dispose();
   }
@@ -407,28 +420,41 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
     var offset = renderBox.localToGlobal(Offset.zero);
 
     return OverlayEntry(
-      builder: (context) => Positioned(
-        left: offset.dx,
-        top: offset.dy + renderBox.size.height + 5,
-        width: renderBox.size.width,
-        child: Material(
-          elevation: 0.0,
-          child: Container(
-            height: 200,
-            color: Theme.of(context).scaffoldBackgroundColor,
-            child: ListView.builder(
-              itemCount: _filteredOptions.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(_filteredOptions[index]),
-                  onTap: () {
-                    _controller.text = _filteredOptions[index];
-                    _removeOverlay();
-                  },
-                );
-              },
+      builder: (context) => GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          // Remove overlay if tapped outside the dropdown list
+          _removeOverlay();
+          _focusNode.unfocus();
+        },
+        child: Stack(
+          children: [
+            Positioned(
+              left: offset.dx,
+              top: offset.dy + renderBox.size.height + 5,
+              width: renderBox.size.width,
+              child: Material(
+                elevation: 4.0,
+                color: Colors.transparent,
+                child: Container(
+                  height: 200,
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: ListView.builder(
+                    itemCount: _filteredOptions.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(_filteredOptions[index]),
+                        onTap: () {
+                          _controller.text = _filteredOptions[index];
+                          _removeOverlay();
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -440,9 +466,12 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
           .where((option) => option.toLowerCase().contains(text.toLowerCase()))
           .toList();
     });
-    if (_filteredOptions.isNotEmpty && _overlayEntry == null) {
-      _showOverlay();
-    } else if (_filteredOptions.isEmpty) {
+
+    // Show overlay if there are filtered results and text is not empty
+    if (_filteredOptions.isNotEmpty && text.isNotEmpty) {
+      if (_overlayEntry == null) _showOverlay();
+    } else {
+      // Remove overlay if text is cleared or no results
       _removeOverlay();
     }
   }
@@ -457,6 +486,7 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
           widthFactor: 0.98,
           child: TextField(
             controller: _controller,
+            focusNode: _focusNode,
             onChanged: _onTextChanged,
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.symmetric(vertical: 12),
