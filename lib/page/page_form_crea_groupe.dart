@@ -49,7 +49,13 @@ class CreaGroupe extends StatelessWidget {  // j'ai changé a statefull pour pou
 
                 child: FractionallySizedBox(
                   widthFactor: 0.98,
-                  child: FloatingSearchBar(), 
+                  child: FloatingSearchBar(
+                    onItemSelected: (selectedText) {
+                      print("Selected item: $selectedText");
+                      // Perform actions with selectedText if needed
+                      },
+                    
+                  ), 
                 ),
               
             ),
@@ -323,48 +329,14 @@ class WidgetBouton extends StatelessWidget {
   }
 }
 
-/*      À revoir pour recuperer le text
 
-class InfoTexte extends StatefulWidget {
-  @override
-  _InfoTexte createState() => _<InfoTexte();
-}
 
-class _InfoTexte  extends State<InfoTexte> {
-  final TextEditingController _nomDuGroupeController = TextEditingController();
-  final TextEditingController _diffusionDinfoController = TextEditingController();
-
-  void _retrieveText() {
-    String entreNomDuGroupe = _nomDuGroupeController.text;
-    String entreDiffusionDinfo = _diffusionDinfoController.text;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        InfoTexte(
-          hintText: "Enter text here",
-          controller: _nomDuGroupeController,
-        ),
-        ElevatedButton(
-          onPressed: _retrieveText,
-          child: Text("Retrieve Text"),
-        ),
-      ],
-    );
-  }
-
-  @override
-  void dispose() {
-    _nomDuGroupeController.dispose();
-    super.dispose();
-  }
-}
-
-*/
 
 class FloatingSearchBar extends StatefulWidget {
+  final Function(String)? onItemSelected;
+
+  const FloatingSearchBar({Key? key, this.onItemSelected}) : super(key: key);
+
   @override
   _FloatingSearchBarState createState() => _FloatingSearchBarState();
 }
@@ -374,7 +346,7 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
   final FocusNode _focusNode = FocusNode();
   OverlayEntry? _overlayEntry;
   List<String> _filteredOptions = [];
-  List<String> _allOptions = [
+  final List<String> _allOptions = [
     'Bob Rose',
     'Alice Pasrugeux',
     'Justin Time',
@@ -388,8 +360,6 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
   @override
   void initState() {
     super.initState();
-
-    // Listen to focus changes to hide overlay when focus is lost
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus) {
         _removeOverlay();
@@ -406,6 +376,9 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
   }
 
   void _showOverlay() {
+    if (_overlayEntry != null) {
+      _removeOverlay();
+    }
     _overlayEntry = _createOverlayEntry();
     Overlay.of(context).insert(_overlayEntry!);
   }
@@ -420,41 +393,33 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
     var offset = renderBox.localToGlobal(Offset.zero);
 
     return OverlayEntry(
-      builder: (context) => GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          // Remove overlay if tapped outside the dropdown list
-          _removeOverlay();
-          _focusNode.unfocus();
-        },
-        child: Stack(
-          children: [
-            Positioned(
-              left: offset.dx,
-              top: offset.dy + renderBox.size.height + 5,
-              width: renderBox.size.width,
-              child: Material(
-                elevation: 4.0,
-                color: Colors.transparent,
-                child: Container(
-                  height: 200,
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  child: ListView.builder(
-                    itemCount: _filteredOptions.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(_filteredOptions[index]),
-                        onTap: () {
-                          _controller.text = _filteredOptions[index];
-                          _removeOverlay();
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ),
+      builder: (context) => Positioned(
+        left: offset.dx,
+        top: offset.dy + renderBox.size.height + 5,
+        width: renderBox.size.width,
+        child: Material(
+          elevation: 4.0,
+          child: Container(
+            height: 200,
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child: ListView.builder(
+              itemCount: _filteredOptions.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(_filteredOptions[index]),
+                  onTap: () {
+                    _controller.text = _filteredOptions[index];
+                    widget.onItemSelected?.call(_filteredOptions[index]);
+                    _removeOverlay();
+                    setState(() {
+                      _filteredOptions.clear();
+                    });
+                    _focusNode.unfocus();
+                  },
+                );
+              },
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -467,11 +432,9 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
           .toList();
     });
 
-    // Show overlay if there are filtered results and text is not empty
     if (_filteredOptions.isNotEmpty && text.isNotEmpty) {
-      if (_overlayEntry == null) _showOverlay();
+      _showOverlay();
     } else {
-      // Remove overlay if text is cleared or no results
       _removeOverlay();
     }
   }
@@ -480,38 +443,32 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
-      child: SizedBox(
-        height: 40,
-        child: FractionallySizedBox(
-          widthFactor: 0.98,
-          child: TextField(
-            controller: _controller,
-            focusNode: _focusNode,
-            onChanged: _onTextChanged,
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(vertical: 12),
-              enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  color: Color.fromARGB(255, 100, 3, 42),
-                  width: 2.0,
-                ),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  color: Color.fromARGB(255, 100, 3, 42),
-                  width: 2.0,
-                ),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              prefixIcon: const Icon(
-                Icons.search,
-                color: Color.fromARGB(255, 100, 3, 42),
-              ),
-              filled: true,
-              fillColor: const Color(0xFFD9D9D9),
+      child: TextField(
+        controller: _controller,
+        focusNode: _focusNode,
+        onChanged: _onTextChanged,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(vertical: 12),
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(
+              color: Color.fromARGB(255, 100, 3, 42),
+              width: 2.0,
             ),
+            borderRadius: BorderRadius.circular(10.0),
           ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(
+              color: Color.fromARGB(255, 100, 3, 42),
+              width: 2.0,
+            ),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          prefixIcon: const Icon(
+            Icons.search,
+            color: Color.fromARGB(255, 100, 3, 42),
+          ),
+          filled: true,
+          fillColor: const Color(0xFFD9D9D9),
         ),
       ),
     );
