@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart'; // Importation du package file_picker pour sélectionner un fichier
 import 'page_file_actualite.dart'; // Importation de la page d'actualité
+import 'package:flutter/services.dart'; // Pour utiliser FilteringTextInputFormatter
 import 'bdd/event.dart';
 import 'bdd/bdd.dart';
-import 'package:flutter/services.dart'; // Pour utiliser FilteringTextInputFormatter
 
 class EventCreationForm extends StatefulWidget {
   @override
@@ -142,7 +142,7 @@ class _EventCreationFormState extends State<EventCreationForm> {
           ),
           SizedBox(width: 20),
           Expanded(
-            child: TextField(
+            child: TextFormField(
               controller: controller,
               decoration: InputDecoration(
                 filled: true,
@@ -174,28 +174,34 @@ class _EventCreationFormState extends State<EventCreationForm> {
             width: 150,
             child: Text(
               "$label *",
-              style: TextStyle(
-                color: const Color.fromARGB(255, 0, 0, 0),
-                fontSize: 16,
-              ),
+              style: TextStyle(color: Colors.black, fontSize: 16),
             ),
           ),
           SizedBox(width: 20),
           Expanded(
-            child: TextField(
+            child: TextFormField(
               controller: controller,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')), // Autorise les décimales
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
               ],
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Veuillez entrer un tarif';
+                }
+                if (double.tryParse(value) == null || double.parse(value) <= 0) {
+                  return 'Veuillez entrer un tarif valide';
+                }
+                return null;
+              },
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.grey[200],
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: const Color.fromRGBO(155, 3, 63, 1)),
+                  borderSide: BorderSide(color: Color.fromRGBO(155, 3, 63, 1)),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: const Color.fromRGBO(155, 3, 63, 1)),
+                  borderSide: BorderSide(color: Color.fromRGBO(155, 3, 63, 1)),
                 ),
               ),
             ),
@@ -224,7 +230,7 @@ class _EventCreationFormState extends State<EventCreationForm> {
           ),
           SizedBox(width: 20),
           Expanded(
-            child: TextField(
+            child: TextFormField(
               controller: controller,
               keyboardType: TextInputType.number,
               inputFormatters: [
@@ -348,7 +354,7 @@ class _EventCreationFormState extends State<EventCreationForm> {
             _buildPlacesInputRow("Nombre de places", _placesController),
             Divider(),
             // Informations complémentaires
-            TextField(
+            TextFormField(
               controller: _infosComplementairesController,
               maxLines: 4,
               decoration: InputDecoration(
@@ -403,11 +409,15 @@ class _EventCreationFormState extends State<EventCreationForm> {
             if (_inscriptionViaHelloAsso)
               _buildInputRow("Lien Hello Asso", _helloAssoLinkController),
             // Bouton Publier
-            ElevatedButton(
-              onPressed: () {
-                // Implémentation de la publication à faire
-              },
-              child: Text('Publier'),
+              ElevatedButton(
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Évènement ajouté !")),
+                    );
+                  }
+                },
+                child: Text('Publier'),
             ),
           ],
         ),
