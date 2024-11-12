@@ -46,18 +46,15 @@ class CreaGroupe extends StatelessWidget {  // j'ai changé a statefull pour pou
             // Champ de recherche avec TextField
             Padding(
               padding: const EdgeInsets.fromLTRB(20.0, 5, 20.0, 0.0),
-
-                child: FractionallySizedBox(
-                  widthFactor: 0.98,
-                  child: FloatingSearchBar(
-                    onItemSelected: (selectedText) {
-                      print("Selected item: $selectedText");
-                      // Perform actions with selectedText if needed
-                      },
-                    
-                  ), 
+              child: FractionallySizedBox(
+                widthFactor: 0.98,
+                child: FloatingSearchBar(
+                  onItemSelected: (selectedText) {
+                    print("Selected participant: $selectedText");
+                    // Handle selected participant if needed
+                  },
                 ),
-              
+              ),
             ),
 // on enleve ce qui est en dessous car c'est mtn dans la class AutocompletExample car sinon les widgets en dessous cachent la liste des options
             // Divider pour séparer les sections
@@ -343,8 +340,6 @@ class FloatingSearchBar extends StatefulWidget {
 
 class _FloatingSearchBarState extends State<FloatingSearchBar> {
   final TextEditingController _controller = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
-  OverlayEntry? _overlayEntry;
   List<String> _filteredOptions = [];
   final List<String> _allOptions = [
     'Bob Rose',
@@ -357,52 +352,60 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
     'Charlie Quide',
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    _focusNode.addListener(() {
-      if (!_focusNode.hasFocus) {
-        _removeOverlay();
-      }
+  void _onTextChanged(String text) {
+    setState(() {
+      _filteredOptions = _allOptions
+          .where((option) => option.toLowerCase().contains(text.toLowerCase()))
+          .toList();
     });
   }
 
   @override
-  void dispose() {
-    _controller.dispose();
-    _focusNode.dispose();
-    _removeOverlay();
-    super.dispose();
-  }
-
-  void _showOverlay() {
-    if (_overlayEntry != null) {
-      _removeOverlay();
-    }
-    _overlayEntry = _createOverlayEntry();
-    Overlay.of(context).insert(_overlayEntry!);
-  }
-
-  void _removeOverlay() {
-    _overlayEntry?.remove();
-    _overlayEntry = null;
-  }
-
-  OverlayEntry _createOverlayEntry() {
-    RenderBox renderBox = context.findRenderObject() as RenderBox;
-    var offset = renderBox.localToGlobal(Offset.zero);
-
-    return OverlayEntry(
-      builder: (context) => Positioned(
-        left: offset.dx,
-        top: offset.dy + renderBox.size.height + 5,
-        width: renderBox.size.width,
-        child: Material(
-          elevation: 4.0,
-          child: Container(
-            height: 200,
-            color: Theme.of(context).scaffoldBackgroundColor,
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          controller: _controller,
+          onChanged: _onTextChanged,
+          decoration: InputDecoration(
+            contentPadding: const EdgeInsets.symmetric(vertical: 12),
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color: Color.fromARGB(255, 100, 3, 42),
+                width: 2.0,
+              ),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color: Color.fromARGB(255, 100, 3, 42),
+                width: 2.0,
+              ),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            prefixIcon: const Icon(
+              Icons.search,
+              color: Color.fromARGB(255, 100, 3, 42),
+            ),
+            filled: true,
+            fillColor: const Color(0xFFD9D9D9),
+          ),
+        ),
+        const SizedBox(height: 5),
+        // Display dropdown options if there are filtered options
+        if (_filteredOptions.isNotEmpty)
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: Color.fromARGB(255, 100, 3, 42)),
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            constraints: BoxConstraints(
+              maxHeight: 200, // Limit the height of the dropdown
+            ),
             child: ListView.builder(
+              shrinkWrap: true,
               itemCount: _filteredOptions.length,
               itemBuilder: (context, index) {
                 return ListTile(
@@ -410,67 +413,15 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
                   onTap: () {
                     _controller.text = _filteredOptions[index];
                     widget.onItemSelected?.call(_filteredOptions[index]);
-                    _removeOverlay();
                     setState(() {
-                      _filteredOptions.clear();
+                      _filteredOptions.clear(); // Clear the dropdown
                     });
-                    _focusNode.unfocus();
                   },
                 );
               },
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  void _onTextChanged(String text) {
-    setState(() {
-      _filteredOptions = _allOptions
-          .where((option) => option.toLowerCase().contains(text.toLowerCase()))
-          .toList();
-    });
-
-    if (_filteredOptions.isNotEmpty && text.isNotEmpty) {
-      _showOverlay();
-    } else {
-      _removeOverlay();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: TextField(
-        controller: _controller,
-        focusNode: _focusNode,
-        onChanged: _onTextChanged,
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(vertical: 12),
-          enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: Color.fromARGB(255, 100, 3, 42),
-              width: 2.0,
-            ),
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: Color.fromARGB(255, 100, 3, 42),
-              width: 2.0,
-            ),
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          prefixIcon: const Icon(
-            Icons.search,
-            color: Color.fromARGB(255, 100, 3, 42),
-          ),
-          filled: true,
-          fillColor: const Color(0xFFD9D9D9),
-        ),
-      ),
+      ],
     );
   }
 }
