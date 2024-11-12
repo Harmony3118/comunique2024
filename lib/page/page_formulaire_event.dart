@@ -20,8 +20,8 @@ class _EventCreationFormState extends State<EventCreationForm> {
   final TextEditingController _lieuController = TextEditingController();
   final TextEditingController _tarifController = TextEditingController();
   final TextEditingController _placesController = TextEditingController();
-  final TextEditingController _infosComplementairesController =
-      TextEditingController();
+  final TextEditingController _infosComplementairesController = TextEditingController();
+  final TextEditingController _helloAssoLinkController = TextEditingController();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -46,6 +46,7 @@ class _EventCreationFormState extends State<EventCreationForm> {
     _tarifController.dispose();
     _placesController.dispose();
     _infosComplementairesController.dispose();
+    _helloAssoLinkController.dispose();
     super.dispose();
   }
 /*
@@ -392,9 +393,15 @@ class _EventCreationFormState extends State<EventCreationForm> {
               onChanged: (bool? value) {
                 setState(() {
                   _inscriptionViaHelloAsso = value!;
+                  if (!_inscriptionViaHelloAsso) {
+                    _helloAssoLinkController.clear(); // Réinitialise le champ si décoché
+                  }
                 });
               },
             ),
+            // Champ pour le lien Hello Asso qui apparaît uniquement si la case est cochée
+            if (_inscriptionViaHelloAsso)
+              _buildInputRow("Lien Hello Asso", _helloAssoLinkController),
             // Bouton Publier
             ElevatedButton(
               onPressed: () {
