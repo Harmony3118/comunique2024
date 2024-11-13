@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart'; // Importation du package file_picker pour sélectionner un fichier
-import 'page_file_actualite.dart'; // Importation de la page d'actualité
+import 'package:flutter/services.dart'; // Pour utiliser FilteringTextInputFormatter
+import 'page_ajout.dart'; // Pour la redirection en arrière
 import 'bdd/event.dart';
 import 'bdd/bdd.dart';
 
@@ -16,10 +17,11 @@ class _EventCreationFormState extends State<EventCreationForm> {
   final TextEditingController _objetController = TextEditingController();
   final TextEditingController _organisateurController = TextEditingController();
   final TextEditingController _titreController = TextEditingController();
+  final TextEditingController _lieuController = TextEditingController();
   final TextEditingController _tarifController = TextEditingController();
   final TextEditingController _placesController = TextEditingController();
-  final TextEditingController _infosComplementairesController =
-      TextEditingController();
+  final TextEditingController _infosComplementairesController = TextEditingController();
+  final TextEditingController _helloAssoLinkController = TextEditingController();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -31,6 +33,15 @@ class _EventCreationFormState extends State<EventCreationForm> {
   // on fera plus tard
   String? _selectedFile;
 
+  String? _selectedRole;
+  String? _selectedDestinataire;
+  String? _selectedOrganisateur;
+
+  // Listes pour les rôles, destinataires et organisateurs (actuellement vides)
+  final List<String> _roles = []; // Ajouter les options nécessaires plus tard
+  final List<String> _destinataires = []; // Ajouter les options nécessaires plus tard
+  final List<String> _organisateurs = []; // Ajouter les options nécessaires plus tard
+
   @override
   void dispose() {
     // libère les controlleurs : qu'est ce que c'est ?
@@ -40,9 +51,11 @@ class _EventCreationFormState extends State<EventCreationForm> {
     _objetController.dispose();
     _organisateurController.dispose();
     _titreController.dispose();
+    _lieuController.dispose();
     _tarifController.dispose();
     _placesController.dispose();
     _infosComplementairesController.dispose();
+    _helloAssoLinkController.dispose();
     super.dispose();
   }
 /*
@@ -138,7 +151,7 @@ class _EventCreationFormState extends State<EventCreationForm> {
           ),
           SizedBox(width: 20),
           Expanded(
-            child: TextField(
+            child: TextFormField(
               controller: controller,
               decoration: InputDecoration(
                 filled: true,
@@ -150,6 +163,96 @@ class _EventCreationFormState extends State<EventCreationForm> {
                 focusedBorder: OutlineInputBorder(
                   borderSide:
                       BorderSide(color: const Color.fromRGBO(155, 3, 63, 1)),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Widget de saisie pour le champ de tarif (float uniquement)
+  Widget _buildTarifInputRow(String label, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: 150,
+            child: Text(
+              "$label *",
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+          ),
+          SizedBox(width: 20),
+          Expanded(
+            child: TextFormField(
+              controller: controller,
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+              ],
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Veuillez entrer un tarif';
+                }
+                if (double.tryParse(value) == null || double.parse(value) <= 0) {
+                  return 'Veuillez entrer un tarif valide';
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.grey[200],
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color.fromRGBO(155, 3, 63, 1)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color.fromRGBO(155, 3, 63, 1)),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Widget de saisie pour le champ de nombre de places (entiers uniquement)
+  Widget _buildPlacesInputRow(String label, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: 150,
+            child: Text(
+              "$label *",
+              style: TextStyle(
+                color: const Color.fromARGB(255, 0, 0, 0),
+                fontSize: 16,
+              ),
+            ),
+          ),
+          SizedBox(width: 20),
+          Expanded(
+            child: TextFormField(
+              controller: controller,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly, // Autorise uniquement les entiers
+              ],
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.grey[200],
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: const Color.fromRGBO(155, 3, 63, 1)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: const Color.fromRGBO(155, 3, 63, 1)),
                 ),
               ),
             ),
@@ -171,6 +274,58 @@ class _EventCreationFormState extends State<EventCreationForm> {
         ),
         Divider(color: Colors.grey, thickness: 1),
       ],
+    );
+  }
+
+  // Fonction de création d'un widget DropdownButtonFormField pour un champ
+  Widget _buildDropdownRow(String label, String? selectedValue, List<String> items, ValueChanged<String?> onChanged) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: 150,
+            child: Text(
+              "$label *",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+              ),
+            ),
+          ),
+          SizedBox(width: 20),
+          Expanded(
+            child: DropdownButtonFormField<String>(
+              value: selectedValue,
+              items: items.isEmpty
+                  ? [
+                      DropdownMenuItem(
+                        value: null,
+                        child: Text('Aucune option'),
+                      )
+                    ]
+                  : items.map((item) {
+                      return DropdownMenuItem(
+                        value: item,
+                        child: Text(item),
+                      );
+                    }).toList(),
+              onChanged: onChanged,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.grey[200],
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color.fromRGBO(155, 3, 63, 1)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color.fromRGBO(155, 3, 63, 1)),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -204,7 +359,7 @@ class _EventCreationFormState extends State<EventCreationForm> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              FileActualite()), // Redirection vers page_file_actualite.dart
+                              AjoutPage()), // Redirection vers page_file_actualite.dart
                     );
                   },
                 ),
@@ -213,12 +368,24 @@ class _EventCreationFormState extends State<EventCreationForm> {
             SizedBox(height: 20),
             _buildCenteredTitle("Nouvelle publication"),
             _buildInputRow("Expéditeur", _expediteurController),
-            _buildInputRow("Rôle", _roleController),
-            _buildInputRow("Destinataire", _destinataireController),
+            _buildDropdownRow("Rôle", _selectedRole, _roles, (newValue) {
+              setState(() {
+                _selectedRole = newValue;
+              });
+            }),
+            _buildDropdownRow("Destinataire", _selectedDestinataire, _destinataires, (newValue) {
+              setState(() {
+                _selectedDestinataire = newValue;
+              });
+            }),
             _buildInputRow("Objet", _objetController),
             Divider(),
             _buildCenteredTitle("Contenu"),
-            _buildInputRow("Organisateur", _organisateurController),
+            _buildDropdownRow("Organisateur", _selectedOrganisateur, _organisateurs, (newValue) {
+              setState(() {
+                _selectedOrganisateur = newValue;
+              });
+            }),
             _buildInputRow("Titre de l'info", _titreController),
             // Choisir la date
             ListTile(
@@ -255,11 +422,12 @@ class _EventCreationFormState extends State<EventCreationForm> {
             ),
             Divider(),
             _buildCenteredTitle("Autres infos"),
-            _buildInputRow("Tarif", _tarifController),
-            _buildInputRow("Nombre de places", _placesController),
+            _buildInputRow("Lieu", _lieuController),
+            _buildTarifInputRow("Tarif", _tarifController),
+            _buildPlacesInputRow("Nombre de places", _placesController),
             Divider(),
             // Informations complémentaires
-            TextField(
+            TextFormField(
               controller: _infosComplementairesController,
               maxLines: 4,
               decoration: InputDecoration(
@@ -304,15 +472,25 @@ class _EventCreationFormState extends State<EventCreationForm> {
               onChanged: (bool? value) {
                 setState(() {
                   _inscriptionViaHelloAsso = value!;
+                  if (!_inscriptionViaHelloAsso) {
+                    _helloAssoLinkController.clear(); // Réinitialise le champ si décoché
+                  }
                 });
               },
             ),
+            // Champ pour le lien Hello Asso qui apparaît uniquement si la case est cochée
+            if (_inscriptionViaHelloAsso)
+              _buildInputRow("Lien Hello Asso", _helloAssoLinkController),
             // Bouton Publier
-            ElevatedButton(
-              onPressed: () {
-                // Implémentation de la publication à faire
-              },
-              child: Text('Publier'),
+              ElevatedButton(
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Évènement ajouté !")),
+                    );
+                  }
+                },
+                child: Text('Publier'),
             ),
           ],
         ),
