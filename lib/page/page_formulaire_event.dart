@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart'; // Importation du package file_picker pour sélectionner un fichier
-import 'page_file_actualite.dart'; // Importation de la page d'actualité
 import 'package:flutter/services.dart'; // Pour utiliser FilteringTextInputFormatter
+import 'page_ajout.dart'; // Pour la redirection en arrière
 import 'bdd/event.dart';
 import 'bdd/bdd.dart';
 
@@ -32,6 +32,15 @@ class _EventCreationFormState extends State<EventCreationForm> {
   bool _inscriptionViaHelloAsso = false;
   // on fera plus tard
   String? _selectedFile;
+
+  String? _selectedRole;
+  String? _selectedDestinataire;
+  String? _selectedOrganisateur;
+
+  // Listes pour les rôles, destinataires et organisateurs (actuellement vides)
+  final List<String> _roles = []; // Ajouter les options nécessaires plus tard
+  final List<String> _destinataires = []; // Ajouter les options nécessaires plus tard
+  final List<String> _organisateurs = []; // Ajouter les options nécessaires plus tard
 
   @override
   void dispose() {
@@ -268,6 +277,58 @@ class _EventCreationFormState extends State<EventCreationForm> {
     );
   }
 
+  // Fonction de création d'un widget DropdownButtonFormField pour un champ
+  Widget _buildDropdownRow(String label, String? selectedValue, List<String> items, ValueChanged<String?> onChanged) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: 150,
+            child: Text(
+              "$label *",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+              ),
+            ),
+          ),
+          SizedBox(width: 20),
+          Expanded(
+            child: DropdownButtonFormField<String>(
+              value: selectedValue,
+              items: items.isEmpty
+                  ? [
+                      DropdownMenuItem(
+                        value: null,
+                        child: Text('Aucune option'),
+                      )
+                    ]
+                  : items.map((item) {
+                      return DropdownMenuItem(
+                        value: item,
+                        child: Text(item),
+                      );
+                    }).toList(),
+              onChanged: onChanged,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.grey[200],
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color.fromRGBO(155, 3, 63, 1)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color.fromRGBO(155, 3, 63, 1)),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   // Fonction pour sélectionner un fichier
   Future<void> _selectFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -298,7 +359,7 @@ class _EventCreationFormState extends State<EventCreationForm> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              FileActualite()), // Redirection vers page_file_actualite.dart
+                              AjoutPage()), // Redirection vers page_file_actualite.dart
                     );
                   },
                 ),
@@ -307,12 +368,24 @@ class _EventCreationFormState extends State<EventCreationForm> {
             SizedBox(height: 20),
             _buildCenteredTitle("Nouvelle publication"),
             _buildInputRow("Expéditeur", _expediteurController),
-            _buildInputRow("Rôle", _roleController),
-            _buildInputRow("Destinataire", _destinataireController),
+            _buildDropdownRow("Rôle", _selectedRole, _roles, (newValue) {
+              setState(() {
+                _selectedRole = newValue;
+              });
+            }),
+            _buildDropdownRow("Destinataire", _selectedDestinataire, _destinataires, (newValue) {
+              setState(() {
+                _selectedDestinataire = newValue;
+              });
+            }),
             _buildInputRow("Objet", _objetController),
             Divider(),
             _buildCenteredTitle("Contenu"),
-            _buildInputRow("Organisateur", _organisateurController),
+            _buildDropdownRow("Organisateur", _selectedOrganisateur, _organisateurs, (newValue) {
+              setState(() {
+                _selectedOrganisateur = newValue;
+              });
+            }),
             _buildInputRow("Titre de l'info", _titreController),
             // Choisir la date
             ListTile(
