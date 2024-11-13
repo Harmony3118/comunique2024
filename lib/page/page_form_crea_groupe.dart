@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:multiple_search_selection/multiple_search_selection.dart';
 // il faut importer le package du widget bouton 
 class CreaGroupe extends StatelessWidget {  // j'ai changé a statefull pour pouvoir utiliser la class _LesInfosDesText
   @override
@@ -48,12 +49,7 @@ class CreaGroupe extends StatelessWidget {  // j'ai changé a statefull pour pou
               padding: const EdgeInsets.fromLTRB(20.0, 5, 20.0, 0.0),
               child: FractionallySizedBox(
                 widthFactor: 0.98,
-                child: FloatingSearchBar(
-                  onItemSelected: (selectedText) {
-                    print("Selected participant: $selectedText");
-                    // Handle selected participant if needed
-                  },
-                ),
+                child: CustomMultipleSearch(),
               ),
             ),
 // on enleve ce qui est en dessous car c'est mtn dans la class AutocompletExample car sinon les widgets en dessous cachent la liste des options
@@ -327,21 +323,8 @@ class WidgetBouton extends StatelessWidget {
 }
 
 
-
-
-class FloatingSearchBar extends StatefulWidget {
-  final Function(String)? onItemSelected;
-
-  const FloatingSearchBar({Key? key, this.onItemSelected}) : super(key: key);
-
-  @override
-  _FloatingSearchBarState createState() => _FloatingSearchBarState();
-}
-
-class _FloatingSearchBarState extends State<FloatingSearchBar> {
-  final TextEditingController _controller = TextEditingController();
-  List<String> _filteredOptions = [];
-  final List<String> _allOptions = [
+class CustomMultipleSearch extends StatelessWidget {
+  final List<String> options = [
     'Bob Rose',
     'Alice Pasrugeux',
     'Justin Time',
@@ -352,76 +335,56 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
     'Charlie Quide',
   ];
 
-  void _onTextChanged(String text) {
-    setState(() {
-      _filteredOptions = _allOptions
-          .where((option) => option.toLowerCase().contains(text.toLowerCase()))
-          .toList();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextField(
-          controller: _controller,
-          onChanged: _onTextChanged,
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(vertical: 12),
-            enabledBorder: OutlineInputBorder(
-              borderSide: const BorderSide(
-                color: Color.fromARGB(255, 100, 3, 42),
-                width: 2.0,
-              ),
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(
-                color: Color.fromARGB(255, 100, 3, 42),
-                width: 2.0,
-              ),
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            prefixIcon: const Icon(
-              Icons.search,
-              color: Color.fromARGB(255, 100, 3, 42),
-            ),
-            filled: true,
-            fillColor: const Color(0xFFD9D9D9),
-          ),
+    return MultipleSearchSelection<String>(
+      items: options,
+      fieldToCheck: (item) => item,
+      
+      // Custom appearance for the search field and selected chips
+      chipLabel: (item) => item,
+      chipBackgroundColor: Colors.grey[200],
+      chipDeleteIcon: Icon(Icons.close, size: 18),
+      
+      // Custom list tile appearance for each dropdown item
+      itemBuilder: (context, item, isSelected) {
+        return ListTile(
+          title: Text(item),
+          trailing: isSelected ? Icon(Icons.check, color: Colors.blue) : null,
+        );
+      },
+
+      // Custom styling for the search input
+      searchHintText: 'Search...',
+      searchDecoration: InputDecoration(
+        prefixIcon: Icon(Icons.search, color: Colors.blueAccent),
+        contentPadding: EdgeInsets.symmetric(vertical: 10.0),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Color.fromARGB(255, 100, 3, 42), width: 2.0),
+          borderRadius: BorderRadius.circular(10.0),
         ),
-        const SizedBox(height: 5),
-        // Display dropdown options if there are filtered options
-        if (_filteredOptions.isNotEmpty)
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Color.fromARGB(255, 100, 3, 42)),
-              borderRadius: BorderRadius.circular(5.0),
-            ),
-            constraints: BoxConstraints(
-              maxHeight: 200, // Limit the height of the dropdown
-            ),
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: _filteredOptions.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(_filteredOptions[index]),
-                  onTap: () {
-                    _controller.text = _filteredOptions[index];
-                    widget.onItemSelected?.call(_filteredOptions[index]);
-                    setState(() {
-                      _filteredOptions.clear(); // Clear the dropdown
-                    });
-                  },
-                );
-              },
-            ),
-          ),
-      ],
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Color.fromARGB(255, 100, 3, 42), width: 2.0),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        filled: true,
+        fillColor: Color(0xFFD9D9D9),
+      ),
+
+      // Enable dynamic searching and clearing options
+      showSearchBar: true,
+      caseSensitiveSearch: false,
+      showClearAllButton: true,
+      clearAllButtonDecoration: BoxDecoration(
+        color: Colors.blueAccent,
+        borderRadius: BorderRadius.circular(5.0),
+      ),
+      clearAllButtonStyle: TextStyle(color: Colors.white),
+
+      // Handle selection events
+      onItemSelected: (selectedItems) {
+        print("Selected items: $selectedItems");
+      },
     );
   }
 }
