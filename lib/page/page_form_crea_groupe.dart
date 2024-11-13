@@ -339,37 +339,44 @@ class CustomMultipleSearch extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultipleSearchSelection<String>(
       items: options,
-      fieldToCheck: (item) => item,
+      fieldToCheck: (item) => item, // specifies what to search/filter by
       
-      // Custom appearance for the search field and selected chips
-      chipLabel: (item) => item,
-      chipBackgroundColor: Colors.grey[200],
-      chipDeleteIcon: Icon(Icons.close, size: 18),
+      // Defines the search field
+      searchField: TextField(
+        decoration: InputDecoration(
+          hintText: 'Search...',
+          prefixIcon: Icon(Icons.search, color: Colors.blueAccent),
+          contentPadding: EdgeInsets.symmetric(vertical: 10.0),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color.fromARGB(255, 100, 3, 42), width: 2.0),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color.fromARGB(255, 100, 3, 42), width: 2.0),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          filled: true,
+          fillColor: Color(0xFFD9D9D9),
+        ),
+      ),
       
-      // Custom list tile appearance for each dropdown item
+      // Displays selected items
+      pickedItemBuilder: (context, item, onDelete) {
+        return Chip(
+          label: Text(item),
+          backgroundColor: Colors.grey[200],
+          deleteIcon: Icon(Icons.close, size: 18),
+          onDeleted: onDelete, // handles deletion when chip is tapped
+        );
+      },
+
+      // Custom list tile for each option
       itemBuilder: (context, item, isSelected) {
         return ListTile(
           title: Text(item),
           trailing: isSelected ? Icon(Icons.check, color: Colors.blue) : null,
         );
       },
-
-      // Custom styling for the search input
-      searchHintText: 'Search...',
-      searchDecoration: InputDecoration(
-        prefixIcon: Icon(Icons.search, color: Colors.blueAccent),
-        contentPadding: EdgeInsets.symmetric(vertical: 10.0),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color.fromARGB(255, 100, 3, 42), width: 2.0),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color.fromARGB(255, 100, 3, 42), width: 2.0),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        filled: true,
-        fillColor: Color(0xFFD9D9D9),
-      ),
 
       // Enable dynamic searching and clearing options
       showSearchBar: true,
