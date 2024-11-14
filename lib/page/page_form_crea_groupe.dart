@@ -322,7 +322,6 @@ class WidgetBouton extends StatelessWidget {
   }
 }
 
-
 class CustomMultipleSearch extends StatelessWidget {
   final List<String> options = [
     'Bob Rose',
@@ -339,13 +338,11 @@ class CustomMultipleSearch extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultipleSearchSelection<String>(
       items: options,
-      fieldToCheck: (item) => item, // specifies what to search/filter by
-      
-      // Defines the search field
+      fieldToCheck: (item) => item, // Specify the field used for searching
       searchField: TextField(
         decoration: InputDecoration(
-          hintText: 'Search...',
-          prefixIcon: Icon(Icons.search, color: Colors.blueAccent),
+          hintText: 'Participants...',
+          prefixIcon: Icon(Icons.search, color: Color.fromARGB(255, 100, 3, 42)),
           contentPadding: EdgeInsets.symmetric(vertical: 10.0),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Color.fromARGB(255, 100, 3, 42), width: 2.0),
@@ -360,38 +357,32 @@ class CustomMultipleSearch extends StatelessWidget {
         ),
       ),
       
-      // Displays selected items
-      pickedItemBuilder: (context, item, onDelete) {
-        return Chip(
-          label: Text(item),
-          backgroundColor: Colors.grey[200],
-          deleteIcon: Icon(Icons.close, size: 18),
-          onDeleted: onDelete, // handles deletion when chip is tapped
-        );
-      },
-
-      // Custom list tile for each option
+      // Builds each picked item as a Chip (single parameter as required by the package)
+      pickedItemBuilder: (item) => Chip(
+        label: Text(item),
+        backgroundColor: Colors.grey[200],
+        deleteIcon: Icon(Icons.close, size: 18),
+        onDeleted: () {
+          // Optional: Implement deletion logic here if needed
+        },
+      ),
+      
+      // Custom list tile for each option in the list
       itemBuilder: (context, item, isSelected) {
         return ListTile(
-          title: Text(item),
-          trailing: isSelected ? Icon(Icons.check, color: Colors.blue) : null,
+          title: Text(item.toString()), // Ensures item is converted to String if needed
+          trailing: isSelected ? Icon(Icons.check, color: Color.fromARGB(255, 100, 3, 42)) : null,
         );
       },
 
-      // Enable dynamic searching and clearing options
-      showSearchBar: true,
-      caseSensitiveSearch: false,
-      showClearAllButton: true,
-      clearAllButtonDecoration: BoxDecoration(
-        color: Colors.blueAccent,
-        borderRadius: BorderRadius.circular(5.0),
-      ),
-      clearAllButtonStyle: TextStyle(color: Colors.white),
 
-      // Handle selection events
-      onItemSelected: (selectedItems) {
+      // Additional configuration
+      onPickedChange: (selectedItems) {
         print("Selected items: $selectedItems");
       },
+      itemsVisibility: ShowedItemsVisibility.alwaysOn,
+      fuzzySearch: FuzzySearch.jaro, // Optional fuzzy search algorithm
+      showSelectAllButton: true,
     );
   }
 }
