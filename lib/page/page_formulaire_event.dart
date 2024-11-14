@@ -60,7 +60,7 @@ class _EventCreationFormState extends State<EventCreationForm> {
         status: 1, // c'est le role
         idGroupe: 1,
         objet: _objetController.text,
-        // organisateur ?
+        idOrganisateur:, 
         titre: _titreController.text,
         // pb avec les types, comment faire la convertion ?
         date: _selectedDate.toString(),
@@ -71,7 +71,9 @@ class _EventCreationFormState extends State<EventCreationForm> {
         // nb de places
         commentaire: _infosComplementairesController.text,
         fichier: _selectedFile,
-        inscription: _inscriptionViaApp);
+        inscriptionAppli: _inscriptionViaApp,
+        inscriptionHelloAsso: _inscriptionViaApp,
+        );
 
     await AppDataBase.instance.insertEvent(evenement);
 
