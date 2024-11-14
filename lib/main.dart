@@ -81,18 +81,23 @@ class MyApp extends StatelessWidget {
       //   currentIndex: 0,
       //   body: FileActualite(),
 
+      
+
       home: const PageConnection(),
-      // home: Scaffold(
+       //home: Scaffold(
       //   appBar: Header(),
       //   body: AnnuairePage(),
       //   bottomNavigationBar: Footer(),
       // ),
-/*
-      home: Scaffold(
-        appBar: Header(),
-        body: AnnuairePage(),
-        bottomNavigationBar: Footer(),
-      ),*/
+
     );
   }
 }
+       
+
+      // home: BasePage(
+      //   // test
+      //   currentIndex: 0,
+      //   body: const PageConnection(),
+      // ),
+
