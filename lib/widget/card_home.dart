@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:typed_data';
 
 class CardHome extends StatefulWidget {
   final String office;
@@ -7,7 +8,7 @@ class CardHome extends StatefulWidget {
   final String eventDate;
   final String eventTime;
   final String eventLocation;
-  final String imageUrl;
+  final Uint8List? imageData;
   final Color color;
 
   const CardHome({
@@ -18,7 +19,7 @@ class CardHome extends StatefulWidget {
     required this.eventDate,
     required this.eventTime,
     required this.eventLocation,
-    required this.imageUrl,
+    this.imageData,
     required this.color,
   }) : super(key: key);
 
@@ -119,8 +120,13 @@ class _CardHomeState extends State<CardHome> {
                           .min, // Ensures the avatar and text take up minimum space
                       children: [
                         CircleAvatar(
-                          backgroundImage: NetworkImage(widget.imageUrl),
+                          // backgroundImage: NetworkImage(widget.imageUrl),
                           radius: 25.0,
+                          backgroundImage: widget.imageData != null
+                              ? MemoryImage(widget.imageData as Uint8List)
+                              : null,
+                          // child: widget.imageData == null ? Text(${widget.office[0].toUpperCase()}${widget.office.split(' ')[1][0].toUpperCase()}',
+                          // style: TextStyle(fontSize: 20.0, color: Colors.white),)
                         ),
                         const SizedBox(width: 8.0),
                         Container(

@@ -35,11 +35,11 @@ class AppDataBase {
       onCreate: (db, version) async {
         // Création des tables si elles n'existent pas encore
         await db.execute(
-            "CREATE TABLE utilisateur (idUtilisateur INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT, prenom TEXT, email TEXT, promotion INTEGER)");
+            "CREATE TABLE utilisateur (idUtilisateur INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT, prenom TEXT, email TEXT, promotion INTEGER, image BLOB)");
         await db.execute(
             "CREATE TABLE role (idRole INTEGER PRIMARY KEY AUTOINCREMENT, nomRole TEXT)");
         await db.execute(
-            "CREATE TABLE organisation (idOrga INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT)");
+            "CREATE TABLE organisation (idOrga INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT, image BLOB)");
         await db.execute(
             "CREATE TABLE statuts (idUtilisateur INTEGER, idOrganisation INTEGER, idRole INTEGER, annee INTEGER, PRIMARY KEY (idUtilisateur, idOrganisation, idRole), FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur), FOREIGN KEY (idOrganisation) REFERENCES organisation(idOrga), FOREIGN KEY (idRole) REFERENCES role(idRole))");
         await db.execute(
