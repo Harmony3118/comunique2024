@@ -1,12 +1,47 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:multiple_search_selection/multiple_search_selection.dart';
 // il faut importer le package du widget bouton 
-class CreaGroupe extends StatelessWidget {  // j'ai changé a statefull pour pouvoir utiliser la class _LesInfosDesText
+
+class CreaGroupe extends StatefulWidget {
+  @override
+  _CreaGroupeState createState() => _CreaGroupeState();
+}
+
+class _CreaGroupeState extends State<CreaGroupe> {
+  final TextEditingController groupNameController = TextEditingController();
+  final TextEditingController secondFieldController = TextEditingController();
+  DateTime? selectedDate;
+  List<String> selectedParticipants = [];
+
+  void createGroup() {
+    final groupName = groupNameController.text.trim();
+    final secondField = secondFieldController.text.trim();
+
+    if (groupName.isEmpty || selectedParticipants.isEmpty || selectedDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please fill all required fields.')),
+      );
+      return;
+    }
+
+    final groupData = {
+      'groupName': groupName,
+      'secondField': secondField,
+      'date': selectedDate?.toIso8601String(),
+      'participants': selectedParticipants,
+    };
+
+    print("Group Data: $groupData");
+    // Send `groupData` to your external database
+    // Example: sendToDatabase(groupData);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-
         child: Column(
           children: [
             Row(
@@ -19,95 +54,79 @@ class CreaGroupe extends StatelessWidget {  // j'ai changé a statefull pour pou
                 const Text(
                   "Nouveau groupe de diffusion",
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                  //FontWeight(400),
                 ),
               ],
             ),
-
-            // faire un truc pour que quand on appui dessus ca nous envoie en arrière
-
-            const Divider(
-              thickness: 1,
-              color: Colors.black,
-            ),
-
+            const Divider(thickness: 1, color: Colors.black),
             const TitresTextes(text: "Nom du groupe *"),
-
             PetiteBoite(
-              hintText: "", // on veut pas d'inscription en particulier 
-              onChanged: (text) {
-                // fonction pour ramasser les inscription 
-              },
+              controller: groupNameController,
+              hintText: "",
             ),
-
             const Diviseur(),
-
             const TitresTextes(text: "Participants *"),
-            
-            // Champ de recherche avec TextField
             Padding(
               padding: const EdgeInsets.fromLTRB(20.0, 5, 20.0, 0.0),
               child: FractionallySizedBox(
                 widthFactor: 0.98,
-                child: CustomMultipleSearch(),
+                child: CustomMultipleSearch(
+                  onSelectionChanged: (selectedItems) {
+                    setState(() {
+                      selectedParticipants = selectedItems;
+                    });
+                  },
+                ),
               ),
             ),
-// on enleve ce qui est en dessous car c'est mtn dans la class AutocompletExample car sinon les widgets en dessous cachent la liste des options
-            // Divider pour séparer les sections
             const Diviseur(),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                  padding:  EdgeInsets.fromLTRB( MediaQuery.of(context).size.width * 0.1, 1.5,0.0, 1.5), //bidouille car le calendrier juste après faisait que je ne pouvais pas utiliser la class TitresText
-                  child: const Text("Date de fin du groupe *",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.left,
+                  padding: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width * 0.1,
+                    1.5,
+                    0.0,
+                    1.5,
+                  ),
+                  child: const Text(
+                    "Date de fin du groupe *",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.left,
                   ),
                 ),
-                // calendrier 
                 Flexible(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: CalendarIcon(
-                      onDateSelected: (selectedDate) {
-                        // Use the selected date here
+                      onDateSelected: (pickedDate) {
+                        setState(() {
+                          selectedDate = pickedDate;
+                        });
                       },
                     ),
                   ),
                 ),
               ],
             ),
-
-
-            // Ajouter un bouton ou un widget pour sélectionner une date
             const Padding(
               padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10), // Removed the extra const keyword
-              child: TitresTextes(text: "Nom du groupe *"), // Removed the extra const keyword
+              child: TitresTextes(text: "Diffuson d'infos *"), // Removed the extra const keyword
             ),
             PetiteBoite(
-              hintText: "", // on veut pas d'inscription en particulier 
-              onChanged: (text) {
-                // fonction pour ramasser les inscription 
-              },
+              controller: secondFieldController,
+              hintText: "",
             ),
-            // rajouter un petit snackbar apres le bouton créer 
             Padding(
               padding: const EdgeInsets.fromLTRB(100.0, 10, 0.0, 0),
               child: WidgetBouton(
-                typeBouton: 3, // Set the button type
-                texte: 'Créer', // Text to display on the button
-                maFonction: () {
-                  // Define the action on button press
-                  // faire la fonction qui renvoie à une page confirmant la creation du groupe
-                },
+                typeBouton: 3,
+                texte: 'Créer',
+                maFonction: createGroup,
               ),
             ),
-            
           ],
         ),
-        
       ),
     );
   }
@@ -322,6 +341,8 @@ class WidgetBouton extends StatelessWidget {
   }
 }
 
+
+
 class CustomMultipleSearch extends StatelessWidget {
   final List<String> options = [
     'Bob Rose',
@@ -334,11 +355,15 @@ class CustomMultipleSearch extends StatelessWidget {
     'Charlie Quide',
   ];
 
+  final Function(List<String>)? onSelectionChanged;
+
+  CustomMultipleSearch({this.onSelectionChanged});
+
   @override
   Widget build(BuildContext context) {
     return MultipleSearchSelection<String>(
       items: options,
-      fieldToCheck: (item) => item, // Specify the field used for searching
+      fieldToCheck: (item) => item,
       searchField: TextField(
         decoration: InputDecoration(
           hintText: 'Participants...',
@@ -356,32 +381,31 @@ class CustomMultipleSearch extends StatelessWidget {
           fillColor: Color(0xFFD9D9D9),
         ),
       ),
-      
-      // Builds each picked item as a Chip (single parameter as required by the package)
       pickedItemBuilder: (item) => Chip(
         label: Text(item),
         backgroundColor: Colors.grey[200],
         deleteIcon: Icon(Icons.close, size: 18),
         onDeleted: () {
-          // Optional: Implement deletion logic here if needed
+          // Handle the removal of the chip
         },
       ),
-      
-      // Custom list tile for each option in the list
       itemBuilder: (context, item, isSelected) {
+        assert(item is String, 'Item must be a String');
         return ListTile(
-          title: Text(item.toString()), // Ensures item is converted to String if needed
-          trailing: isSelected ? Icon(Icons.check, color: Color.fromARGB(255, 100, 3, 42)) : null,
+          title: Text(
+            item as String,
+            overflow: TextOverflow.ellipsis, // Prevent long text overflow
+          ),
+          trailing: isSelected
+              ? Icon(Icons.check, color: Color.fromARGB(255, 100, 3, 42))
+              : null,
         );
       },
-
-
-      // Additional configuration
       onPickedChange: (selectedItems) {
-        print("Selected items: $selectedItems");
+        onSelectionChanged?.call(selectedItems);
       },
       itemsVisibility: ShowedItemsVisibility.alwaysOn,
-      fuzzySearch: FuzzySearch.jaro, // Optional fuzzy search algorithm
+      fuzzySearch: FuzzySearch.jaro,
       showSelectAllButton: true,
     );
   }
