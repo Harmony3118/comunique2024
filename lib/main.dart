@@ -81,12 +81,11 @@ class MyApp extends StatelessWidget {
       //   currentIndex: 0,
       //   body: FileActualite(),
 
-      
-
+    
       home: const PageConnection(),
-       //home: Scaffold(
+      // home: Scaffold(
       //   appBar: Header(),
-      //   body: AnnuairePage(),
+      // body: PageConnection(),
       //   bottomNavigationBar: Footer(),
       // ),
 
