@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart'; // Importation du package file_picker pour sélectionner un fichier
-import 'page_navigation.dart';
 import 'package:flutter/services.dart'; // Pour utiliser FilteringTextInputFormatter
 import 'page_ajout.dart'; // Pour la redirection en arrière
+import 'page_navigation.dart';
+import 'page_file_actualite.dart';
 import 'bdd/event.dart';
 import 'bdd/bdd.dart';
 
