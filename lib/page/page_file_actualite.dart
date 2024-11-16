@@ -6,33 +6,6 @@ import 'bdd/event.dart';
 import 'bdd/role.dart';
 import 'bdd/bdd.dart';
 
-// Classe modèle pour un événement
-class Event {
-  final String office;
-  final String role;
-  final String eventTitle;
-  final String eventDate;
-  final String eventTime;
-  final String eventLocation;
-  final String imageUrl;
-  final Color color;
-  bool isPinned;
-
-  Event({
-    required this.office,
-    required this.role,
-    required this.eventTitle,
-    required this.eventDate,
-    required this.eventTime,
-    required this.eventLocation,
-    required this.imageUrl,
-    required this.color,
-    this.isPinned = false,
-  });
-
-
-}
-
 class FileActualite extends StatefulWidget {
   @override
   _FileActualiteState createState() => _FileActualiteState();
@@ -43,37 +16,40 @@ class _FileActualiteState extends State<FileActualite> {
   bool isPinFilterActive = false;
 
 // Liste statique d'événements
-  final List<Event> events = [
-    Event(
-      office: "JE",
-      role: "Présidente i2c",
-      eventTitle: 'Formation i2c',
-      eventDate: 'Le jeudi 16 novembre 2023',
-      eventTime: 'De 12h30 à 14h',
-      eventLocation: 'Salle S103',
-      imageUrl: 'https://via.placeholder.com/150',
-      color: const Color.fromRGBO(187, 208, 143, 0.71),
-    ),
-    Event(
-      office: "BDS",
-      role: "Respo WES",
-      eventTitle: 'WES',
-      eventDate: 'Du 12 au 14 janvier 2024',
-      eventTime: '',
-      eventLocation: 'Station Pas de la Case, Andorre',
-      imageUrl: 'https://via.placeholder.com/150',
-      color: const Color.fromRGBO(167, 222, 219, 0.71),
-    ),
-    Event(
-      office: "BDA",
-      role: "Club musique",
-      eventTitle: 'Répétition',
-      eventDate: 'Le mardi 21 septembre 2023',
-      eventTime: 'De 12h30 à 13h30',
-      eventLocation: 'Salle S103',
-      imageUrl: 'https://via.placeholder.com/150',
-      color: const Color.fromRGBO(245, 233, 171, 0.71),
-    ),
+  final List<Map<String, dynamic>> events = [
+    {
+      "office": "JE",
+      "role": "Présidente i2c",
+      "eventTitle": 'Formation i2c',
+      "eventDate": 'Le jeudi 16 novembre 2023',
+      "eventTime": 'De 12h30 à 14h',
+      "eventLocation": 'Salle S103',
+      "imageUrl": 'https://via.placeholder.com/150',
+      "color": const Color.fromRGBO(187, 208, 143, 0.71),
+      "isPinned" : false,
+    },
+    {
+      "office": "BDS",
+      "role": "Respo WES",
+      "eventTitle": 'WES',
+      "eventDate": 'Du 12 au 14 janvier 2024',
+      "eventTime": '',
+      "eventLocation": 'Station Pas de la Case, Andorre',
+      "imageUrl": 'https://via.placeholder.com/150',
+      "color": const Color.fromRGBO(167, 222, 219, 0.71),
+      "isPinned" : false,
+    },
+    {
+      "office": "BDA",
+      "role": "Club musique",
+      "eventTitle": 'Répétition',
+      "eventDate": 'Le mardi 21 septembre 2023',
+      "eventTime": 'De 12h30 à 13h30',
+      "eventLocation": 'Salle S103',
+      "imageUrl": 'https://via.placeholder.com/150',
+      "color": const Color.fromRGBO(245, 233, 171, 0.71),
+      "isPinned" : false,
+    },
   ];
 
   // Fonction de mise à jour des filtres
@@ -92,16 +68,19 @@ class _FileActualiteState extends State<FileActualite> {
   @override
   Widget build(BuildContext context) {
     // Filtrer les événements en fonction des filtres actifs et du filtre épingle
-    List<Event> filteredEvents = events;
+    List<Map<String, dynamic>> filteredEvents = events;
 
     // Appliquer les filtres par office
     if (activeFilters.isNotEmpty) {
-      filteredEvents = filteredEvents.where((event) => activeFilters.contains(event.office)).toList();
+      filteredEvents = filteredEvents
+          .where((event) => activeFilters.contains(event["office"]))
+          .toList();
     }
 
     // Appliquer le filtre épingle si actif
     if (isPinFilterActive) {
-      filteredEvents = filteredEvents.where((event) => event.isPinned).toList();
+      filteredEvents =
+          filteredEvents.where((event) => event["isPinned"] == true).toList();
     }
 
     return SafeArea(
@@ -113,25 +92,25 @@ class _FileActualiteState extends State<FileActualite> {
               onFilterChanged: _onFilterChanged,
               isPinFilterActive: isPinFilterActive,
               onPinFilterToggle: _togglePinFilter,
-          ),
+            ),
           ),
           Expanded(
             child: ListView(
               children: filteredEvents.map((event) {
                 return CardHome(
-                  office: event.office,
-                  role: event.role,
-                  eventTitle: event.eventTitle,
-                  eventDate: event.eventDate,
-                  eventTime: event.eventTime,
-                  eventLocation: event.eventLocation,
-                  imageUrl: event.imageUrl,
-                  color: event.color,
+                  office: event["office"],
+                  role: event["role"],
+                  eventTitle: event["eventTitle"],
+                  eventDate: event["eventDate"],
+                  eventTime: event["eventTime"],
+                  eventLocation: event["eventLocation"],
+                  imageUrl: event["imageUrl"],
+                  color: event["color"],
                   // Gérer l'état de l'épingle pour chaque carte
-                  isPinned: event.isPinned,
+                  isPinned: event["isPinned"],
                   onPinToggle: () {
                     setState(() {
-                      event.isPinned = !event.isPinned;
+                      event["isPinned"] = !event["isPinned"];
                     });
                   },
                 );
