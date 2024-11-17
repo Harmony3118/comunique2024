@@ -67,16 +67,18 @@ class _CreaGroupeState extends State<CreaGroupe> {
             const TitresTextes(text: "Participants *"),
             Padding(
               padding: const EdgeInsets.fromLTRB(20.0, 5, 20.0, 0.0),
-              child: FractionallySizedBox(
-                widthFactor: 0.98,
-                child: CustomMultipleSearch(
-                  onSelectionChanged: (selectedItems) {
-                    setState(() {
-                      selectedParticipants = selectedItems;
-                    });
-                  },
-                ),
-              ),
+              //child: FractionallySizedBox(
+              //  widthFactor: 0.98,
+                //child: Flexible (
+                child:MultiSelectSearchBar(
+                        onSelectionChanged: (selectedItems) {
+                          setState(() {
+                            selectedParticipants = selectedItems;
+                          });
+                        },
+                      ),
+               // ),
+             // ),
             ),
             const Diviseur(),
             Row(
@@ -342,7 +344,172 @@ class WidgetBouton extends StatelessWidget {
 }
 
 
+class MultiSelectSearchBar extends StatefulWidget {
+  final Function(List<String>) onSelectionChanged;
 
+  MultiSelectSearchBar({required this.onSelectionChanged});
+
+  @override
+  _MultiSelectSearchBarState createState() => _MultiSelectSearchBarState();
+}
+
+class _MultiSelectSearchBarState extends State<MultiSelectSearchBar> {
+  final List<String> allOptions = [
+    'Apple',
+    'Banana',
+    'Cherry',
+    'Date',
+    'Elderberry',
+    'Fig',
+    'Grapes',
+    'Honeydew',
+  ];
+
+  final List<String> selectedOptions = [];
+  final TextEditingController searchController = TextEditingController();
+  final FocusNode searchFocusNode = FocusNode();
+
+  List<String> filteredOptions = [];
+  OverlayEntry? dropdownOverlay;
+
+  @override
+  void initState() {
+    super.initState();
+
+    searchController.addListener(() {
+      filterOptions(searchController.text);
+    });
+
+    searchFocusNode.addListener(() {
+      if (searchFocusNode.hasFocus) {
+        showDropdown();
+      } else {
+        hideDropdown();
+      }
+    });
+  }
+
+  void filterOptions(String input) {
+    setState(() {
+      filteredOptions = allOptions
+          .where((option) =>
+              option.toLowerCase().contains(input.toLowerCase()) &&
+              !selectedOptions.contains(option))
+          .toList();
+    });
+    if (filteredOptions.isNotEmpty) {
+      showDropdown();
+    } else {
+      hideDropdown();
+    }
+  }
+
+  void addSelectedOption(String option) {
+    setState(() {
+      selectedOptions.add(option);
+      searchController.clear();
+      filterOptions(''); // Refilter to update options
+    });
+    widget.onSelectionChanged(selectedOptions);
+  }
+
+  void removeSelectedOption(String option) {
+    setState(() {
+      selectedOptions.remove(option);
+    });
+    widget.onSelectionChanged(selectedOptions);
+  }
+
+  void showDropdown() {
+    if (dropdownOverlay != null) return;
+
+    final overlay = Overlay.of(context);
+    final renderBox = context.findRenderObject() as RenderBox;
+    final offset = renderBox.localToGlobal(Offset.zero);
+
+    dropdownOverlay = OverlayEntry(
+      builder: (context) => Positioned(
+        left: offset.dx,
+        top: offset.dy + renderBox.size.height,
+        width: renderBox.size.width,
+        child: Material(
+          elevation: 4,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: 200),
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: filteredOptions.length,
+              itemBuilder: (context, index) {
+                final option = filteredOptions[index];
+                return ListTile(
+                  title: Text(option),
+                  onTap: () {
+                    addSelectedOption(option);
+                    hideDropdown();
+                  },
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+
+    overlay?.insert(dropdownOverlay!);
+  }
+
+  void hideDropdown() {
+    dropdownOverlay?.remove();
+    dropdownOverlay = null;
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    searchFocusNode.dispose();
+    hideDropdown();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Wrap(
+            spacing: 8.0,
+            runSpacing: 8.0,
+            children: selectedOptions.map((option) {
+              return Chip(
+                label: Text(option),
+                deleteIcon: Icon(Icons.close),
+                onDeleted: () => removeSelectedOption(option),
+              );
+            }).toList(),
+          ),
+          SizedBox(height: 8.0),
+          TextField(
+            controller: searchController,
+            focusNode: searchFocusNode,
+            decoration: InputDecoration(
+              labelText: 'Search',
+              border: OutlineInputBorder(),
+              suffixIcon: Icon(Icons.search),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+/*
 class CustomMultipleSearch extends StatelessWidget {
   final List<String> options = [
     'Bob Rose',
@@ -410,3 +577,4 @@ class CustomMultipleSearch extends StatelessWidget {
     );
   }
 }
+*/
