@@ -4,7 +4,7 @@ import 'package:gsheets/gsheets.dart';
 const _clientId = '270875634573-cmpg059hdoja3dddtk444apgmu9uodkn.apps.googleusercontent.com';
 const _clientSecret = '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';
 
-
+ 
 class UserSheetApi {
   static const _credentials = r'''{
   "type": "service_account",
@@ -89,7 +89,7 @@ class UserRegistration {
     );
     await UserSheetApi.insert([user.toJson()]);
   }
-}
+} 
 
 // pour appliquer la page sur le bouton on l'appelle ainsi :
 // onPressed: () async {
