@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 
 
 class _HomePageState extends State<HomePage> {
-  int _currentIndex = 0;
+  int _currentIndex = 0; // mettre le racourcis vers la base de données
   final List<Widget Function(Function(int))> _pages = [
     (onPageChanged) => MoisView(onPageChanged: onPageChanged),
     (onPageChanged) => SemaineView(onPageChanged: onPageChanged),
@@ -63,7 +63,7 @@ class _MoisViewState extends State<MoisView> {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: [ 
 
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -85,7 +85,6 @@ class _MoisViewState extends State<MoisView> {
                 child: Text('semaine', style: TextStyle(color: Colors.white),),
               ),
               SizedBox(width: 10),
-              
               
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
