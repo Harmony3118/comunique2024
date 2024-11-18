@@ -22,8 +22,10 @@ class _EventCreationFormState extends State<EventCreationForm> {
   final TextEditingController _lieuController = TextEditingController();
   final TextEditingController _tarifController = TextEditingController();
   final TextEditingController _placesController = TextEditingController();
-  final TextEditingController _infosComplementairesController = TextEditingController();
-  final TextEditingController _helloAssoLinkController = TextEditingController();
+  final TextEditingController _infosComplementairesController =
+      TextEditingController();
+  final TextEditingController _helloAssoLinkController =
+      TextEditingController();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -41,8 +43,10 @@ class _EventCreationFormState extends State<EventCreationForm> {
 
   // Listes pour les rôles, destinataires et organisateurs (actuellement vides)
   final List<String> _roles = []; // Ajouter les options nécessaires plus tard
-  final List<String> _destinataires = []; // Ajouter les options nécessaires plus tard
-  final List<String> _organisateurs = []; // Ajouter les options nécessaires plus tard
+  final List<String> _destinataires =
+      []; // Ajouter les options nécessaires plus tard
+  final List<String> _organisateurs =
+      []; // Ajouter les options nécessaires plus tard
 
   @override
   void dispose() {
@@ -70,24 +74,24 @@ class _EventCreationFormState extends State<EventCreationForm> {
       // récupérer l'id du groupe
       // récupérer l'id du status (du role)
       final Event evenement = Event(
-          idUtilisateur: 1,
-          status: 1, // c'est le role
-          idGroupe: 1,
-          objet: _objetController.text,
-          idOrganisateur:, 
-          titre: _titreController.text,
-          // pb avec les types, comment faire la convertion ?
-          date: _selectedDate.toString(),
-          hDebut: _startTime.toString(),
-          hFin: _endTime.toString(),
-          lieu: "École", //-->  pas de choix du lieu dans le form
-          tarif: double.parse(_tarifController.text),
-          // nb de places
-          commentaire: _infosComplementairesController.text,
-          fichier: _selectedFile,
-          inscriptionAppli: _inscriptionViaApp,
-          inscriptionHelloAsso: _inscriptionViaApp,
-          );
+        idUtilisateur: 1,
+        status: 1, // c'est le role
+        idGroupe: 1,
+        objet: _objetController.text,
+        idOrganisation: 1,
+        titre: _titreController.text,
+        // pb avec les types, comment faire la convertion ?
+        date: _selectedDate.toString(),
+        hDebut: _startTime.toString(),
+        hFin: _endTime.toString(),
+        lieu: "École", //-->  pas de choix du lieu dans le form
+        tarif: double.parse(_tarifController.text),
+        // nb de places
+        commentaire: _infosComplementairesController.text,
+        fichier: _selectedFile,
+        inscriptionAppli: _inscriptionViaApp,
+        inscriptionHelloAsso: _inscriptionViaApp,
+      );
 
       await AppDataBase.instance.insertEvent(evenement);
 
@@ -204,7 +208,8 @@ class _EventCreationFormState extends State<EventCreationForm> {
                 if (value == null || value.isEmpty) {
                   return 'Veuillez entrer un tarif';
                 }
-                if (double.tryParse(value) == null || double.parse(value) <= 0) {
+                if (double.tryParse(value) == null ||
+                    double.parse(value) <= 0) {
                   return 'Veuillez entrer un tarif valide';
                 }
                 return null;
@@ -249,16 +254,19 @@ class _EventCreationFormState extends State<EventCreationForm> {
               controller: controller,
               keyboardType: TextInputType.number,
               inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly, // Autorise uniquement les entiers
+                FilteringTextInputFormatter
+                    .digitsOnly, // Autorise uniquement les entiers
               ],
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.grey[200],
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: const Color.fromRGBO(155, 3, 63, 1)),
+                  borderSide:
+                      BorderSide(color: const Color.fromRGBO(155, 3, 63, 1)),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: const Color.fromRGBO(155, 3, 63, 1)),
+                  borderSide:
+                      BorderSide(color: const Color.fromRGBO(155, 3, 63, 1)),
                 ),
               ),
             ),
@@ -284,7 +292,8 @@ class _EventCreationFormState extends State<EventCreationForm> {
   }
 
   // Fonction de création d'un widget DropdownButtonFormField pour un champ
-  Widget _buildDropdownRow(String label, String? selectedValue, List<String> items, ValueChanged<String?> onChanged) {
+  Widget _buildDropdownRow(String label, String? selectedValue,
+      List<String> items, ValueChanged<String?> onChanged) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
@@ -379,7 +388,9 @@ class _EventCreationFormState extends State<EventCreationForm> {
                 _selectedRole = newValue;
               });
             }),
-            _buildDropdownRow("Destinataire", _selectedDestinataire, _destinataires, (newValue) {
+            _buildDropdownRow(
+                "Destinataire", _selectedDestinataire, _destinataires,
+                (newValue) {
               setState(() {
                 _selectedDestinataire = newValue;
               });
@@ -387,7 +398,9 @@ class _EventCreationFormState extends State<EventCreationForm> {
             _buildInputRow("Objet", _objetController),
             Divider(),
             _buildCenteredTitle("Contenu"),
-            _buildDropdownRow("Organisateur", _selectedOrganisateur, _organisateurs, (newValue) {
+            _buildDropdownRow(
+                "Organisateur", _selectedOrganisateur, _organisateurs,
+                (newValue) {
               setState(() {
                 _selectedOrganisateur = newValue;
               });
@@ -479,7 +492,8 @@ class _EventCreationFormState extends State<EventCreationForm> {
                 setState(() {
                   _inscriptionViaHelloAsso = value!;
                   if (!_inscriptionViaHelloAsso) {
-                    _helloAssoLinkController.clear(); // Réinitialise le champ si décoché
+                    _helloAssoLinkController
+                        .clear(); // Réinitialise le champ si décoché
                   }
                 });
               },

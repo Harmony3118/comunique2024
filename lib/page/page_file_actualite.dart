@@ -26,7 +26,7 @@ class _FileActualiteState extends State<FileActualite> {
       "eventLocation": 'Salle S103',
       "imageUrl": 'https://via.placeholder.com/150',
       "color": const Color.fromRGBO(187, 208, 143, 0.71),
-      "isPinned" : false,
+      "isPinned": false,
     },
     {
       "office": "BDS",
@@ -37,7 +37,7 @@ class _FileActualiteState extends State<FileActualite> {
       "eventLocation": 'Station Pas de la Case, Andorre',
       "imageUrl": 'https://via.placeholder.com/150',
       "color": const Color.fromRGBO(167, 222, 219, 0.71),
-      "isPinned" : false,
+      "isPinned": false,
     },
     {
       "office": "BDA",
@@ -48,7 +48,7 @@ class _FileActualiteState extends State<FileActualite> {
       "eventLocation": 'Salle S103',
       "imageUrl": 'https://via.placeholder.com/150',
       "color": const Color.fromRGBO(245, 233, 171, 0.71),
-      "isPinned" : false,
+      "isPinned": false,
     },
   ];
 
@@ -104,7 +104,7 @@ class _FileActualiteState extends State<FileActualite> {
                   eventDate: event["eventDate"],
                   eventTime: event["eventTime"],
                   eventLocation: event["eventLocation"],
-                  imageUrl: event["imageUrl"],
+                  imageData: event["imageUrl"],
                   color: event["color"],
                   // Gérer l'état de l'épingle pour chaque carte
                   isPinned: event["isPinned"],
@@ -122,25 +122,6 @@ class _FileActualiteState extends State<FileActualite> {
     );
   }
 
-
-      // informations de e : 
-          // e.commentaire
-          // e.date
-          // e.fichier
-          // e.hDebut
-          // e.hFin
-          // e.idGroupe
-          // e.idPost
-          // e.idUtilisateur
-          // e.idOrganisation   vv
-          // e.inscription
-          // e.lieu
-          // e.objet
-          // e.tarif
-          // e.status           vv
-          // e.titre            vv
-          //
-          // what about organisateur ?
   void afficherListEvents() async {
     final db = await AppDataBase.instance.database;
     final List<Map<String, dynamic>> maps = await db.query('utilisateur');
@@ -148,22 +129,35 @@ class _FileActualiteState extends State<FileActualite> {
       return Event.fromMap(maps[i]);
     });
 
-    for(Event e in evenements) {
-      List<Map<String, dynamic>> map1 = await db.query("Organisation", where: "idOrga = ?", whereArgs: [e.idOrganisation]);
+    for (Event e in evenements) {
+      List<Map<String, dynamic>> map1 = await db.query("Organisation",
+          where: "idOrga = ?", whereArgs: [e.idOrganisation]);
       Organisation o = Organisation.fromMap(map1[1]);
-      List<Map<String, dynamic>> map2 = await db.query("role", where: "idRole = ?", whereArgs: [e.status]);
+      List<Map<String, dynamic>> map2 =
+          await db.query("role", where: "idRole = ?", whereArgs: [e.status]);
       Role r = Role.fromMap(map2[1]);
+      bool b = false;
+      // List<Map<String, dynamic>> inscription = await db.query("inscription", where: "idUtilisateur = ?");
       CardHome(
         office: o.nom,
         role: r.nomRole,
         eventTitle: e.titre,
-        //eventDate: 'Le jeudi 16 novembre 2023',
-        eventDate: e.date,
+        eventDate: e.date, //eventDate: 'Le jeudi 16 novembre 2023',
         eventTime: 'De${e.hDebut} à ${e.hFin}',
         eventLocation: e.lieu,
         imageData: o.imageData,
-        color: Color.fromRGBO(187, 208, 143, 0.71),
-      ),
+        color: Color.fromRGBO(187, 208, 143,
+            0.71), // il faut modifier ça, afficher la bonne couleur pour chaque organisation
+        // Gérer l'état de l'épingle pour chaque carte
+        isPinned:
+            b, // a ajouter, /!\ ne pas rajouter cela dans event mais dans la table inscription
+        onPinToggle: () {
+          setState(() {
+            b = !b;
+            // modifier aussi la table inscription (vérif valeur vérité)
+          });
+        },
+      );
     }
   }
 }
