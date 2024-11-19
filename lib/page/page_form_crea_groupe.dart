@@ -1,8 +1,16 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:multiple_search_selection/multiple_search_selection.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:multiple_search_selection/multiple_search_selection.dart'; //a enlever eventuellement aussi sur le pubspec
 // il faut importer le package du widget bouton 
+
+final List<MultiSelectItem<String>> items = [
+  MultiSelectItem("Option1", "Option 1"),
+  MultiSelectItem("Option2", "Option 2"),
+  MultiSelectItem("Option3", "Option 3"),
+  MultiSelectItem("Option4", "Option 4"),
+];
 
 class CreaGroupe extends StatefulWidget {
   @override
@@ -42,6 +50,7 @@ class _CreaGroupeState extends State<CreaGroupe> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
+        child: SingleChildScrollView(
         child: Column(
           children: [
             Row(
@@ -67,18 +76,39 @@ class _CreaGroupeState extends State<CreaGroupe> {
             const TitresTextes(text: "Participants *"),
             Padding(
               padding: const EdgeInsets.fromLTRB(20.0, 5, 20.0, 0.0),
-              //child: FractionallySizedBox(
-              //  widthFactor: 0.98,
-                //child: Flexible (
-                child:MultiSelectSearchBar(
-                        onSelectionChanged: (selectedItems) {
-                          setState(() {
-                            selectedParticipants = selectedItems;
-                          });
-                        },
-                      ),
-               // ),
-             // ),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: 400, // Set a reasonable max height
+                ),
+                child: MultiSelectDialogField(
+                  items: [
+                    MultiSelectItem("Option1", "Option 1"),
+                    MultiSelectItem("Option2", "Essai 2"),
+                    MultiSelectItem("Option3", "Option 3"),
+                    MultiSelectItem("Option4", "Option 4"),
+                  ],
+                  title: Text(""),
+                  initialValue: selectedParticipants,
+                  searchable: true,
+                  buttonText: const Text(
+                    "Sélectionnez les Participants",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  onConfirm: (values) {
+                    setState(() {
+                      selectedParticipants = values.cast<String>();
+                    });
+                  },
+                  chipDisplay: MultiSelectChipDisplay(
+                    items: selectedParticipants.map((e) => MultiSelectItem(e, e)).toList(),
+                    onTap: (item) {
+                      setState(() {
+                        selectedParticipants.remove(item); // Deselect on tap
+                      });
+                    },
+                  ),
+                ),
+               ),
             ),
             const Diviseur(),
             Row(
@@ -129,6 +159,7 @@ class _CreaGroupeState extends State<CreaGroupe> {
             ),
           ],
         ),
+      ),
       ),
     );
   }
@@ -578,3 +609,54 @@ class CustomMultipleSearch extends StatelessWidget {
   }
 }
 */
+
+
+class MultiSelectSearchPage extends StatefulWidget {
+  final Function(List<String>) onSelectionChanged;
+
+  const MultiSelectSearchPage({required this.onSelectionChanged, Key? key})
+      : super(key: key);
+
+  @override
+  _MultiSelectSearchPageState createState() => _MultiSelectSearchPageState();
+}
+
+class _MultiSelectSearchPageState extends State<MultiSelectSearchPage> {
+  final List<MultiSelectItem<String>> _items = [
+    MultiSelectItem("Option1", "Option 1"),
+    MultiSelectItem("Option2", "Option 2"),
+    MultiSelectItem("Option3", "Option 3"),
+    MultiSelectItem("Option4", "Option 4"),
+  ];
+
+  List<String> _selectedItems = [];
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiSelectDialogField(
+      items: _items,
+      title: Text("Select Options"),
+      searchable: true,
+      buttonText: Text("Select Items"),
+      initialValue: _selectedItems, // Retains previously selected items
+      onConfirm: (values) {
+        setState(() {
+          _selectedItems = values.cast<String>();
+        });
+
+        // Notify the parent widget of changes
+        widget.onSelectionChanged(_selectedItems);
+      },
+      chipDisplay: MultiSelectChipDisplay(
+        onTap: (item) {
+          setState(() {
+            _selectedItems.remove(item); // Deselect item on tap
+          });
+
+          // Notify the parent widget of changes
+          widget.onSelectionChanged(_selectedItems);
+        },
+      ),
+    );
+  }
+}
