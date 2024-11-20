@@ -82,9 +82,9 @@ class MyApp extends StatelessWidget {
 
       //home: const PageConnection(),
        home: Scaffold(
-        appBar: Header(),
+       // appBar: Header(),
       body: PageConnection(),
-        bottomNavigationBar: Footer(),
+       // bottomNavigationBar: Footer(),
        ),
     );
   }
