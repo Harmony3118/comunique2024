@@ -4,7 +4,6 @@ import 'semaine.dart';
 import 'jour.dart';
 import 'bdd/bdd.dart';
 import 'bdd/event.dart';
-import 'bdd/role.dart';
 import 'bdd/organisation.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,14 +11,16 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
+// a toi de voir quel type de sortie tu veux
+// void afficherPointEvents() async {
 Future<List<Widget>> afficherPointEvents() async {
   final db = await AppDataBase.instance.database;
+  // liste de tous les events qu'il faut afficher
   final List<Map<String, dynamic>> maps = await db.query('event');
-  print("Liste de maps ${maps}");
   List<Event> evenements = List.generate(maps.length, (i) {
     return Event.fromMap(maps[i]);
   });
-  List<Widget> newCards = [];
+  List<Widget> newCards = []; // pas utile si type retour = void
 
   for (Event e in evenements) {
     List<Map<String, dynamic>> map1 = await db.query("Organisation",
