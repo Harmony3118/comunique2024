@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
-// il faut importer le package du widget bouton 
+// il faut importer le package du widget bouton et enlever la class widgetbouton d'ici que j'ai copié collé 
+
+// Le code fonctionne mais voici quelque dernier points qui peuvent être amélioré :
+//rajouter une image a la place du check 
+//faire une croix pour pouvoir désactiver
+//enlever la bare en dessous des participants
 
 //eventuelement mettre class AppData avec le nom des participants dans un autre fichier global
 class AppData {
@@ -10,8 +15,8 @@ class AppData {
     MultiSelectItem("Option2", "Participant 2"),
     MultiSelectItem("Option3", "Participant 3"),
     MultiSelectItem("Option4", "Participant 4"),
-    MultiSelectItem("Option5", "Participant 4"),
-    MultiSelectItem("Option6", "Participant 4"),
+    MultiSelectItem("Option5", "profeseur  4"),
+    MultiSelectItem("Option6", "administrateur 4"),
     MultiSelectItem("Option7", "Participant 4"),
     MultiSelectItem("Option8", "Participant 4"),
     MultiSelectItem("Option8", "Participant 4"),
@@ -95,48 +100,68 @@ class _CreaGroupeState extends State<CreaGroupe> {
             const Diviseur(),
             const TitresTextes(text: "Participants *"),
            Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 5, 20.0, 0.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min, // Allows the column to grow dynamically
-              children: [
-                SingleChildScrollView(
-                  child: MultiSelectDialogField(
-                    items: AppData.participants,
-                    title: const Text(""),
-                    searchable: true,
-                    buttonText: const Text(
-                      "Sélectionnez les Participants",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                     buttonIcon: const Icon(
-                        Icons.search, // Replacing the down arrow with a search icon
-                        color:Color.fromARGB(255, 100, 3, 42),
-                      ),
-                    initialValue: selectedParticipants,
-                    onConfirm: (values) {
-                      setState(() {
-                        selectedParticipants = values.cast<String>();
-                      });
-                    },
-                    chipDisplay: MultiSelectChipDisplay(
-                      onTap: (item) {
-                        setState(() {
-                          selectedParticipants.remove(item); // Deselect on tap
-                        });
-                      },
-                      
-                      chipColor: Color.fromARGB(255, 100, 3, 42), // Set the chip color
-                      textStyle: const TextStyle(
-                        color: Colors.white, // Text color inside the chip
-                        fontWeight: FontWeight.bold
-                      ),
-                      
-                    ),
-                  ),
-                ),
-              ],
+  padding: const EdgeInsets.fromLTRB(20.0, 5, 20.0, 0.0),
+  child: Column(
+    mainAxisSize: MainAxisSize.min, // Allows the column to grow dynamically
+    children: [
+      SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            MultiSelectDialogField(
+              items: AppData.participants,
+              title: const Text(""),
+              searchable: true,
+              buttonText: const Text(
+                "Sélectionnez les Participants",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              buttonIcon: const Icon(
+                Icons.search, // Replacing the down arrow with a search icon
+                color: Color.fromARGB(255, 100, 3, 42),
+              ),
+              initialValue: selectedParticipants,
+              onConfirm: (values) {
+                setState(() {
+                  selectedParticipants = values.cast<String>();
+                  print("Selected Participants: $selectedParticipants");
+                });
+              },
             ),
+            const SizedBox(height: 10),
+            Wrap(
+  children: selectedParticipants.map((participantValue) {
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Chip(
+        label: Text(
+          participantValue, // This will display the 'value' directly
+          style: const TextStyle(
+            color: Colors.white, // Text color inside the chip
+            fontWeight: FontWeight.bold,
           ),
+        ),
+        backgroundColor: const Color.fromARGB(255, 100, 3, 42), // Chip color
+        deleteIcon: const Icon(
+          Icons.close, // Cross icon for deletion
+          color: Colors.white,
+        ),
+        onDeleted: () {
+          setState(() {
+            selectedParticipants.remove(participantValue); // Remove by 'value'
+          });
+        },
+      ),
+    );
+  }).toList(),
+)
+
+          ],
+        ),
+      ),
+    ],
+  ),
+),
 
             const Diviseur(),
             Row(
@@ -416,50 +441,61 @@ class MultiSelectSearchPage extends StatefulWidget {
 }
 
 class _MultiSelectSearchPageState extends State<MultiSelectSearchPage> {
- 
-  List<String> _selectedItems = []; // Tracks the currently selected items.
-
- 
+  List<String> _selectedItems = []; // Tracks the selected 'value' items.
 
   @override
   Widget build(BuildContext context) {
-    return MultiSelectDialogField(
-      items: AppData.participants,
-      title: const Text("Select Options"),
-      searchable: true,
-      buttonIcon: const Icon(
-        Icons.search, // Search icon instead of the arrow
-        color: Colors.black,
-      ),
-      buttonText: const Text("Select Items"),
-      initialValue: _selectedItems, // Retains previously selected items
-      onConfirm: (values) {
-        setState(() {
-          _selectedItems = values.cast<String>();
-        });
+    return Column(
+      children: [
+        MultiSelectDialogField(
+          items: AppData.participants,
+          title: const Text("Select Options"),
+          searchable: true,
+          buttonIcon: const Icon(
+            Icons.search, // Search icon
+            color: Colors.black,
+          ),
+          buttonText: const Text("Select Items"),
+          initialValue: _selectedItems,
+          onConfirm: (values) {
+            setState(() {
+              _selectedItems = values.cast<String>(); // Store only the 'value'
+            });
 
-        // Notify the parent widget of changes
-        widget.onSelectionChanged(_selectedItems);
-      },
-    
-      chipDisplay: MultiSelectChipDisplay(
-        
-        onTap: (item) {
-          setState(() {
-            _selectedItems.remove(item); // Deselect item on tap
-          });
-          
-          // Notify the parent widget of changes
-          widget.onSelectionChanged(_selectedItems);
-        },
-        chipColor: Color.fromARGB(255, 100, 3, 42), // Set the chip color
-        textStyle: const TextStyle(
-          color: Colors.white, // Text color inside the chip
-          fontWeight: FontWeight.bold
-        
+            // Notify the parent widget of changes if needed
+            widget.onSelectionChanged(_selectedItems);
+          },
         ),
-        
-      ),
+        const SizedBox(height: 10),
+        Wrap(
+          children: _selectedItems.map((value) {
+            return Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Chip(
+                label: Text(
+                  value, // Display the 'value' directly
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                backgroundColor: const Color.fromARGB(255, 100, 3, 42),
+                deleteIcon: const Icon(
+                  Icons.close,
+                  color: Colors.white,
+                ),
+                onDeleted: () {
+                  setState(() {
+                    _selectedItems.remove(value); // Remove by 'value'
+                  });
+
+                  widget.onSelectionChanged(_selectedItems); // Notify parent
+                },
+              ),
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 }
