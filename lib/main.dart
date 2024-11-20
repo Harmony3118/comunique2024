@@ -11,7 +11,7 @@ import 'package:comunique2024/page/page_file_actualite.dart';
 import 'package:comunique2024/page/page_connection.dart';
 import 'package:comunique2024/page/page_header_footer.dart';
 import 'package:comunique2024/page/page_inscription.dart';
-import 'package:comunique2024/page/page_inscription_suite.dart';
+import 'package:comunique2024/page/page_parametre.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
@@ -92,7 +92,7 @@ class MyApp extends StatelessWidget {
        
 
       // home: BasePage(
-      //   // test
+      //   // test 
       //   currentIndex: 0,
       //   body: const PageConnection(),
       // ),
