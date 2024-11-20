@@ -401,7 +401,7 @@ class _EventCreationFormState extends State<EventCreationForm> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              AjoutPage()), // Redirection vers page_file_actualite.dart
+                             BasePage(currentIndex: 2, body: AjoutPage())), // Redirection vers page_file_actualite.dart
                     );
                   },
                 ),
