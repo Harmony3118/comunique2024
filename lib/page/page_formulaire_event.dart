@@ -4,6 +4,7 @@ import 'package:flutter/services.dart'; // Pour utiliser FilteringTextInputForma
 import 'page_ajout.dart'; // Pour la redirection en arrière
 import 'bdd/event.dart';
 import 'bdd/bdd.dart';
+import 'package:intl/intl.dart'; // Importation de DateFormat
 
 class EventCreationForm extends StatefulWidget {
   @override
@@ -26,6 +27,8 @@ class _EventCreationFormState extends State<EventCreationForm> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   DateTime? _selectedDate;
+  DateTime? _selectedStartDate;
+  DateTime? _selectedEndDate;
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
   bool _inscriptionViaApp = false;
@@ -103,18 +106,23 @@ class _EventCreationFormState extends State<EventCreationForm> {
     }
   }*/
 
-  // Fonction pour sélectionner une date
-  Future<void> _selectDate(BuildContext context) async {
+   // Fonction pour sélectionner une date (soit de début, soit de fin)
+  Future<void> _selectDate(BuildContext context, bool isStartDate) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2020),
       lastDate: DateTime(2101),
     );
-    if (picked != null && picked != _selectedDate)
+    if (picked != null) {
       setState(() {
-        _selectedDate = picked;
+        if (isStartDate) {
+          _selectedStartDate = picked;
+        } else {
+          _selectedEndDate = picked;
+        }
       });
+    }
   }
 
   // Fonction pour sélectionner une heure
@@ -387,16 +395,27 @@ class _EventCreationFormState extends State<EventCreationForm> {
               });
             }),
             _buildInputRow("Titre de l'info", _titreController),
-            // Choisir la date
+            // Champ pour la date de début
             ListTile(
               title: Text(
-                _selectedDate == null
-                    ? 'Sélectionner une date'
-                    : 'Date : ${_selectedDate!.toLocal()}'.split(' ')[0],
+                _selectedStartDate == null
+                    ? 'Sélectionner une date de début'
+                    : 'Date de début : ${DateFormat('dd/MM/yyyy').format(_selectedStartDate!)}',
                 style: TextStyle(fontSize: 16),
               ),
               trailing: Icon(Icons.calendar_today),
-              onTap: () => _selectDate(context),
+              onTap: () => _selectDate(context, true), // true pour la date de début
+            ),
+            // Champ pour la date de fin
+            ListTile(
+              title: Text(
+                _selectedEndDate == null
+                    ? 'Sélectionner une date de fin'
+                    : 'Date de fin : ${DateFormat('dd/MM/yyyy').format(_selectedEndDate!)}',
+                style: TextStyle(fontSize: 16),
+              ),
+              trailing: Icon(Icons.calendar_today),
+              onTap: () => _selectDate(context, false), // false pour la date de fin
             ),
             // Heure de début
             ListTile(

@@ -1,10 +1,10 @@
 import 'package:comunique2024/page/page_file_actualite.dart';
 import 'package:flutter/material.dart';
 
-
 class CardHome extends StatefulWidget {
   final String office;
   final String role;
+  final String object;
   final String eventTitle;
   final String eventDate;
   final String eventTime;
@@ -14,11 +14,11 @@ class CardHome extends StatefulWidget {
   final bool isPinned; // Indique si l'événement est épinglé
   final VoidCallback onPinToggle; // Callback pour mettre à jour l'épingle
 
-
   const CardHome({
     Key? key,
     required this.office,
     required this.role,
+    required this.object,
     required this.eventTitle,
     required this.eventDate,
     required this.eventTime,
@@ -28,8 +28,6 @@ class CardHome extends StatefulWidget {
     required this.isPinned,
     required this.onPinToggle,
   }) : super(key: key);
-
-  
 
   @override
   _CardHomeState createState() => _CardHomeState();

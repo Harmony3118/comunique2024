@@ -16,6 +16,7 @@ class _FileActualiteState extends State<FileActualite> {
     {
       "office": "JE",
       "role": "Présidente i2c",
+      "object":"Conférence",
       "eventTitle": 'Formation i2c',
       "eventDate": 'Le jeudi 16 novembre 2023',
       "eventTime": 'De 12h30 à 14h',
@@ -27,6 +28,7 @@ class _FileActualiteState extends State<FileActualite> {
     {
       "office": "BDS",
       "role": "Respo WES",
+      "object":"Sortie",
       "eventTitle": 'WES',
       "eventDate": 'Du 12 au 14 janvier 2024',
       "eventTime": '',
@@ -38,6 +40,7 @@ class _FileActualiteState extends State<FileActualite> {
     {
       "office": "BDA",
       "role": "Club musique",
+      "object": "Rencontre Club",
       "eventTitle": 'Répétition',
       "eventDate": 'Le mardi 21 septembre 2023',
       "eventTime": 'De 12h30 à 13h30',
@@ -68,16 +71,20 @@ class _FileActualiteState extends State<FileActualite> {
 
     // Appliquer les filtres par office
     if (activeFilters.isNotEmpty) {
-      filteredEvents = filteredEvents
-          .where((event) => activeFilters.contains(event["office"]))
-          .toList();
-    }
+      filteredEvents = filteredEvents.where((event) {
+        // Vérifier si l'événement correspond à un filtre actif dans "office" ou "object"
+    return activeFilters.contains(event["office"]) | activeFilters.contains(event["object"]);
+  }).toList();
+}
 
     // Appliquer le filtre épingle si actif
     if (isPinFilterActive) {
       filteredEvents =
           filteredEvents.where((event) => event["isPinned"] == true).toList();
     }
+
+    
+
 
     return SafeArea(
       child: Column(
@@ -96,6 +103,7 @@ class _FileActualiteState extends State<FileActualite> {
                 return CardHome(
                   office: event["office"],
                   role: event["role"],
+                  object : event["object"],
                   eventTitle: event["eventTitle"],
                   eventDate: event["eventDate"],
                   eventTime: event["eventTime"],
