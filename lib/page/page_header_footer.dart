@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'page_navigation.dart';
+import 'page_parametre.dart';
 
 class Header extends StatefulWidget implements PreferredSizeWidget {
   @override
@@ -24,7 +26,12 @@ class _Header extends State<Header> {
           icon: Icon(Icons.settings),
           color: const Color.fromARGB(255, 59, 58, 58),
           onPressed: () {
-            // A ajouter...
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      BasePage(currentIndex: 0, body: Pageparametre()),
+                ));
           },
         ),
       ],
