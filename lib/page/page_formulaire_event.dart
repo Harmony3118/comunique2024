@@ -84,9 +84,9 @@ class _EventCreationFormState extends State<EventCreationForm> {
       idOrganisation: 1,
       titre: _titreController.text,
       // pb avec les types, comment faire la convertion ?
-      date: _selectedDate.toString(),
-      hDebut: _startTime.toString(),
-      hFin: _endTime.toString(),
+      date: _selectedDate?.toIso8601String().split('T')[0],
+      hDebut: _startTime?.format(context),
+      hFin: _endTime?.format(context),
       lieu: "École", //-->  pas de choix du lieu dans le form
       tarif: double.parse(_tarifController.text),
       // nb de places
@@ -515,6 +515,7 @@ class _EventCreationFormState extends State<EventCreationForm> {
                 print("Liste des évènements prévus");
                 print(events);
                 print("Fin de la liste");
+                print("");
                 // fin test
 
                 Navigator.push(

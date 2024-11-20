@@ -6,9 +6,9 @@ class Event {
   int idGroupe;
   String objet; //
   String titre; //
-  String date;
-  String hDebut;
-  String hFin;
+  String? date;
+  String? hDebut;
+  String? hFin;
   String lieu;
   double tarif; // changer le type dans la bdd
   String commentaire;
@@ -25,9 +25,9 @@ class Event {
     required this.idGroupe,
     required this.objet,
     required this.titre,
-    required this.date,
-    required this.hDebut,
-    required this.hFin,
+    this.date,
+    this.hDebut,
+    this.hFin,
     required this.lieu,
     required this.tarif,
     required this.commentaire,

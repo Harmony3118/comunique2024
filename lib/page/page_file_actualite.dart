@@ -64,8 +64,6 @@ class _FileActualiteState extends State<FileActualite> {
 
   void _loadEvents() async {
     List<Widget> newCards = await afficherListEvents();
-    print("après recup event");
-    print(newCards);
     // newCards est vide...
     setState(() {
       cards = newCards;
@@ -94,10 +92,8 @@ class _FileActualiteState extends State<FileActualite> {
 
     // Appliquer les filtres par office
     if (activeFilters.isNotEmpty) {
-      print("ok0");
       filteredEvents = filteredEvents.where((card) {
         if (card is CardHome) {
-          print("ok1");
           return activeFilters.contains(card.office);
         }
         return false;
@@ -144,38 +140,27 @@ class _FileActualiteState extends State<FileActualite> {
     List<Event> evenements = List.generate(maps.length, (i) {
       return Event.fromMap(maps[i]);
     });
-    print("test 1 ou non");
     List<Widget> newCards = [];
 
-    print("Liste d'évènement ${evenements}");
-
     for (Event e in evenements) {
-      print("test 1");
       List<Map<String, dynamic>> map1 = await db.query("Organisation",
           where: "idOrga = ?", whereArgs: [e.idOrganisation]);
-      print("test 1.1");
-      print(map1);
       Organisation o = Organisation.fromMap(map1.first);
-      print("test 2");
       List<Map<String, dynamic>> map2 =
           await db.query("role", where: "idRole = ?", whereArgs: [e.status]);
       Role r = Role.fromMap(map2.first);
-      print("test 3");
 
       bool b = false;
       // List<Map<String, dynamic>> inscription = await db.query("inscription", where: "idUtilisateur = ?");
 
       // il faut modifier ça, afficher la bonne couleur pour chaque organisation
       // Gérer l'état de l'épingle pour chaque carte
-      print(
-          b); // a ajouter, /!\ ne pas rajouter cela dans event mais dans la table inscription
-
       newCards.add(CardHome(
         office: o.nom,
         role: r.nomRole,
         eventTitle: e.titre,
-        eventDate: e.date, //eventDate: 'Le jeudi 16 novembre 2023',
-        eventTime: 'De ${e.hDebut} à ${e.hFin}',
+        eventDate: e.date ?? 'Date non définie',
+        eventTime: formatTimeInterval(e.hDebut, e.hFin),
         eventLocation: e.lieu,
         imageData: o.imageData,
         color: Color(o.color),
@@ -190,9 +175,7 @@ class _FileActualiteState extends State<FileActualite> {
           });
         },
       ));
-      print("test 4");
     }
-    print(newCards);
     return newCards;
   }
 }

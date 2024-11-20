@@ -174,7 +174,7 @@ class _CardHomeState extends State<CardHome> {
                 const SizedBox(height: 4.0),
                 // This Text widget contains your event details which should be aligned to the left
                 Text(
-                  '${widget.eventDate}\n${widget.eventTime}\n${widget.eventLocation}',
+                  '${_formatDate(widget.eventDate)}\n${widget.eventTime}\n${widget.eventLocation}',
                   style: const TextStyle(
                     color: Colors.black,
                   ),
@@ -200,4 +200,63 @@ class _CardHomeState extends State<CardHome> {
       ),
     );
   }
+}
+
+String _formatDate(String date) {
+  // La chaîne de date est au format "yyyy-MM-dd"
+  final parsedDate =
+      DateTime.parse(date); // Convertit la chaîne en objet DateTime
+  return '${_dayOfWeek(parsedDate.weekday)} ${parsedDate.day} ${_monthName(parsedDate.month)} ${parsedDate.year}';
+}
+
+String formatTimeInterval(String? startTime, String? endTime) {
+  if (startTime != null && endTime != null) {
+    return 'De ${_formatTime(startTime)} à ${_formatTime(endTime)}';
+  } else if (startTime != null) {
+    return 'Début : ${_formatTime(startTime)}';
+  } else if (endTime != null) {
+    return 'Fin : ${_formatTime(endTime)}';
+  } else {
+    return 'Horaire non défini';
+  }
+}
+
+String _formatTime(String time) {
+  // La chaîne d'heure est au format "HH:mm"
+  print("time : ${time}");
+  final parts = time.split(':');
+  final hour = int.parse(parts[0]);
+  final minute = parts[1];
+  return '${hour}h$minute'; // Affiche "12h30" par exemple
+}
+
+String _dayOfWeek(int weekday) {
+  const days = [
+    'Lundi',
+    'Mardi',
+    'Mercredi',
+    'Jeudi',
+    'Vendredi',
+    'Samedi',
+    'Dimanche'
+  ];
+  return days[weekday - 1]; // Les jours de la semaine en français
+}
+
+String _monthName(int month) {
+  const months = [
+    'janvier',
+    'février',
+    'mars',
+    'avril',
+    'mai',
+    'juin',
+    'juillet',
+    'août',
+    'septembre',
+    'octobre',
+    'novembre',
+    'décembre'
+  ];
+  return months[month - 1]; // Les mois en français
 }
