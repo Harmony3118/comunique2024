@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:comunique2024/page/page_contact_admin.dart';
 import 'package:comunique2024/page/page_navigation.dart';
-import 'package:comunique2024/page/page_reservartion3.dart';
+import 'package:comunique2024/page/page_reservation3.dart';
 
 void main() {
   runApp(const MyApp2());
