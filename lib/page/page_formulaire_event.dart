@@ -68,49 +68,52 @@ class _EventCreationFormState extends State<EventCreationForm> {
   // insérer un utilisateur
   void saveEvent() async {
     print("ok0");
-    if (formKey.currentState!.validate()) {
-      print("ok1");
-      // récupérer l'id de l'utilisateur
-      // récupérer l'id du groupe
-      // récupérer l'id du status (du role)
-      final Event evenement = Event(
-        idUtilisateur: 1,
-        status: 1, // c'est le role
-        idGroupe: 1,
-        objet: _objetController.text,
-        idOrganisation: 1,
-        titre: _titreController.text,
-        // pb avec les types, comment faire la convertion ?
-        date: _selectedDate.toString(),
-        hDebut: _startTime.toString(),
-        hFin: _endTime.toString(),
-        lieu: "École", //-->  pas de choix du lieu dans le form
-        tarif: double.parse(_tarifController.text),
-        // nb de places
-        commentaire: _infosComplementairesController.text,
-        fichier: _selectedFile,
-        inscriptionAppli: _inscriptionViaApp,
-        inscriptionHelloAsso: _inscriptionViaApp,
-      );
+    //if (formKey.currentState!.validate()) {
+    print("ok1");
+    // récupérer l'id de l'utilisateur
+    // récupérer l'id du groupe
+    // récupérer l'id du status (du role)
 
-      await AppDataBase.instance.insertEvent(evenement);
+    int inscripApp = _inscriptionViaApp ? 1 : 0;
+    int inscripHA = _inscriptionViaHelloAsso ? 1 : 0;
+    final Event evenement = Event(
+      idUtilisateur: 1,
+      status: 1, // c'est le role
+      idGroupe: 1,
+      objet: _objetController.text,
+      idOrganisation: 1,
+      titre: _titreController.text,
+      // pb avec les types, comment faire la convertion ?
+      date: _selectedDate.toString(),
+      hDebut: _startTime.toString(),
+      hFin: _endTime.toString(),
+      lieu: "École", //-->  pas de choix du lieu dans le form
+      tarif: double.parse(_tarifController.text),
+      // nb de places
+      commentaire: _infosComplementairesController.text,
+      fichier: _selectedFile,
+      inscriptionAppli: inscripApp,
+      inscriptionHelloAsso: inscripHA,
+    );
 
-      // Affiche le message de succès
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Évènement ajouté !")),
-      );
+    await AppDataBase.instance.insertEvent(evenement);
 
-      // Réinitialiser les champs
-      _expediteurController.clear();
-      _roleController.clear();
-      _destinataireController.clear();
-      _objetController.clear();
-      _organisateurController.clear();
-      _titreController.clear();
-      _tarifController.clear();
-      _placesController.clear();
-      _infosComplementairesController.clear();
-    }
+    // Affiche le message de succès
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Évènement ajouté !")),
+    );
+
+    // Réinitialiser les champs
+    _expediteurController.clear();
+    _roleController.clear();
+    _destinataireController.clear();
+    _objetController.clear();
+    _organisateurController.clear();
+    _titreController.clear();
+    _tarifController.clear();
+    _placesController.clear();
+    _infosComplementairesController.clear();
+    //}
   }
 
   // Fonction pour sélectionner une date

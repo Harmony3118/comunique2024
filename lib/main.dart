@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-// import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:comunique2024/page/bdd/bdd.dart';
 import 'package:comunique2024/page/page_header_footer.dart';
 import 'package:comunique2024/page/page_annuaire.dart';
@@ -15,14 +15,13 @@ import 'package:comunique2024/page/page_inscription_suite.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
-  /*
   print("Lancement de l'application");
   // Nécessaire pour les opérations async dans main()
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialise sqflite pour les environnements de bureau
-  // sqfliteFfiInit();
-  // databaseFactory = databaseFactoryFfi;
+  sqfliteFfiInit();
+  databaseFactory = databaseFactoryFfi;
 
   // Chemin de la base de données
   final databasePath = join(await getDatabasesPath(), 'AppDataBase.db');
@@ -38,7 +37,7 @@ void main() async {
   final List<Map<String, dynamic>> organisations =
       await db.query('organisation');
   print(organisations);
-*/
+
   runApp(const MyApp());
 }
 
@@ -81,14 +80,12 @@ class MyApp extends StatelessWidget {
       //   currentIndex: 0,
       //   body: FileActualite(),
 
-    
       home: const PageConnection(),
       // home: Scaffold(
       //   appBar: Header(),
       // body: PageConnection(),
       //   bottomNavigationBar: Footer(),
       // ),
-
     );
   }
 }

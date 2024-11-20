@@ -11,46 +11,67 @@ class FileActualite extends StatefulWidget {
   _FileActualiteState createState() => _FileActualiteState();
 }
 
+// class _FileActualiteState extends State<FileActualite> {
+//   List<String> activeFilters = [];
+//   bool isPinFilterActive = false;
+
+// Liste statique d'événements
+// final List<Map<String, dynamic>> events = [
+//   {
+//     "office": "JE",
+//     "role": "Présidente i2c",
+//     "eventTitle": 'Formation i2c',
+//     "eventDate": 'Le jeudi 16 novembre 2023',
+//     "eventTime": 'De 12h30 à 14h',
+//     "eventLocation": 'Salle S103',
+//     "imageUrl": 'https://via.placeholder.com/150',
+//     "color": const Color.fromRGBO(187, 208, 143, 0.71),
+//     "isPinned": false,
+//   },
+//   {
+//     "office": "BDS",
+//     "role": "Respo WES",
+//     "eventTitle": 'WES',
+//     "eventDate": 'Du 12 au 14 janvier 2024',
+//     "eventTime": '',
+//     "eventLocation": 'Station Pas de la Case, Andorre',
+//     "imageUrl": 'https://via.placeholder.com/150',
+//     "color": const Color.fromRGBO(167, 222, 219, 0.71),
+//     "isPinned": false,
+//   },
+//   {
+//     "office": "BDA",
+//     "role": "Club musique",
+//     "eventTitle": 'Répétition',
+//     "eventDate": 'Le mardi 21 septembre 2023',
+//     "eventTime": 'De 12h30 à 13h30',
+//     "eventLocation": 'Salle S103',
+//     "imageUrl": 'https://via.placeholder.com/150',
+//     "color": const Color.fromRGBO(245, 233, 171, 0.71),
+//     "isPinned": false,
+//   },
+// ];
 class _FileActualiteState extends State<FileActualite> {
   List<String> activeFilters = [];
   bool isPinFilterActive = false;
+  List<Widget> cards = [];
+  bool isLoading = true;
 
-// Liste statique d'événements
-  final List<Map<String, dynamic>> events = [
-    {
-      "office": "JE",
-      "role": "Présidente i2c",
-      "eventTitle": 'Formation i2c',
-      "eventDate": 'Le jeudi 16 novembre 2023',
-      "eventTime": 'De 12h30 à 14h',
-      "eventLocation": 'Salle S103',
-      "imageUrl": 'https://via.placeholder.com/150',
-      "color": const Color.fromRGBO(187, 208, 143, 0.71),
-      "isPinned": false,
-    },
-    {
-      "office": "BDS",
-      "role": "Respo WES",
-      "eventTitle": 'WES',
-      "eventDate": 'Du 12 au 14 janvier 2024',
-      "eventTime": '',
-      "eventLocation": 'Station Pas de la Case, Andorre',
-      "imageUrl": 'https://via.placeholder.com/150',
-      "color": const Color.fromRGBO(167, 222, 219, 0.71),
-      "isPinned": false,
-    },
-    {
-      "office": "BDA",
-      "role": "Club musique",
-      "eventTitle": 'Répétition',
-      "eventDate": 'Le mardi 21 septembre 2023',
-      "eventTime": 'De 12h30 à 13h30',
-      "eventLocation": 'Salle S103',
-      "imageUrl": 'https://via.placeholder.com/150',
-      "color": const Color.fromRGBO(245, 233, 171, 0.71),
-      "isPinned": false,
-    },
-  ];
+  void initState() {
+    super.initState();
+    _loadEvents(); // Charger les événements au démarrage
+  }
+
+  void _loadEvents() async {
+    List<Widget> newCards = await afficherListEvents();
+    print("après recup event");
+    print(newCards);
+    // newCards est vide...
+    setState(() {
+      cards = newCards;
+      isLoading = false;
+    });
+  }
 
   // Fonction de mise à jour des filtres
   void _onFilterChanged(List<String> selectedFilters) {
@@ -68,19 +89,29 @@ class _FileActualiteState extends State<FileActualite> {
   @override
   Widget build(BuildContext context) {
     // Filtrer les événements en fonction des filtres actifs et du filtre épingle
-    List<Map<String, dynamic>> filteredEvents = events;
+    // List<Map<String, dynamic>> filteredEvents = events;
+    List<Widget> filteredEvents = cards;
 
     // Appliquer les filtres par office
     if (activeFilters.isNotEmpty) {
-      filteredEvents = filteredEvents
-          .where((event) => activeFilters.contains(event["office"]))
-          .toList();
+      print("ok0");
+      filteredEvents = filteredEvents.where((card) {
+        if (card is CardHome) {
+          print("ok1");
+          return activeFilters.contains(card.office);
+        }
+        return false;
+      }).toList();
     }
 
     // Appliquer le filtre épingle si actif
     if (isPinFilterActive) {
-      filteredEvents =
-          filteredEvents.where((event) => event["isPinned"] == true).toList();
+      filteredEvents = filteredEvents.where((card) {
+        if (card is CardHome) {
+          return card.isPinned;
+        }
+        return false;
+      }).toList();
     }
 
     return SafeArea(
@@ -95,59 +126,60 @@ class _FileActualiteState extends State<FileActualite> {
             ),
           ),
           Expanded(
-            child: ListView(
-              children: filteredEvents.map((event) {
-                return CardHome(
-                  office: event["office"],
-                  role: event["role"],
-                  eventTitle: event["eventTitle"],
-                  eventDate: event["eventDate"],
-                  eventTime: event["eventTime"],
-                  eventLocation: event["eventLocation"],
-                  imageData: event["imageUrl"],
-                  color: event["color"],
-                  // Gérer l'état de l'épingle pour chaque carte
-                  isPinned: event["isPinned"],
-                  onPinToggle: () {
-                    setState(() {
-                      event["isPinned"] = !event["isPinned"];
-                    });
-                  },
-                );
-              }).toList(),
-            ),
+            child: isLoading
+                ? Center(child: CircularProgressIndicator())
+                : filteredEvents.isEmpty
+                    ? Center(child: Text('Aucun événement trouvé.'))
+                    : ListView(children: filteredEvents),
           ),
         ],
       ),
     );
   }
 
-  void afficherListEvents() async {
+  Future<List<Widget>> afficherListEvents() async {
     final db = await AppDataBase.instance.database;
-    final List<Map<String, dynamic>> maps = await db.query('utilisateur');
+    final List<Map<String, dynamic>> maps = await db.query('event');
+    print("Liste de maps ${maps}");
     List<Event> evenements = List.generate(maps.length, (i) {
       return Event.fromMap(maps[i]);
     });
+    print("test 1 ou non");
+    List<Widget> newCards = [];
+
+    print("Liste d'évènement ${evenements}");
 
     for (Event e in evenements) {
+      print("test 1");
       List<Map<String, dynamic>> map1 = await db.query("Organisation",
           where: "idOrga = ?", whereArgs: [e.idOrganisation]);
-      Organisation o = Organisation.fromMap(map1[1]);
+      print("test 1.1");
+      print(map1);
+      Organisation o = Organisation.fromMap(map1.first);
+      print("test 2");
       List<Map<String, dynamic>> map2 =
           await db.query("role", where: "idRole = ?", whereArgs: [e.status]);
-      Role r = Role.fromMap(map2[1]);
+      Role r = Role.fromMap(map2.first);
+      print("test 3");
+
       bool b = false;
       // List<Map<String, dynamic>> inscription = await db.query("inscription", where: "idUtilisateur = ?");
-      CardHome(
+
+      // il faut modifier ça, afficher la bonne couleur pour chaque organisation
+      // Gérer l'état de l'épingle pour chaque carte
+      print(
+          b); // a ajouter, /!\ ne pas rajouter cela dans event mais dans la table inscription
+
+      newCards.add(CardHome(
         office: o.nom,
         role: r.nomRole,
         eventTitle: e.titre,
         eventDate: e.date, //eventDate: 'Le jeudi 16 novembre 2023',
-        eventTime: 'De${e.hDebut} à ${e.hFin}',
+        eventTime: 'De ${e.hDebut} à ${e.hFin}',
         eventLocation: e.lieu,
         imageData: o.imageData,
-        color: Color.fromRGBO(187, 208, 143,
-            0.71), // il faut modifier ça, afficher la bonne couleur pour chaque organisation
+        color: Color(o.color),
+        // il faut modifier ça, afficher la bonne couleur pour chaque organisation
         // Gérer l'état de l'épingle pour chaque carte
         isPinned:
             b, // a ajouter, /!\ ne pas rajouter cela dans event mais dans la table inscription
@@ -157,7 +189,10 @@ class _FileActualiteState extends State<FileActualite> {
             // modifier aussi la table inscription (vérif valeur vérité)
           });
         },
-      );
+      ));
+      print("test 4");
     }
+    print(newCards);
+    return newCards;
   }
 }

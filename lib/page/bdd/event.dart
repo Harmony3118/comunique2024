@@ -13,8 +13,8 @@ class Event {
   double tarif; // changer le type dans la bdd
   String commentaire;
   String? fichier;
-  bool inscriptionAppli;
-  bool inscriptionHelloAsso;
+  int inscriptionAppli; // ce sont des booléens mais conservés en int
+  int inscriptionHelloAsso; // ce sont des booléens mais conservés en int
 
   // Constructeur
   Event({
