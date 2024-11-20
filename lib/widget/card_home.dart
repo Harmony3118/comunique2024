@@ -9,6 +9,9 @@ class CardHome extends StatefulWidget {
   final String eventLocation;
   final String imageUrl;
   final Color color;
+  final String price;
+  final String capacity;
+  final String moreInfo;
 
   const CardHome({
     Key? key,
@@ -20,6 +23,9 @@ class CardHome extends StatefulWidget {
     required this.eventLocation,
     required this.imageUrl,
     required this.color,
+    required this.price,
+    required this.capacity,
+    required this.moreInfo,
   }) : super(key: key);
 
   @override
@@ -29,6 +35,7 @@ class CardHome extends StatefulWidget {
 class _CardHomeState extends State<CardHome> {
   bool isPinned = false;
   bool isRegistered = false;
+  bool isDetailled = false;
 
   void _showConfirmationDialog() {
     showDialog(
@@ -172,6 +179,19 @@ class _CardHomeState extends State<CardHome> {
                     color: Colors.black,
                   ),
                 ),
+                Text(isDetailled
+                    ? 'Prix : ${widget.price}\nNombres de places : ${widget.capacity}\n${widget.moreInfo}'
+                    : ''),
+                const SizedBox(height: 10),
+                TextButton(
+                    onPressed: () {
+                      setState(() {
+                        isDetailled = !isDetailled;
+                      });
+                    },
+                    child: Text(isDetailled
+                        ? "- moins d'informations"
+                        : "+ plus d'informations")),
                 const SizedBox(height: 16.0),
                 Center(
                   child: ElevatedButton(
