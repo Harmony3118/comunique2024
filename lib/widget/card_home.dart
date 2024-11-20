@@ -11,8 +11,7 @@ class CardHome extends StatefulWidget {
   final String eventLocation;
   final Uint8List? imageData;
   final Color color;
-  final String price;
-  final String capacity;
+  final double price;
   final String moreInfo;
   final bool isPinned; // Indique si l'événement est épinglé
   final VoidCallback onPinToggle; // Callback pour mettre à jour l'épingle
@@ -28,7 +27,6 @@ class CardHome extends StatefulWidget {
     this.imageData,
     required this.color,
     required this.price,
-    required this.capacity,
     required this.moreInfo,
     required this.isPinned,
     required this.onPinToggle,
@@ -187,7 +185,7 @@ class _CardHomeState extends State<CardHome> {
                   ),
                 ),
                 Text(isDetailled
-                    ? 'Prix : ${widget.price}\nNombres de places : ${widget.capacity}\n${widget.moreInfo}'
+                    ? 'Prix : ${widget.price}\n\n${widget.moreInfo}'
                     : ''),
                 const SizedBox(height: 10),
                 TextButton(

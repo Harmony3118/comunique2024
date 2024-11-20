@@ -165,6 +165,8 @@ class _FileActualiteState extends State<FileActualite> {
         imageData: o.imageData,
         color: Color(o.color),
         // il faut modifier ça, afficher la bonne couleur pour chaque organisation
+        price: e.tarif,
+        moreInfo: e.commentaire,
         // Gérer l'état de l'épingle pour chaque carte
         isPinned:
             b, // a ajouter, /!\ ne pas rajouter cela dans event mais dans la table inscription
