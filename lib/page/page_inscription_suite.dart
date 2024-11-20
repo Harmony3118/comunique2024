@@ -65,47 +65,55 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
     return Scaffold(
       body: Form(
         key: formKey,
-        child: Container(
-          color: Colors.white,
-          child: Stack(
-            children: <Widget>[
-              Positioned(
-                top: 90,
-                left: (MediaQuery.of(context).size.width - 157) / 2,
-                child: image(context),
+        child : Container(
+        color: Colors.white,
+        child: SingleChildScrollView( // Permet le défilement
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            // Icône de retour en haut à gauche
+            Padding(
+              padding: const EdgeInsets.only(top: 50, right: 350),
+              child: IconButton(
+                icon: Icon(Icons.arrow_back, color: Colors.black),
+                onPressed: () {
+                  Navigator.pop(context); // Action de retour à l'écran précédent
+                },
               ),
-              Positioned(
-                top: 690,
-                left: (MediaQuery.of(context).size.width - 299) / 2,
-                child: bulle_bordeaux(context),
-              ),
-              Positioned(
-                top: 760,
-                left: (MediaQuery.of(context).size.width - 299) / 2,
-                child: bulle_claire(context),
-              ),
-              Positioned(
-                top: 280,
-                left: (MediaQuery.of(context).size.width - 400) / 2,
-                child: mes_prefs(context),
-              ),
-              Positioned(
-                top: 420,
-                left: (MediaQuery.of(context).size.width - 400) / 2,
-                child: mes_donnees(context),
-              ),
+            ),
+            Center(
+              child: image(context), // Centered image
+            ),
+            const SizedBox(height: 10), // Espace entre l'image et "Mes préférences"
+            
+              // Mes préférences
+              mes_prefs(context),
+              const SizedBox(height: 20), // Espace entre les sections
+
+              // Mes données
+              mes_donnees(context),
+              const SizedBox(height: 60), // Espace avant les boutons
+              
+              // Bulle bordeaux
+              bulle_bordeaux(context),
+              const SizedBox(height: 30), // Espace entre les deux boutons
+              
+              // Bulle claire
+              bulle_claire(context),
+              const SizedBox(height: 200), // Espace en bas pour le défilement
             ],
           ),
         ),
       ),
+    ),
     );
   }
 
   Widget image(BuildContext context) {
     return const Image(
       image: AssetImage('assets/Logo.png'),
-      width: 157,
-      height: 157,
+      width: 160,
+      height: 160,
       fit: BoxFit.cover,
     );
   }
@@ -169,6 +177,7 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
             ),
           ),
         ),
+        // Photo de profil
         Container(
           width: 400,
           height: 50,
@@ -381,6 +390,7 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
     }
   }
 }
+
 
 // case intéractive calendrier
 

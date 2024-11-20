@@ -1,41 +1,46 @@
 class Event {
   int? idPost;
   int idUtilisateur;
-  int status;
+  int idOrganisation;
+  int status; // = role
   int idGroupe;
   String objet; //
   String titre; //
-  String date;
-  String hDebut;
-  String hFin;
+  String? date;
+  String? hDebut;
+  String? hFin;
   String lieu;
   double tarif; // changer le type dans la bdd
   String commentaire;
   String? fichier;
-  bool inscription;
+  int inscriptionAppli; // ce sont des booléens mais conservés en int
+  int inscriptionHelloAsso; // ce sont des booléens mais conservés en int
 
   // Constructeur
   Event({
     this.idPost,
     required this.idUtilisateur,
+    required this.idOrganisation,
     required this.status,
     required this.idGroupe,
     required this.objet,
     required this.titre,
-    required this.date,
-    required this.hDebut,
-    required this.hFin,
+    this.date,
+    this.hDebut,
+    this.hFin,
     required this.lieu,
     required this.tarif,
     required this.commentaire,
     this.fichier,
-    required this.inscription,
+    required this.inscriptionAppli,
+    required this.inscriptionHelloAsso,
   });
 
   // Méthode pour convertir l'objet en Map
   Map<String, dynamic> toMap() {
     return {
       'idUtilisateur': idUtilisateur,
+      'idOrganisation': idOrganisation,
       'status': status,
       'idGroupe': idGroupe,
       'objet': objet,
@@ -47,7 +52,8 @@ class Event {
       'tarif': tarif,
       'commentaire': commentaire,
       'fichier': fichier,
-      'inscription': inscription,
+      'inscriptionAppli': inscriptionAppli,
+      'inscriptionHelloAsso': inscriptionHelloAsso,
     };
   }
 
@@ -55,6 +61,7 @@ class Event {
   factory Event.fromMap(Map<String, dynamic> map) => Event(
       idPost: map['idPost'],
       idUtilisateur: map['idUtilisateur'],
+      idOrganisation: map['idOrganisation'],
       status: map['status'],
       idGroupe: map['idGroupe'],
       objet: map['objet'],
@@ -66,5 +73,6 @@ class Event {
       tarif: map['tarif'],
       commentaire: map['commentaire'],
       fichier: map['fichier'],
-      inscription: map['inscription']);
+      inscriptionAppli: map['inscriptionAppli'],
+      inscriptionHelloAsso: map['inscriptionHelloAsso']);
 }

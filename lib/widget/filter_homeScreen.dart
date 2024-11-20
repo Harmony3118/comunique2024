@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 
 class Filter extends StatefulWidget {
-  const Filter({super.key});
+  final ValueChanged<List<String>> onFilterChanged;
+  final bool isPinFilterActive;
+  final VoidCallback onPinFilterToggle;
+
+ Filter({
+    required this.onFilterChanged,
+    required this.isPinFilterActive,
+    required this.onPinFilterToggle,
+  });
 
   @override
   _FilterState createState() => _FilterState();
@@ -12,13 +20,20 @@ class _FilterState extends State<Filter> {
   bool isPinButtonSelected = false;
   bool isStatusButtonSelected = false;
   bool isObjectButtonSelected = false;
+  
+  get isPinFilterActive => null;
+  
+  get onPinFilterToggle => null;
 
   void _toggleFilterOption(String option) {
-    if (selectedFilters.contains(option)) {
-      selectedFilters.remove(option);
-    } else {
-      selectedFilters.add(option);
-    }
+    setState(() {
+      if (selectedFilters.contains(option)) {
+        selectedFilters.remove(option);
+      } else {
+        selectedFilters.add(option);
+      }
+      widget.onFilterChanged(selectedFilters);
+    });
   }
 
   Widget _buildFilterOption(
@@ -59,14 +74,6 @@ class _FilterState extends State<Filter> {
 
   void _showFilterSheet(
       BuildContext context, List<String> options, String sheetTitle) {
-    setState(() {
-      if (sheetTitle == 'Organisateur') {
-        isStatusButtonSelected = true;
-      }
-      if (sheetTitle == 'Sujet') {
-        isObjectButtonSelected = true;
-      }
-    });
     showModalBottomSheet<String>(
       context: context,
       builder: (BuildContext context) {
@@ -125,18 +132,7 @@ class _FilterState extends State<Filter> {
           },
         );
       },
-    ).whenComplete(() {
-      if (sheetTitle == 'Organisateur') {
-        setState(() {
-          isStatusButtonSelected = false;
-        });
-      }
-      if (sheetTitle == 'Sujet') {
-        setState(() {
-          isObjectButtonSelected = false;
-        });
-      }
-    });
+    );
   }
 
   @override
@@ -205,21 +201,24 @@ class _FilterState extends State<Filter> {
                 ),
               ),
             ),
-            Padding(
+          Padding(
               padding: const EdgeInsets.all(6.0),
               child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    isPinButtonSelected = !isPinButtonSelected;
-                  });
-                },
+                onPressed: widget.onPinFilterToggle,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: isPinButtonSelected
+                  backgroundColor: widget.isPinFilterActive
                       ? const Color.fromRGBO(100, 3, 41, 1)
                       : const Color.fromRGBO(100, 3, 41, 0.6),
                   foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30), // même rayon que les autres boutons
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 ),
-                child: const Icon(Icons.push_pin),
+                child: Icon(
+                  widget.isPinFilterActive ? Icons.push_pin : Icons.push_pin_outlined,
+                  color: widget.isPinFilterActive ? Colors.white : Colors.white,
+                ),
               ),
             ),
           ],
