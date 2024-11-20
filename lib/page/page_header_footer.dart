@@ -12,6 +12,7 @@ class _Header extends State<Header> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      automaticallyImplyLeading: false, // Supprime l'icône de retour
       title: Text("COM'UNIQUE",
           style: TextStyle(
             color: Color.fromARGB(255, 100, 3, 41),
