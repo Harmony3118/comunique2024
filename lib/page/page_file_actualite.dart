@@ -1,10 +1,10 @@
-import 'package:comunique2024/page/bdd/organisation.dart';
 import 'package:flutter/material.dart';
 import 'package:comunique2024/widget/filter_homeScreen.dart';
 import 'package:comunique2024/widget/card_home.dart';
+import 'bdd/bdd.dart';
 import 'bdd/event.dart';
 import 'bdd/role.dart';
-import 'bdd/bdd.dart';
+import 'bdd/organisation.dart';
 
 class FileActualite extends StatefulWidget {
   @override
@@ -156,6 +156,7 @@ class _FileActualiteState extends State<FileActualite> {
       // il faut modifier ça, afficher la bonne couleur pour chaque organisation
       // Gérer l'état de l'épingle pour chaque carte
       newCards.add(CardHome(
+        // object: e.object,
         office: o.nom,
         role: r.nomRole,
         eventTitle: e.titre,
