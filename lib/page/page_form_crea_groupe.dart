@@ -1,16 +1,36 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:multiple_search_selection/multiple_search_selection.dart'; //a enlever eventuellement aussi sur le pubspec
+
 // il faut importer le package du widget bouton 
 
-final List<MultiSelectItem<String>> items = [
-  MultiSelectItem("Option1", "Option 1"),
-  MultiSelectItem("Option2", "Option 2"),
-  MultiSelectItem("Option3", "Option 3"),
-  MultiSelectItem("Option4", "Option 4"),
-];
+//eventuelement mettre class AppData avec le nom des participants dans un autre fichier global
+class AppData {
+  static  List<MultiSelectItem<String>> participants = [
+    MultiSelectItem("Option1", "Participant 1"),
+    MultiSelectItem("Option2", "Participant 2"),
+    MultiSelectItem("Option3", "Participant 3"),
+    MultiSelectItem("Option4", "Participant 4"),
+    MultiSelectItem("Option5", "Participant 4"),
+    MultiSelectItem("Option6", "Participant 4"),
+    MultiSelectItem("Option7", "Participant 4"),
+    MultiSelectItem("Option8", "Participant 4"),
+    MultiSelectItem("Option8", "Participant 4"),
+    MultiSelectItem("Option8", "Participant 4"),
+    MultiSelectItem("Option8", "Participant 4"),
+    MultiSelectItem("Option8", "Participant 4"),
+    MultiSelectItem("Option8", "Participant 4"),
+    MultiSelectItem("Option8", "Participant 4"),
+    MultiSelectItem("Option8", "Participant 4"),
+    MultiSelectItem("Option8", "Participant 4"),
+    MultiSelectItem("Option8", "Participant 4"),
+    MultiSelectItem("Option8", "Participant 4"),
+    MultiSelectItem("Option8", "Participant 4"),
+    MultiSelectItem("Option8", "Participant 4"),
+
+
+  ];
+}
+
 
 class CreaGroupe extends StatefulWidget {
   @override
@@ -49,8 +69,8 @@ class _CreaGroupeState extends State<CreaGroupe> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
+      body: 
+         SingleChildScrollView(
         child: Column(
           children: [
             Row(
@@ -74,42 +94,39 @@ class _CreaGroupeState extends State<CreaGroupe> {
             ),
             const Diviseur(),
             const TitresTextes(text: "Participants *"),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 5, 20.0, 0.0),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: 400, // Set a reasonable max height
-                ),
-                child: MultiSelectDialogField(
-                  items: [
-                    MultiSelectItem("Option1", "Option 1"),
-                    MultiSelectItem("Option2", "Essai 2"),
-                    MultiSelectItem("Option3", "Option 3"),
-                    MultiSelectItem("Option4", "Option 4"),
-                  ],
-                  title: Text(""),
-                  initialValue: selectedParticipants,
-                  searchable: true,
-                  buttonText: const Text(
-                    "Sélectionnez les Participants",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  onConfirm: (values) {
-                    setState(() {
-                      selectedParticipants = values.cast<String>();
-                    });
-                  },
-                  chipDisplay: MultiSelectChipDisplay(
-                    items: selectedParticipants.map((e) => MultiSelectItem(e, e)).toList(),
-                    onTap: (item) {
+           Padding(
+            padding: const EdgeInsets.fromLTRB(20.0, 5, 20.0, 0.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min, // Allows the column to grow dynamically
+              children: [
+                SingleChildScrollView(
+                  child: MultiSelectDialogField(
+                    items: AppData.participants,
+                    title: const Text(""),
+                    searchable: true,
+                    buttonText: const Text(
+                      "Sélectionnez les Participants",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    initialValue: selectedParticipants,
+                    onConfirm: (values) {
                       setState(() {
-                        selectedParticipants.remove(item); // Deselect on tap
+                        selectedParticipants = values.cast<String>();
                       });
                     },
+                    chipDisplay: MultiSelectChipDisplay(
+                      onTap: (item) {
+                        setState(() {
+                          selectedParticipants.remove(item); // Deselect on tap
+                        });
+                      },
+                    ),
                   ),
                 ),
-               ),
+              ],
             ),
+          ),
+
             const Diviseur(),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -160,7 +177,7 @@ class _CreaGroupeState extends State<CreaGroupe> {
           ],
         ),
       ),
-      ),
+      
     );
   }
 }
@@ -375,240 +392,6 @@ class WidgetBouton extends StatelessWidget {
 }
 
 
-class MultiSelectSearchBar extends StatefulWidget {
-  final Function(List<String>) onSelectionChanged;
-
-  MultiSelectSearchBar({required this.onSelectionChanged});
-
-  @override
-  _MultiSelectSearchBarState createState() => _MultiSelectSearchBarState();
-}
-
-class _MultiSelectSearchBarState extends State<MultiSelectSearchBar> {
-  final List<String> allOptions = [
-    'Apple',
-    'Banana',
-    'Cherry',
-    'Date',
-    'Elderberry',
-    'Fig',
-    'Grapes',
-    'Honeydew',
-  ];
-
-  final List<String> selectedOptions = [];
-  final TextEditingController searchController = TextEditingController();
-  final FocusNode searchFocusNode = FocusNode();
-
-  List<String> filteredOptions = [];
-  OverlayEntry? dropdownOverlay;
-
-  @override
-  void initState() {
-    super.initState();
-
-    searchController.addListener(() {
-      filterOptions(searchController.text);
-    });
-
-    searchFocusNode.addListener(() {
-      if (searchFocusNode.hasFocus) {
-        showDropdown();
-      } else {
-        hideDropdown();
-      }
-    });
-  }
-
-  void filterOptions(String input) {
-    setState(() {
-      filteredOptions = allOptions
-          .where((option) =>
-              option.toLowerCase().contains(input.toLowerCase()) &&
-              !selectedOptions.contains(option))
-          .toList();
-    });
-    if (filteredOptions.isNotEmpty) {
-      showDropdown();
-    } else {
-      hideDropdown();
-    }
-  }
-
-  void addSelectedOption(String option) {
-    setState(() {
-      selectedOptions.add(option);
-      searchController.clear();
-      filterOptions(''); // Refilter to update options
-    });
-    widget.onSelectionChanged(selectedOptions);
-  }
-
-  void removeSelectedOption(String option) {
-    setState(() {
-      selectedOptions.remove(option);
-    });
-    widget.onSelectionChanged(selectedOptions);
-  }
-
-  void showDropdown() {
-    if (dropdownOverlay != null) return;
-
-    final overlay = Overlay.of(context);
-    final renderBox = context.findRenderObject() as RenderBox;
-    final offset = renderBox.localToGlobal(Offset.zero);
-
-    dropdownOverlay = OverlayEntry(
-      builder: (context) => Positioned(
-        left: offset.dx,
-        top: offset.dy + renderBox.size.height,
-        width: renderBox.size.width,
-        child: Material(
-          elevation: 4,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxHeight: 200),
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: filteredOptions.length,
-              itemBuilder: (context, index) {
-                final option = filteredOptions[index];
-                return ListTile(
-                  title: Text(option),
-                  onTap: () {
-                    addSelectedOption(option);
-                    hideDropdown();
-                  },
-                );
-              },
-            ),
-          ),
-        ),
-      ),
-    );
-
-    overlay?.insert(dropdownOverlay!);
-  }
-
-  void hideDropdown() {
-    dropdownOverlay?.remove();
-    dropdownOverlay = null;
-  }
-
-  @override
-  void dispose() {
-    searchController.dispose();
-    searchFocusNode.dispose();
-    hideDropdown();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Wrap(
-            spacing: 8.0,
-            runSpacing: 8.0,
-            children: selectedOptions.map((option) {
-              return Chip(
-                label: Text(option),
-                deleteIcon: Icon(Icons.close),
-                onDeleted: () => removeSelectedOption(option),
-              );
-            }).toList(),
-          ),
-          SizedBox(height: 8.0),
-          TextField(
-            controller: searchController,
-            focusNode: searchFocusNode,
-            decoration: InputDecoration(
-              labelText: 'Search',
-              border: OutlineInputBorder(),
-              suffixIcon: Icon(Icons.search),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-
-
-/*
-class CustomMultipleSearch extends StatelessWidget {
-  final List<String> options = [
-    'Bob Rose',
-    'Alice Pasrugeux',
-    'Justin Time',
-    'Justin Case',
-    'Jamel Case',
-    'Pascal Case',
-    'Tom De Lasuite',
-    'Charlie Quide',
-  ];
-
-  final Function(List<String>)? onSelectionChanged;
-
-  CustomMultipleSearch({this.onSelectionChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    return MultipleSearchSelection<String>(
-      items: options,
-      fieldToCheck: (item) => item,
-      searchField: TextField(
-        decoration: InputDecoration(
-          hintText: 'Participants...',
-          prefixIcon: Icon(Icons.search, color: Color.fromARGB(255, 100, 3, 42)),
-          contentPadding: EdgeInsets.symmetric(vertical: 10.0),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color.fromARGB(255, 100, 3, 42), width: 2.0),
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color.fromARGB(255, 100, 3, 42), width: 2.0),
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          filled: true,
-          fillColor: Color(0xFFD9D9D9),
-        ),
-      ),
-      pickedItemBuilder: (item) => Chip(
-        label: Text(item),
-        backgroundColor: Colors.grey[200],
-        deleteIcon: Icon(Icons.close, size: 18),
-        onDeleted: () {
-          // Handle the removal of the chip
-        },
-      ),
-      itemBuilder: (context, item, isSelected) {
-        assert(item is String, 'Item must be a String');
-        return ListTile(
-          title: Text(
-            item as String,
-            overflow: TextOverflow.ellipsis, // Prevent long text overflow
-          ),
-          trailing: isSelected
-              ? Icon(Icons.check, color: Color.fromARGB(255, 100, 3, 42))
-              : null,
-        );
-      },
-      onPickedChange: (selectedItems) {
-        onSelectionChanged?.call(selectedItems);
-      },
-      itemsVisibility: ShowedItemsVisibility.alwaysOn,
-      fuzzySearch: FuzzySearch.jaro,
-      showSelectAllButton: true,
-    );
-  }
-}
-*/
 
 
 class MultiSelectSearchPage extends StatefulWidget {
@@ -622,19 +405,15 @@ class MultiSelectSearchPage extends StatefulWidget {
 }
 
 class _MultiSelectSearchPageState extends State<MultiSelectSearchPage> {
-  final List<MultiSelectItem<String>> _items = [
-    MultiSelectItem("Option1", "Option 1"),
-    MultiSelectItem("Option2", "Option 2"),
-    MultiSelectItem("Option3", "Option 3"),
-    MultiSelectItem("Option4", "Option 4"),
-  ];
+ 
+  List<String> _selectedItems = []; // Tracks the currently selected items.
 
-  List<String> _selectedItems = [];
+ 
 
   @override
   Widget build(BuildContext context) {
     return MultiSelectDialogField(
-      items: _items,
+      items: AppData.participants,
       title: Text("Select Options"),
       searchable: true,
       buttonText: Text("Select Items"),
