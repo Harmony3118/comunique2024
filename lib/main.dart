@@ -1,3 +1,5 @@
+import 'package:comunique2024/page/page_form_absence.dart';
+import 'package:comunique2024/page/page_form_soiree.dart';
 import 'package:comunique2024/page/page_header_footer.dart';
 import 'package:comunique2024/page/page_inscription.dart';
 import 'package:comunique2024/page/page_inscription_suite.dart';
@@ -39,12 +41,12 @@ class MyApp extends StatelessWidget {
       // ******************************************************************************
       // ******************************************************************************
 
-      home: const PageConnection(),
-      // home: Scaffold(
-      //   appBar: Header(),
-      //   body: AnnuairePage(),
-      //   bottomNavigationBar: Footer(),
-      // ),
+     // home: const PageConnection(),
+     home: Scaffold(
+        appBar: Header(),
+         body: FormSoiree(),
+       bottomNavigationBar: Footer(),
+      ),
     );
   }
 }
