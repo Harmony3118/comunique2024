@@ -108,6 +108,10 @@ class _CreaGroupeState extends State<CreaGroupe> {
                       "Sélectionnez les Participants",
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
+                     buttonIcon: const Icon(
+                        Icons.search, // Replacing the down arrow with a search icon
+                        color:Color.fromARGB(255, 100, 3, 42),
+                      ),
                     initialValue: selectedParticipants,
                     onConfirm: (values) {
                       setState(() {
@@ -120,6 +124,13 @@ class _CreaGroupeState extends State<CreaGroupe> {
                           selectedParticipants.remove(item); // Deselect on tap
                         });
                       },
+                      
+                      chipColor: Color.fromARGB(255, 100, 3, 42), // Set the chip color
+                      textStyle: const TextStyle(
+                        color: Colors.white, // Text color inside the chip
+                        fontWeight: FontWeight.bold
+                      ),
+                      
                     ),
                   ),
                 ),
@@ -414,9 +425,13 @@ class _MultiSelectSearchPageState extends State<MultiSelectSearchPage> {
   Widget build(BuildContext context) {
     return MultiSelectDialogField(
       items: AppData.participants,
-      title: Text("Select Options"),
+      title: const Text("Select Options"),
       searchable: true,
-      buttonText: Text("Select Items"),
+      buttonIcon: const Icon(
+        Icons.search, // Search icon instead of the arrow
+        color: Colors.black,
+      ),
+      buttonText: const Text("Select Items"),
       initialValue: _selectedItems, // Retains previously selected items
       onConfirm: (values) {
         setState(() {
@@ -426,15 +441,24 @@ class _MultiSelectSearchPageState extends State<MultiSelectSearchPage> {
         // Notify the parent widget of changes
         widget.onSelectionChanged(_selectedItems);
       },
+    
       chipDisplay: MultiSelectChipDisplay(
+        
         onTap: (item) {
           setState(() {
             _selectedItems.remove(item); // Deselect item on tap
           });
-
+          
           // Notify the parent widget of changes
           widget.onSelectionChanged(_selectedItems);
         },
+        chipColor: Color.fromARGB(255, 100, 3, 42), // Set the chip color
+        textStyle: const TextStyle(
+          color: Colors.white, // Text color inside the chip
+          fontWeight: FontWeight.bold
+        
+        ),
+        
       ),
     );
   }
