@@ -5,7 +5,13 @@ import 'page_ajout.dart'; // Pour la redirection en arrière
 import 'page_navigation.dart';
 import 'page_file_actualite.dart';
 import 'bdd/event.dart';
+import 'bdd/organisation.dart';
 import 'bdd/bdd.dart';
+
+Future<List<Map<String, dynamic>>> recupOrga() async {
+  final db = await AppDataBase.instance.database;
+  return await db.query('Organisation');
+}
 
 class EventCreationForm extends StatefulWidget {
   @override
@@ -45,8 +51,21 @@ class _EventCreationFormState extends State<EventCreationForm> {
   final List<String> _roles = []; // Ajouter les options nécessaires plus tard
   final List<String> _destinataires =
       []; // Ajouter les options nécessaires plus tard
-  final List<String> _organisateurs =
-      []; // Ajouter les options nécessaires plus tard
+  List<Map<String, dynamic>> _organisateurs = [];
+  List<String> _organisateursNames = [];
+  @override
+  void initState() {
+    super.initState();
+    _loadOrganisations();
+  }
+
+  void _loadOrganisations() async {
+    final data = await recupOrga();
+    setState(() {
+      _organisateurs = data;
+      _organisateursNames = data.map((org) => org['nom'] as String).toList();
+    });
+  }
 
   @override
   void dispose() {
@@ -76,12 +95,17 @@ class _EventCreationFormState extends State<EventCreationForm> {
 
     int inscripApp = _inscriptionViaApp ? 1 : 0;
     int inscripHA = _inscriptionViaHelloAsso ? 1 : 0;
+    final selectedOrg = _organisateurs.firstWhere(
+      (org) => org['nom'] == _selectedOrganisateur,
+      orElse: () => {},
+    );
+
     final Event evenement = Event(
       idUtilisateur: 1,
       status: 1, // c'est le role
       idGroupe: 1,
       objet: _objetController.text,
-      idOrganisation: 1,
+      idOrganisation: selectedOrg['idOrga'],
       titre: _titreController.text,
       // pb avec les types, comment faire la convertion ?
       date: _selectedDate?.toIso8601String().split('T')[0],
@@ -402,7 +426,7 @@ class _EventCreationFormState extends State<EventCreationForm> {
             Divider(),
             _buildCenteredTitle("Contenu"),
             _buildDropdownRow(
-                "Organisateur", _selectedOrganisateur, _organisateurs,
+                "Organisateur", _selectedOrganisateur, _organisateursNames,
                 (newValue) {
               setState(() {
                 _selectedOrganisateur = newValue;

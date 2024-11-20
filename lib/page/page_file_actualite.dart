@@ -64,7 +64,6 @@ class _FileActualiteState extends State<FileActualite> {
 
   void _loadEvents() async {
     List<Widget> newCards = await afficherListEvents();
-    // newCards est vide...
     setState(() {
       cards = newCards;
       isLoading = false;
