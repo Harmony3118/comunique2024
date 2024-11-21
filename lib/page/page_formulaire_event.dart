@@ -7,6 +7,7 @@ import 'page_file_actualite.dart';
 import 'bdd/event.dart';
 import 'bdd/organisation.dart';
 import 'bdd/bdd.dart';
+import 'package:intl/intl.dart'; // Importation de DateFormat
 
 Future<List<Map<String, dynamic>>> recupOrga() async {
   final db = await AppDataBase.instance.database;
@@ -438,7 +439,7 @@ class _EventCreationFormState extends State<EventCreationForm> {
               title: Text(
                 _selectedDate == null
                     ? 'Sélectionner une date'
-                    : 'Date : ${_selectedDate!.toLocal()}'.split(' ')[0],
+                    : 'Date : ${DateFormat('dd/MM/yyyy').format(_selectedDate!)}', // Format de la date
                 style: TextStyle(fontSize: 16),
               ),
               trailing: Icon(Icons.calendar_today),
