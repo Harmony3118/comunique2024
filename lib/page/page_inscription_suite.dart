@@ -203,6 +203,11 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
                   icon: const Icon(Icons.camera_alt),
                   onPressed: _takePhoto,
                 ),
+                if (_image != null)
+                  CircleAvatar(
+                    radius: 25,
+                    backgroundImage: FileImage(_image!),
+                  ),
               ],
             ),
           ),
