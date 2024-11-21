@@ -41,10 +41,10 @@ class MyApp extends StatelessWidget {
       // ******************************************************************************
       // ******************************************************************************
 
-     // home: const PageConnection(),
+     //home: const PageConnection(),
      home: Scaffold(
-        appBar: Header(),
-         body: FormSoiree(),
+       appBar: Header(),
+       body: FormSoiree(),
        bottomNavigationBar: Footer(),
       ),
     );
