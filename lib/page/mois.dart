@@ -80,13 +80,20 @@ class _MoisViewState extends State<MoisView> {
     _selectedDay = _focusedDay;
   }
 
-  void _onDaySelected(
-    DateTime selectedDay,
-    DateTime focusedDay,
-  ) {
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+  setState(() {
     _selectedDay = selectedDay;
     _focusedDay = focusedDay;
-  }
+  });
+
+  // Naviguer vers la page des événements
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => EventPage(selectedDay: selectedDay),
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -168,15 +175,54 @@ class _MoisViewState extends State<MoisView> {
   }
 }
 
-// class EventPage extends StatelessWidget {
-//   final DateTime selectedDay;
+class EventPage extends StatelessWidget {
+  final DateTime selectedDay;
 
-//   EventPage({required this.selectedDay});
+  EventPage({required this.selectedDay});
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: event(),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Événements du ${selectedDay.day}/${selectedDay.month}/${selectedDay.year}",
+        ),
+      ),
+      body: FutureBuilder<List<Event>>(
+        future: fetchEventsForDay(selectedDay),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text("Erreur : ${snapshot.error}"));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text("Aucun événement pour ce jour."));
+          } else {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                final event = snapshot.data![index];
+                return ListTile(
+                  title: Text(event.titre),
+                  subtitle: Text("${event.hDebut} - ${event.hFin}"),
+                );
+              },
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Future<List<Event>> fetchEventsForDay(DateTime day) async {
+    final db = await AppDataBase.instance.database;
+    final String dayString = "${day.year}-${day.month}-${day.day}";
+    final List<Map<String, dynamic>> maps = await db.query(
+      'event',
+      where: 'date = ?',
+      whereArgs: [dayString],
+    );
+    return List.generate(maps.length, (i) => Event.fromMap(maps[i]));
+  }
+}
+
