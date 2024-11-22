@@ -42,7 +42,7 @@ class Event {
       'idUtilisateur': idUtilisateur,
       'idOrganisation': idOrganisation,
       'status': status,
-      'idGroupe': idGroupe,
+      'idGroupe': idGroupe, 
       'objet': objet,
       'titre': titre,
       'date': date,

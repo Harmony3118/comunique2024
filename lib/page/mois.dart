@@ -65,6 +65,133 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+// class MoisView extends StatefulWidget {
+//   final Function(int) onPageChanged;
+
+//   MoisView({required this.onPageChanged});
+//   _MoisViewState createState() => _MoisViewState();
+// }
+
+// class _MoisViewState extends State<MoisView> {
+//   late DateTime _selectedDay;
+//   late DateTime _focusedDay;
+//   late Future<Map<DateTime, List<Color>>> _eventMarkers;
+
+//   void initState() {
+//     super.initState();
+//     _focusedDay = DateTime.now();
+//     _selectedDay = _focusedDay;
+//     _eventMarkers = _fetchEventMarkers();
+//   }
+
+//   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+//   setState(() {
+//     _selectedDay = selectedDay;
+//     _focusedDay = focusedDay;
+//   });
+
+//   // Naviguer vers la page JourView avec la date sélectionnée
+//   Navigator.push(
+//     context,
+//     MaterialPageRoute(
+//       builder: (context) => BasePage(currentIndex:4,body:JourSelection(selectedDate: selectedDay),)
+//     ),
+//   );
+// }
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: FutureBuilder<Map<DateTime, List<Color>>>(
+//         future: _eventMarkers,
+//         builder: (context, snapshot) {
+//           if (snapshot.connectionState == ConnectionState.waiting) {
+//             return Center(child: CircularProgressIndicator());
+//           }
+//           if (snapshot.hasError) {
+//             return Center(child: Text('Erreur: ${snapshot.error}'));
+//           }
+
+//           final eventMarkers = snapshot.data ?? {};
+
+//           return SingleChildScrollView(
+//         child: Column(
+//           children: [
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 ElevatedButton(
+//                   style: ElevatedButton.styleFrom(
+//                     backgroundColor: Color.fromARGB(255, 100, 3, 42),
+//                     side: BorderSide(
+//                         color: Color.fromARGB(255, 100, 3, 42), width: 2),
+//                   ),
+//                   onPressed: () => widget.onPageChanged(0),
+//                   child: Text(
+//                     'mois',
+//                     style: TextStyle(color: Colors.white),
+//                   ),
+//                 ),
+//                 SizedBox(width: 10),
+//                 ElevatedButton(
+//                   style: ElevatedButton.styleFrom(
+//                     backgroundColor: Color.fromARGB(153, 100, 3, 42),
+//                     side: BorderSide(
+//                         color: Color.fromARGB(255, 100, 3, 42), width: 2),
+//                   ),
+//                   onPressed: () => widget.onPageChanged(1),
+//                   child: Text(
+//                     'semaine',
+//                     style: TextStyle(color: Colors.white),
+//                   ),
+//                 ),
+//                 SizedBox(width: 10),
+//                 ElevatedButton(
+//                   style: ElevatedButton.styleFrom(
+//                     backgroundColor: Color.fromARGB(153, 100, 3, 42),
+//                     side: BorderSide(
+//                         color: Color.fromARGB(255, 100, 3, 42), width: 2),
+//                   ),
+//                   onPressed: () => widget.onPageChanged(2),
+//                   child: Text(
+//                     'jour',
+//                     style: TextStyle(color: Colors.white),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//             TableCalendar(
+//               locale: 'fr_FR',
+//               headerStyle: HeaderStyle(
+//                 formatButtonVisible: false,
+//               ),
+//               firstDay: DateTime.utc(2020, 1, 1),
+//               lastDay: DateTime.utc(2030, 12, 31),
+//               focusedDay: _focusedDay,
+//               onDaySelected: _onDaySelected,
+//               selectedDayPredicate: (day) {
+//                 return isSameDay(_selectedDay, day);
+//               },
+//               calendarStyle: CalendarStyle(
+//                 selectedDecoration: BoxDecoration(
+//                   color: Colors.blue,
+//                   shape: BoxShape.circle,
+//                 ),
+//                 todayDecoration: BoxDecoration(
+//                   color: Colors.orange,
+//                   shape: BoxShape.circle,
+//                 ),
+//               ),
+//               startingDayOfWeek: StartingDayOfWeek.monday,
+              
+//       ),
+//           ],
+//         ),
+//     );
+//         },
+//       ),
+//     );
+//   }
+// }
 class MoisView extends StatefulWidget {
   final Function(int) onPageChanged;
 
@@ -75,106 +202,208 @@ class MoisView extends StatefulWidget {
 class _MoisViewState extends State<MoisView> {
   late DateTime _selectedDay;
   late DateTime _focusedDay;
+  late Future<Map<DateTime, List<Color>>> _eventMarkers;
 
+  @override
   void initState() {
     super.initState();
     _focusedDay = DateTime.now();
     _selectedDay = _focusedDay;
+    _eventMarkers = _fetchEventMarkers();
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-  setState(() {
-    _selectedDay = selectedDay;
-    _focusedDay = focusedDay;
-  });
+    setState(() {
+      _selectedDay = selectedDay;
+      _focusedDay = focusedDay;
+    });
 
-  // Naviguer vers la page JourView avec la date sélectionnée
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => BasePage(currentIndex:4,body:JourSelection(selectedDate: selectedDay),)
-    ),
-  );
-}
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 100, 3, 42),
-                    side: BorderSide(
-                        color: Color.fromARGB(255, 100, 3, 42), width: 2),
-                  ),
-                  onPressed: () => widget.onPageChanged(0),
-                  child: Text(
-                    'mois',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                SizedBox(width: 10),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(153, 100, 3, 42),
-                    side: BorderSide(
-                        color: Color.fromARGB(255, 100, 3, 42), width: 2),
-                  ),
-                  onPressed: () => widget.onPageChanged(1),
-                  child: Text(
-                    'semaine',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                SizedBox(width: 10),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(153, 100, 3, 42),
-                    side: BorderSide(
-                        color: Color.fromARGB(255, 100, 3, 42), width: 2),
-                  ),
-                  onPressed: () => widget.onPageChanged(2),
-                  child: Text(
-                    'jour',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-            TableCalendar(
-              locale: 'fr_FR',
-              headerStyle: HeaderStyle(
-                formatButtonVisible: false,
-              ),
-              firstDay: DateTime.utc(2020, 1, 1),
-              lastDay: DateTime.utc(2030, 12, 31),
-              focusedDay: _focusedDay,
-              onDaySelected: _onDaySelected,
-              selectedDayPredicate: (day) {
-                return isSameDay(_selectedDay, day);
-              },
-              calendarStyle: CalendarStyle(
-                selectedDecoration: BoxDecoration(
-                  color: Colors.blue,
-                  shape: BoxShape.circle,
-                ),
-                todayDecoration: BoxDecoration(
-                  color: Colors.orange,
-                  shape: BoxShape.circle,
-                ),
-              ),
-              startingDayOfWeek: StartingDayOfWeek.monday,
-            ),
-          ],
+    // Naviguer vers la page JourView avec la date sélectionnée
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BasePage(
+          currentIndex: 4,
+          body: JourSelection(selectedDate: selectedDay),
         ),
       ),
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder<Map<DateTime, List<Color>>>(
+        future: _eventMarkers,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Erreur: ${snapshot.error}'));
+          }
+
+          final eventMarkers = snapshot.data ?? {};
+
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromARGB(255, 100, 3, 42),
+                        side: BorderSide(
+                            color: Color.fromARGB(255, 100, 3, 42), width: 2),
+                      ),
+                      onPressed: () => widget.onPageChanged(0),
+                      child: Text(
+                        'mois',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromARGB(153, 100, 3, 42),
+                        side: BorderSide(
+                            color: Color.fromARGB(255, 100, 3, 42), width: 2),
+                      ),
+                      onPressed: () => widget.onPageChanged(1),
+                      child: Text(
+                        'semaine',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromARGB(153, 100, 3, 42),
+                        side: BorderSide(
+                            color: Color.fromARGB(255, 100, 3, 42), width: 2),
+                      ),
+                      onPressed: () => widget.onPageChanged(2),
+                      child: Text(
+                        'jour',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+                TableCalendar(
+                  locale: 'fr_FR',
+                  headerStyle: HeaderStyle(
+                    formatButtonVisible: false,
+                  ),
+                  firstDay: DateTime.utc(2020, 1, 1),
+                  lastDay: DateTime.utc(2030, 12, 31),
+                  focusedDay: _focusedDay,
+                  onDaySelected: _onDaySelected,
+                  selectedDayPredicate: (day) {
+                    return isSameDay(_selectedDay, day);
+                  },
+                  calendarStyle: CalendarStyle(
+                    selectedDecoration: BoxDecoration(
+                      color: Colors.blue,
+                      shape: BoxShape.circle,
+                    ),
+                    todayDecoration: BoxDecoration(
+                      color: Colors.orange,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  startingDayOfWeek: StartingDayOfWeek.monday,
+                  calendarBuilders: CalendarBuilders(
+  markerBuilder: (context, date, _) {
+    final markers = eventMarkers[date] ?? [];
+
+    // Afficher des journaux pour chaque date analysée
+    print("Date analysée : $date, Marqueurs : $markers");
+
+    if (markers.isEmpty) return null;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: markers
+          .take(3) // Limite à 3 marqueurs
+          .map(
+            (color) => Container(
+              margin: EdgeInsets.symmetric(horizontal: 1),
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: color,
+                shape: BoxShape.circle,
+              ),
+            ),
+          )
+          .toList(),
+    );
+  },
+),
+
+                  // calendarBuilders: CalendarBuilders(
+                  //   markerBuilder: (context, date, _) {
+                  //     // Vérifie si la date a des marqueurs
+                  //     final markers = eventMarkers[date] ?? [];
+                  //     if (markers.isEmpty) return null;
+
+                  //     // Empile les petits cercles pour chaque couleur
+                  //     return Row(
+                  //       mainAxisAlignment: MainAxisAlignment.center,
+                  //       children: markers
+                  //           .take(3) // Limite à 3 marqueurs pour éviter les débordements
+                  //           .map(
+                  //             (color) => Container(
+                  //               margin: EdgeInsets.symmetric(horizontal: 1),
+                  //               width: 8,
+                  //               height: 8,
+                  //               decoration: BoxDecoration(
+                  //                 color: color,
+                  //                 shape: BoxShape.circle,
+                  //               ),
+                  //             ),
+                  //           )
+                  //           .toList(),
+                  //     );
+                  //   },
+                  // ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+Future<Map<DateTime, List<Color>>> _fetchEventMarkers() async {
+  final db = await AppDataBase.instance.database;
+  final List<Map<String, dynamic>> events = await db.query('event');
+  Map<DateTime, List<Color>> markers = {};
+
+  for (var event in events) {
+    DateTime eventDate = DateTime.parse(event['date']);
+    final orgaResult = await db.query(
+      'organisation',
+      where: 'idOrga = ?',
+      whereArgs: [event['idOrganisation']],
+    );
+
+    if (orgaResult.isNotEmpty) {
+      Color color = Color(orgaResult.first['color'] as int);
+      if (markers[eventDate] == null) {
+        markers[eventDate] = [color];
+      } else if (!markers[eventDate]!.contains(color)) {
+        markers[eventDate]!.add(color);
+      }
+    }
+  }
+
+  print("Event markers: $markers"); 
+  return markers;
 }
 
 // class EventPage extends StatelessWidget {
