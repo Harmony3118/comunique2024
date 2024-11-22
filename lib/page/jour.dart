@@ -24,6 +24,7 @@ class DateDisplay extends StatelessWidget {
 
 class JourView extends StatelessWidget {
   final Function(int) onPageChanged;
+  
 
   JourView({required this.onPageChanged});
 

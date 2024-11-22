@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-
+import 'package:comunique2024/page/mois.dart';
+import 'package:comunique2024/page/page_navigation.dart';
+import 'package:comunique2024/page/jourselection.dart';
 
 
 class SemaineView extends StatefulWidget {
@@ -27,9 +29,20 @@ class _SemaineViewState extends State<SemaineView> {
   
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-      _selectedDay = selectedDay;
-      _focusedDay = focusedDay; 
-  }
+  setState(() {
+    _selectedDay = selectedDay;
+    _focusedDay = focusedDay;
+  });
+
+  // Naviguer vers la page JourView avec la date sélectionnée
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => BasePage(currentIndex:4,body:JourSelection(selectedDate: selectedDay),
+    )),
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
