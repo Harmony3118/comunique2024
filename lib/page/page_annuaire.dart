@@ -207,6 +207,7 @@ class _AnnuairePageState extends State<AnnuairePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, // Désactive la flèche de retour automatique de l'AppBar
         title: const Text('Annuaire Example'),
       ),
       body: SingleChildScrollView(

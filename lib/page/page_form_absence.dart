@@ -325,7 +325,7 @@ class MyForm extends StatefulWidget {
 }
 
 class _MyFormState extends State<MyForm> {
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<String> _professeur = [];
   List<String> professeurs = [
     "Professeur1@ensc.fr",

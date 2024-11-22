@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:comunique2024/page/page_header_footer.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-// import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:comunique2024/page/bdd/bdd.dart';
 import 'package:comunique2024/page/page_header_footer.dart';
 import 'package:comunique2024/page/page_annuaire.dart';
@@ -15,7 +15,7 @@ import 'package:comunique2024/page/page_liens_externes.dart'; //rajouté par pas
 import 'package:comunique2024/page/page_connection.dart';
 import 'package:comunique2024/page/page_header_footer.dart';
 import 'package:comunique2024/page/page_inscription.dart';
-import 'package:comunique2024/page/page_inscription_suite.dart';
+import 'package:comunique2024/page/page_parametre.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
@@ -24,23 +24,23 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialise sqflite pour les environnements de bureau
-  // sqfliteFfiInit();
-  // databaseFactory = databaseFactoryFfi;
+  //sqfliteFfiInit();
+  //databaseFactory = databaseFactoryFfi;
 
   // Chemin de la base de données
-  final databasePath = join(await getDatabasesPath(), 'AppDataBase.db');
+  //final databasePath = join(await getDatabasesPath(), 'AppDataBase.db');
   // Supprimer la base de données pour forcer la recréation
-  await deleteDatabase(databasePath);
-  print("Base de données supprimée. Initialisation...");
+  //await deleteDatabase(databasePath);
+  //print("Base de données supprimée. Initialisation...");
 
   // Initialiser la base de données en accédant à AppDataBase.instance.database
-  final db = await AppDataBase.instance.database;
+  /*final db = await AppDataBase.instance.database;
   print("Initialisation de la base de données réussie.");
 
   // Vérifier si les données de la table "organisation" existent
   final List<Map<String, dynamic>> organisations =
       await db.query('organisation');
-  print(organisations);
+  print(organisations);*/
 
   runApp(const MyApp());
 }
@@ -95,10 +95,10 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
+       
 
       // home: BasePage(
-      //   // test
+      //   // test 
       //   currentIndex: 0,
       //   body: const PageConnection(),
       // ),

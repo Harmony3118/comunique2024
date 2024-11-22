@@ -2,29 +2,59 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'semaine.dart';
 import 'jour.dart';
-
-
- 
+import 'bdd/bdd.dart';
+import 'bdd/event.dart';
+import 'bdd/organisation.dart';
 
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
+// a toi de voir quel type de sortie tu veux
+// void afficherPointEvents() async {
+Future<List<Widget>> afficherPointEvents() async {
+  final db = await AppDataBase.instance.database;
+  // liste de tous les events qu'il faut afficher
+  final List<Map<String, dynamic>> maps = await db.query('event');
+  List<Event> evenements = List.generate(maps.length, (i) {
+    return Event.fromMap(maps[i]);
+  });
+  List<Widget> newCards = []; // pas utile si type retour = void
 
+  for (Event e in evenements) {
+    List<Map<String, dynamic>> map1 = await db.query("Organisation",
+        where: "idOrga = ?", whereArgs: [e.idOrganisation]);
+    Organisation o = Organisation.fromMap(map1.first);
+
+    // la couleur que tu dois afficher pour les events
+    Color c = Color(o.color);
+
+    // pour la date et l'heure des events
+    String? date = e.date;
+    String? heureDebut = e.hDebut;
+    String? heureFin = e.hFin;
+
+    // et la suite est pour toi
+    // /!\ il faut que tu penses à tous les affichages
+    // sur les trois types de calendrier
+  }
+  return newCards;
+}
 
 class _HomePageState extends State<HomePage> {
-  int _currentIndex = 0;
+  int _currentIndex = 0; // mettre le racourcis vers la base de données
   final List<Widget Function(Function(int))> _pages = [
     (onPageChanged) => MoisView(onPageChanged: onPageChanged),
     (onPageChanged) => SemaineView(onPageChanged: onPageChanged),
-    (onPageChanged) => JourView(onPageChanged: onPageChanged), 
+    (onPageChanged) => JourView(onPageChanged: onPageChanged),
   ];
-   void _onPageChanged(int index) {
+  void _onPageChanged(int index) {
     setState(() {
       _currentIndex = index;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,12 +63,11 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-
 class MoisView extends StatefulWidget {
   final Function(int) onPageChanged;
 
   MoisView({required this.onPageChanged});
-_MoisViewState createState() => _MoisViewState();
+  _MoisViewState createState() => _MoisViewState();
 }
 
 class _MoisViewState extends State<MoisView> {
@@ -51,84 +80,93 @@ class _MoisViewState extends State<MoisView> {
     _selectedDay = _focusedDay;
   }
 
-  void _onDaySelected(DateTime selectedDay, DateTime focusedDay,) {
-      _selectedDay = selectedDay;
-      _focusedDay = focusedDay; 
+  void _onDaySelected(
+    DateTime selectedDay,
+    DateTime focusedDay,
+  ) {
+    _selectedDay = selectedDay;
+    _focusedDay = focusedDay;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column( 
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 100, 3, 42), 
-                  side: BorderSide(color:Color.fromARGB(255, 100, 3, 42), width: 2),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 100, 3, 42),
+                    side: BorderSide(
+                        color: Color.fromARGB(255, 100, 3, 42), width: 2),
+                  ),
+                  onPressed: () => widget.onPageChanged(0),
+                  child: Text(
+                    'mois',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-                onPressed: () => widget.onPageChanged(0),
-                child: Text('mois',style: TextStyle(color: Colors.white),),
-              ),
-              SizedBox(width: 10), 
-
-
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(153, 100, 3, 42), 
-                  side: BorderSide(color:Color.fromARGB(255, 100, 3, 42), width: 2),
+                SizedBox(width: 10),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(153, 100, 3, 42),
+                    side: BorderSide(
+                        color: Color.fromARGB(255, 100, 3, 42), width: 2),
+                  ),
+                  onPressed: () => widget.onPageChanged(1),
+                  child: Text(
+                    'semaine',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-                onPressed: () => widget.onPageChanged(1),
-                child: Text('semaine', style: TextStyle(color: Colors.white),),
-              ),
-              SizedBox(width: 10),
-              
-              
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(153, 100, 3, 42),
-                  side: BorderSide(color:Color.fromARGB(255, 100, 3, 42), width: 2),
+                SizedBox(width: 10),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(153, 100, 3, 42),
+                    side: BorderSide(
+                        color: Color.fromARGB(255, 100, 3, 42), width: 2),
+                  ),
+                  onPressed: () => widget.onPageChanged(2),
+                  child: Text(
+                    'jour',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-                onPressed: () => widget.onPageChanged(2),
-                child: Text('jour',style: TextStyle(color: Colors.white),),
-              ),
-            ],
-          ),
-          TableCalendar(
-            locale:'fr_FR',
-            headerStyle: HeaderStyle(
-            formatButtonVisible: false, 
-          ),
-            firstDay: DateTime.utc(2020, 1, 1),
-            lastDay: DateTime.utc(2030, 12, 31),
-            focusedDay: _focusedDay,
-            onDaySelected: _onDaySelected,
-            selectedDayPredicate: (day) {
-              return isSameDay(_selectedDay, day);
-            },
-            calendarStyle: CalendarStyle(
-              selectedDecoration: BoxDecoration(
-                color: Colors.blue,
-                shape: BoxShape.circle,
-              ),
-              todayDecoration: BoxDecoration( 
-                color: Colors.orange,
-                shape: BoxShape.circle,
-              ),
+              ],
             ),
-            startingDayOfWeek: StartingDayOfWeek.monday,
-          ),
-
-        ],
-      ),
+            TableCalendar(
+              locale: 'fr_FR',
+              headerStyle: HeaderStyle(
+                formatButtonVisible: false,
+              ),
+              firstDay: DateTime.utc(2020, 1, 1),
+              lastDay: DateTime.utc(2030, 12, 31),
+              focusedDay: _focusedDay,
+              onDaySelected: _onDaySelected,
+              selectedDayPredicate: (day) {
+                return isSameDay(_selectedDay, day);
+              },
+              calendarStyle: CalendarStyle(
+                selectedDecoration: BoxDecoration(
+                  color: Colors.blue,
+                  shape: BoxShape.circle,
+                ),
+                todayDecoration: BoxDecoration(
+                  color: Colors.orange,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              startingDayOfWeek: StartingDayOfWeek.monday,
+            ),
+          ],
+        ),
       ),
     );
   }
 }
-
 
 // class EventPage extends StatelessWidget {
 //   final DateTime selectedDay;
@@ -142,4 +180,3 @@ class _MoisViewState extends State<MoisView> {
 //     );
 //   }
 // }
-

@@ -1,42 +1,46 @@
 class Event {
-  int idPost;
+  int? idPost;
   int idUtilisateur;
-  int status;
+  int idOrganisation;
+  int status; // = role
   int idGroupe;
   String objet; //
   String titre; //
-  String date;
-  String hDebut;
-  String hFin;
+  String? date;
+  String? hDebut;
+  String? hFin;
   String lieu;
-  int tarif;
+  double tarif; // changer le type dans la bdd
   String commentaire;
-  String fichier;
-  bool inscription;
+  String? fichier;
+  int inscriptionAppli; // ce sont des booléens mais conservés en int
+  int inscriptionHelloAsso; // ce sont des booléens mais conservés en int
 
   // Constructeur
-  Event(
+  Event({
     this.idPost,
-    this.idUtilisateur,
-    this.status,
-    this.idGroupe,
-    this.objet,
-    this.titre,
+    required this.idUtilisateur,
+    required this.idOrganisation,
+    required this.status,
+    required this.idGroupe,
+    required this.objet,
+    required this.titre,
     this.date,
     this.hDebut,
     this.hFin,
-    this.lieu,
-    this.tarif,
-    this.commentaire,
+    required this.lieu,
+    required this.tarif,
+    required this.commentaire,
     this.fichier,
-    this.inscription,
-  );
+    required this.inscriptionAppli,
+    required this.inscriptionHelloAsso,
+  });
 
   // Méthode pour convertir l'objet en Map
   Map<String, dynamic> toMap() {
     return {
-      'idPost': idPost,
       'idUtilisateur': idUtilisateur,
+      'idOrganisation': idOrganisation,
       'status': status,
       'idGroupe': idGroupe,
       'objet': objet,
@@ -48,24 +52,27 @@ class Event {
       'tarif': tarif,
       'commentaire': commentaire,
       'fichier': fichier,
-      'inscription': inscription,
+      'inscriptionAppli': inscriptionAppli,
+      'inscriptionHelloAsso': inscriptionHelloAsso,
     };
   }
 
   //Pour créer une instance à partir d'un Map
   factory Event.fromMap(Map<String, dynamic> map) => Event(
-      map['idPost'],
-      map['idUtilisateur'],
-      map['status'],
-      map['idGroupe'],
-      map['objet'],
-      map['titre'],
-      map['date'],
-      map['hDebut'],
-      map['hFin'],
-      map['lieu'],
-      map['tarif'],
-      map['commentaire'],
-      map['fichier'],
-      map['inscription']);
+      idPost: map['idPost'],
+      idUtilisateur: map['idUtilisateur'],
+      idOrganisation: map['idOrganisation'],
+      status: map['status'],
+      idGroupe: map['idGroupe'],
+      objet: map['objet'],
+      titre: map['titre'],
+      date: map['date'],
+      hDebut: map['hDebut'],
+      hFin: map['hFin'],
+      lieu: map['lieu'],
+      tarif: map['tarif'],
+      commentaire: map['commentaire'],
+      fichier: map['fichier'],
+      inscriptionAppli: map['inscriptionAppli'],
+      inscriptionHelloAsso: map['inscriptionHelloAsso']);
 }

@@ -35,15 +35,15 @@ class AppDataBase {
       onCreate: (db, version) async {
         // Création des tables si elles n'existent pas encore
         await db.execute(
-            "CREATE TABLE utilisateur (idUtilisateur INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT, prenom TEXT, email TEXT, promotion INTEGER)");
+            "CREATE TABLE utilisateur (idUtilisateur INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT, prenom TEXT, email TEXT, promotion INTEGER, image BLOB)");
         await db.execute(
             "CREATE TABLE role (idRole INTEGER PRIMARY KEY AUTOINCREMENT, nomRole TEXT)");
         await db.execute(
-            "CREATE TABLE organisation (idOrga INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT)");
+            "CREATE TABLE organisation (idOrga INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT, image BLOB, color INTEGER)");
         await db.execute(
             "CREATE TABLE statuts (idUtilisateur INTEGER, idOrganisation INTEGER, idRole INTEGER, annee INTEGER, PRIMARY KEY (idUtilisateur, idOrganisation, idRole), FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur), FOREIGN KEY (idOrganisation) REFERENCES organisation(idOrga), FOREIGN KEY (idRole) REFERENCES role(idRole))");
         await db.execute(
-            "CREATE TABLE event (idPost INTEGER PRIMARY KEY AUTOINCREMENT, idUtilisateur INTEGER, status INTEGER, idGroupe INTEGER, objet TEXT, titre TEXT, date TEXT, hDebut TEXT, hFin TEXT, lieu TEXT, tarif INTEGER, commentaire TEXT, fichier TEXT, inscription INTEGER, FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur), FOREIGN KEY (idGroupe) REFERENCES grpDiffusion(idGroupe), FOREIGN KEY (status) REFERENCES role(idRole))");
+            "CREATE TABLE event (idPost INTEGER PRIMARY KEY AUTOINCREMENT, idUtilisateur INTEGER, idOrganisation INTEGER, status INTEGER, idGroupe INTEGER, objet TEXT, titre TEXT, date TEXT, hDebut TEXT, hFin TEXT, lieu TEXT, tarif DOUBLE, commentaire TEXT, fichier TEXT, inscriptionAppli INTEGER, inscriptionHelloAsso INTEGER, FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur), FOREIGN KEY (idGroupe) REFERENCES grpDiffusion(idGroupe), FOREIGN KEY (status) REFERENCES role(idRole))");
         await db.execute(
             "CREATE TABLE inscription (idPost INTEGER, idUtilisateur INTEGER, nbPlaces INTEGER, PRIMARY KEY (idPost, idUtilisateur), FOREIGN KEY (idPost) REFERENCES event(idPost), FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur))");
         // pour l'instant le nb de place n'est pas utilisé
@@ -57,24 +57,25 @@ class AppDataBase {
         // pré remplir les tables
         await _preRemplirOrganisation(db);
         await _preRemplirRole(db);
+        await _preRemplirEvent(db);
       },
     );
   }
 
   Future<void> _preRemplirOrganisation(Database db) async {
+    Color c = Color(0xB5D08FBA);
     List<Map<String, dynamic>> organisations = [
-      {'nom': 'BDE'},
-      {'nom': 'BDS'},
-      {'nom': 'BDA'},
-      {'nom': 'JE'},
-      {'nom': 'Binks'},
-      {'nom': 'Club Musique'},
+      {'nom': 'BDE', 'color': 0xB5DEB5A7},
+      {'nom': 'BDS', 'color': 0xB5A7DEDB},
+      {'nom': 'BDA', 'color': 0xB5F5E9AB},
+      {'nom': 'JE', 'color': 0xB5BBD08F},
+      {'nom': 'Binks', 'color': 0x000000},
+      {'nom': 'Club Musique', 'color': 0xB5F5E9AB},
       // ajouter tous les clubs -> BDA, BDS, BDE
-      {'nom': 'Admisnistration'},
-      {'nom': 'Professeur'},
-      {'nom': 'Doctorant'},
-      {'nom': 'Alumnis'},
-      {'nom': 'Bordeaux Inp'},
+      {'nom': 'Admisnistration', 'color': 0xB5D08FBA},
+      {'nom': 'Professeur', 'color': 0xB5D08FBA},
+      {'nom': 'Doctorant', 'color': 0xB5D08FBA},
+      {'nom': 'Alumnis', 'color': 0xB5D08FBA},
     ];
 
     for (var org in organisations) {
@@ -101,6 +102,139 @@ class AppDataBase {
       await db.insert('role', r);
     }
   }
+
+  Future<void> _preRemplirEvent(Database db) async {
+    double x = 2.0;
+    List<Map<String, dynamic>> listEvent = [
+      {
+        'idUtilisateur': 1,
+        'idOrganisation': 3,
+        'status': 2,
+        'idGroupe': 2,
+        'objet': "Il faut une description de l'event",
+        'titre': "Chorale",
+        'date': "2024-11-18",
+        'hDebut': "11:00",
+        'hFin': "12:00",
+        'lieu': "Ecole",
+        'tarif': x,
+        'commentaire': "commentaire",
+        'inscriptionAppli': 1,
+        'inscriptionHelloAsso': 0,
+      },
+      {
+        'idUtilisateur': 1,
+        'idOrganisation': 4,
+        'status': 2,
+        'idGroupe': 2,
+        'objet': "Il faut une description de l'event",
+        'titre': "Formation i2c",
+        'date': "2023-08-16",
+        'hDebut': "12:30",
+        'hFin': "14:00",
+        'lieu': "Salle S103",
+        'tarif': x,
+        'commentaire': "commentaire",
+        'inscriptionAppli': 0,
+        'inscriptionHelloAsso': 1,
+      },
+      {
+        'idUtilisateur': 1,
+        'idOrganisation': 1,
+        'status': 2,
+        'idGroupe': 2,
+        'objet': "Il faut une description de l'event",
+        'titre': "Chorale",
+        'date': "2024-11-18",
+        'hDebut': "11:00",
+        'hFin': "12:00",
+        'lieu': "Ecole",
+        'tarif': x,
+        'commentaire': "commentaire",
+        'inscriptionAppli': 1,
+        'inscriptionHelloAsso': 0,
+      },
+      {
+        'idUtilisateur': 1,
+        'idOrganisation': 2,
+        'status': 2,
+        'idGroupe': 2,
+        'objet': "Il faut une description de l'event",
+        'titre': "Chorale",
+        'date': "2024-11-18",
+        'hDebut': "11:00",
+        'hFin': "12:00",
+        'lieu': "Ecole",
+        'tarif': x,
+        'commentaire': "commentaire",
+        'inscriptionAppli': 1,
+        'inscriptionHelloAsso': 0,
+      },
+      {
+        'idUtilisateur': 1,
+        'idOrganisation': 5,
+        'status': 2,
+        'idGroupe': 2,
+        'objet': "Il faut une description de l'event",
+        'titre': "Chorale",
+        'date': "2024-11-18",
+        'hDebut': "11:00",
+        'hFin': "12:00",
+        'lieu': "Ecole",
+        'tarif': x,
+        'commentaire': "commentaire",
+        'inscriptionAppli': 1,
+        'inscriptionHelloAsso': 0,
+      },
+      {
+        'idUtilisateur': 1,
+        'idOrganisation': 7,
+        'status': 2,
+        'idGroupe': 2,
+        'objet': "Il faut une description de l'event",
+        'titre': "Chorale",
+        'date': "2024-11-18",
+        'hDebut': "11:00",
+        'hFin': "12:00",
+        'lieu': "Ecole",
+        'tarif': x,
+        'commentaire': "commentaire",
+        'inscriptionAppli': 1,
+        'inscriptionHelloAsso': 0,
+      },
+    ];
+    print("fin des initialisations des events");
+
+    for (var e in listEvent) {
+      await db.insert('event', e);
+    }
+    print("fin ajout event");
+  }
+
+  // final List<Map<String, dynamic>> events = [
+//   //   {
+//     "office": "BDS",
+//     "role": "Respo WES",
+//     "eventTitle": 'WES',
+//     "eventDate": 'Du 12 au 14 janvier 2024',
+//     "eventTime": '',
+//     "eventLocation": 'Station Pas de la Case, Andorre',
+//     "imageUrl": 'https://via.placeholder.com/150',
+//     "color": const Color.fromRGBO(167, 222, 219, 0.71),
+//     "isPinned": false,
+//   },
+//   {
+//     "office": "BDA",
+//     "role": "Club musique",
+//     "eventTitle": 'Répétition',
+//     "eventDate": 'Le mardi 21 septembre 2023',
+//     "eventTime": 'De 12h30 à 13h30',
+//     "eventLocation": 'Salle S103',
+//     "imageUrl": 'https://via.placeholder.com/150',
+//     "color": const Color.fromRGBO(245, 233, 171, 0.71),
+//     "isPinned": false,
+//   },
+// ];
 
   void insertOrganisation(Organisation orga) async {
     final Database db = await database;
@@ -162,9 +296,8 @@ class AppDataBase {
   }
 
   // Méthodes pour la table "event"
-  void insertEvent(Event event) async {
+  Future<void> insertEvent(Event event) async {
     final Database db = await database;
-
     await db.insert(
       'event',
       event.toMap(),

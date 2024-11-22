@@ -7,7 +7,6 @@ import Foundation
 
 import file_selector_macos
 import sqflite_darwin
-import sqflite_darwin
 import url_launcher_macos
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
