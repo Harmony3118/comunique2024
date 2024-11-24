@@ -179,11 +179,11 @@ class _SemaineViewState extends State<SemaineView> {
   final eventColor = event['color'] != null
       ? event['color']
       : const Color.fromARGB(255, 163, 12, 12).value; // Couleur par défaut
-
+ 
   // Ajout des événements dans la carte des heures
   for (int hour = startHour; hour < endHour; hour++) {
     eventsByHour[hour]?.add({
-      ...event,
+      ...event, 
       'startHour': startHour,
       'color': eventColor, // Ajoute une couleur par défaut si nécessaire
     });
