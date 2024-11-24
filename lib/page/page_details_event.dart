@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:comunique2024/widget/card_home.dart';
-import 'bdd/bdd.dart';
 import 'bdd/utilisateur.dart';
 
 class EventDetails extends StatefulWidget {
@@ -71,7 +70,8 @@ class _EventDetailsState extends State<EventDetails> {
               child: CardHome(
                 office: widget.event['office'] ?? "Bureau inconnu",
                 role: widget.event['role'] ?? "Rôle inconnu",
-                eventTitle: widget.event['titre'] ?? "Titre inconnu",
+                object: widget.event['object'] ?? "Rôle inconnu",
+          eventTitle: widget.event['titre'] ?? "Titre inconnu",
                 eventDate: widget.event['date'] ?? "Date inconnue",
                 eventTime: formatTimeInterval(widget.event['hDebut'], widget.event['hFin']),
                 eventLocation: widget.event['location'] ?? "Lieu inconnu",

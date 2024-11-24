@@ -8,6 +8,7 @@ import 'package:comunique2024/page/bdd/utilisateur.dart';
 class CardHome extends StatefulWidget {
   final String office;
   final String role;
+  final String object;
   final String eventTitle;
   final String eventDate;
   final String eventTime;
@@ -23,6 +24,7 @@ class CardHome extends StatefulWidget {
     Key? key,
     required this.office,
     required this.role,
+    required this.object,
     required this.eventTitle,
     required this.eventDate,
     required this.eventTime,
