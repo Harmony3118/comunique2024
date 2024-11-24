@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:comunique2024/page/page_contact_admin.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart'; // Pour le formatage des dates et heures
 import 'package:comunique2024/page/page_navigation.dart';
 
 class Absence extends StatelessWidget {
@@ -110,7 +112,7 @@ class VerifAbsence extends StatelessWidget {
                                               children: [
                                             TextSpan(
                                               text:
-                                                  "J'ai été absent du $stringStartDate à partir de $stringStartTime jusqu'au $stringEndDate à $stringEndTime pour cause de $motif.\n\n Le(s) professeur(s) concernés sont : $stringProfesseur.\n\n Pièces(s) justificative(s) :\n\n • ",
+                                                  "J'ai été absent du $stringStartDate à partir de $stringStartTime jusqu'au $stringEndDate à $stringEndTime pour la raison suivante : « $motif »\n\nLe(s) professeur(s) concernés sont : $stringProfesseur.\n\nPièces(s) justificative(s) :\n\n • ",
                                             ),
                                             TextSpan(
                                                 text: "$nomFichier",
@@ -738,28 +740,75 @@ class _MyFormState extends State<MyForm> {
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
-                              Map result = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => BasePage(
-                                        currentIndex: 4,
-                                        body: VerifAbsence(
-                                            professeur: _professeur,
-                                            startDate: _startDate,
-                                            endDate: _endDate,
-                                            startTime: _startTime,
-                                            endTime: _endTime,
-                                            motif: _motif,
-                                            nomFichier: _nomFichier)),
-                                  ));
 
-                              _professeur = result['professeur'];
-                              _startDateController.text = result['startDate'];
-                              _endDateController.text = result['endDate'];
-                              _startTimeController.text = result['startTime'];
-                              _endTimeController.text = result['endTime'];
-                              _motif = result['motif'];
-                              _nomFichier = result['nomFichier'];
+                              // Formatage de la date
+                              String formatDate(String? date) {
+                                if (date == null || date.isEmpty) return 'Non renseignée';
+                                try {
+                                  DateTime parsedDate = DateFormat('yyyy-MM-dd').parse(date);
+                                  return DateFormat('dd-MM-yyyy').format(parsedDate);
+                                } catch (e) {
+                                  return date; // Si le parsing échoue, retourne la chaîne brute.
+                                }
+                              }
+
+                              // Formatage de l'heure
+                              String formatTime(String? time) {
+                                if (time == null || time.isEmpty) return 'Non renseignée';
+                                try {
+                                  final timeParts = time.split(':');
+                                  final hour = int.parse(timeParts[0]);
+                                  final minute = int.parse(timeParts[1]);
+                                  return TimeOfDay(hour: hour, minute: minute).format(context);
+                                } catch (e) {
+                                  return time; // Si le parsing échoue, retourne la chaîne brute.
+                                }
+                              }
+
+                              // Construire le message du mail
+                              String emailSubject = "Justification d'absence";
+
+                              String emailBody = """
+                    Madame, Monsieur,
+
+                    Je vous écris pour vous informer de mon absence prévue, et je souhaite en fournir une justification.
+
+                    **Motif** : $_motif
+
+                    **Période concernée** :
+                    - Du : ${formatDate(_startDateController.text)} à ${formatTime(_startTimeController.text)}
+                    - Au : ${formatDate(_endDateController.text)} à ${formatTime(_endTimeController.text)}
+
+                    Je reste à votre disposition pour toute information complémentaire ou pour convenir d’une démarche éventuelle.
+
+                    Je vous prie d’agréer, Madame, Monsieur, l’expression de mes salutations distinguées.
+
+                    Cordialement,
+                    INSÉRER NOM ET PRÉNOM
+                              """;
+
+                              String emailRecipient = _professeur.isNotEmpty
+                                  ? _professeur.join(', ')
+                                  : 'email@professeur.com';
+
+                              // Construction de l'URI pour l'e-mail
+                              String uriString = 'mailto:$emailRecipient'
+                                  '?subject=${Uri.encodeComponent(emailSubject)}'
+                                  '&body=${Uri.encodeComponent(emailBody)}';
+
+                              // Ajout de la pièce jointe si elle existe
+                              if (_nomFichier != 'Sélectionner un fichier') {
+                                uriString += '&attachment=${Uri.encodeComponent(_nomFichier)}';
+                              }
+
+                              final Uri emailUri = Uri.parse(uriString);
+
+                              // Lancer l'application de messagerie
+                              if (await canLaunch(emailUri.toString())) {
+                                await launch(emailUri.toString());
+                              } else {
+                                throw 'Impossible d\'ouvrir l\'application de messagerie.';
+                              }
                             }
                           },
                           child: Text(

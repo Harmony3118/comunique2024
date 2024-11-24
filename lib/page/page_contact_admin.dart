@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:comunique2024/page/page_form_absence.dart';
 import 'package:comunique2024/page/page_navigation.dart';
-import 'package:comunique2024/page/page_reservation_salle.dart';
+import 'package:comunique2024/page/page_reservation_salle_1.dart';
 
 class ContactPage extends StatelessWidget {
   const ContactPage({Key? key}) : super(key: key);
