@@ -8,27 +8,30 @@ class PageConnection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: Container(
         color: Colors.white,
-        child: SingleChildScrollView( // Permet le défilement
+        child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               // Image centrée
               Padding(
-                padding: const EdgeInsets.only(top: 115), // Espace au-dessus de l'image
+                padding: EdgeInsets.only(top: screenHeight * 0.1), // 10% de l'écran
                 child: Center(
-                  child: image(context),
+                  child: image(context, screenWidth),
                 ),
               ),
-              const SizedBox(height: 90), // Espace entre l'image et le champ ID
+              SizedBox(height: screenHeight * 0.08), // 8% de l'écran
               // ID
-              id(context),
-              const SizedBox(height: 20), // Espace entre ID et MDP
+              id(context, screenWidth, screenHeight),
+              SizedBox(height: screenHeight * 0.02), // 2% de l'écran
               // MDP
-              mdp(context),
-              const SizedBox(height: 20), // Espace entre MDP et le lien de mot de passe oublié
+              mdp(context, screenWidth, screenHeight),
+              SizedBox(height: screenHeight * 0.02), // 2% de l'écran
               // Mdp oublié ???
               const Text(
                 "Mot de passe oublié ?",
@@ -38,13 +41,13 @@ class PageConnection extends StatelessWidget {
                   decoration: TextDecoration.underline,
                 ),
               ),
-              const SizedBox(height: 70), // Espace avant les boutons
+              SizedBox(height: screenHeight * 0.1), // 10% de l'écran
               // Bulle bordeaux
-              bulle_bordeaux(context),
-              const SizedBox(height: 30), // Espace entre les deux boutons
+              bulle_bordeaux(context, screenWidth, screenHeight),
+              SizedBox(height: screenHeight * 0.03), // 3% de l'écran
               // Bulle claire
-              bulle_claire(context),
-              const SizedBox(height: 200), // Espace en bas pour le défilement
+              bulle_claire(context, screenWidth, screenHeight),
+              SizedBox(height: screenHeight * 0.15), // 15% de l'écran
             ],
           ),
         ),
@@ -52,40 +55,39 @@ class PageConnection extends StatelessWidget {
     );
   }
 
-  Widget image(BuildContext context) {
+  Widget image(BuildContext context, double screenWidth) {
     return const Image(
       image: AssetImage('assets/Logo.png'),
-      width: 200,
-      height: 200,
+      width: 200, // Taille fixe
+      height: 200, // Taille fixe
       fit: BoxFit.cover,
     );
   }
 
-  Widget bulle_bordeaux(BuildContext context) {
+  Widget bulle_bordeaux(BuildContext context, double screenWidth, double screenHeight) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  BasePage(currentIndex: 0, body: FileActualite()),
-            ));
+          context,
+          MaterialPageRoute(
+            builder: (context) => BasePage(currentIndex: 0, body: FileActualite()),
+          ),
+        );
       },
       child: Container(
-        width: 299,
-        height: 43,
+        width: screenWidth * 0.8, // 80% de la largeur de l'écran
+        height: screenHeight * 0.06, // 6% de la hauteur de l'écran
         decoration: BoxDecoration(
           color: const Color.fromARGB(255, 100, 3, 41),
-          borderRadius: BorderRadius.circular(19), // Bords arrondis
+          borderRadius: BorderRadius.circular(30), // Bords arrondis
         ),
         child: const Center(
-          // Centrage du texte
           child: Text(
-            "Se connecter", // Le texte à afficher
+            "Se connecter",
             style: TextStyle(
-              color: Colors.white, // Couleur du texte
+              color: Colors.white,
               fontSize: 24,
-              fontWeight: FontWeight.bold, // Met le texte en gras
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
@@ -93,7 +95,7 @@ class PageConnection extends StatelessWidget {
     );
   }
 
-  Widget bulle_claire(BuildContext context) {
+  Widget bulle_claire(BuildContext context, double screenWidth, double screenHeight) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -102,18 +104,17 @@ class PageConnection extends StatelessWidget {
         );
       },
       child: Container(
-        width: 299,
-        height: 43,
+        width: screenWidth * 0.8, // 80% de la largeur de l'écran
+        height: screenHeight * 0.06, // 6% de la hauteur de l'écran
         decoration: BoxDecoration(
           color: const Color.fromARGB(255, 215, 215, 215),
-          borderRadius: BorderRadius.circular(19), // Bords arrondis
+          borderRadius: BorderRadius.circular(30), // Bords arrondis
         ),
         child: const Center(
-          // Centrage du texte
           child: Text(
-            "S'inscrire", // Le texte à afficher
+            "S'inscrire",
             style: TextStyle(
-              color: Colors.black, // Couleur du texte
+              color: Colors.black,
               fontSize: 24,
             ),
           ),
@@ -122,32 +123,32 @@ class PageConnection extends StatelessWidget {
     );
   }
 
-  Widget id(BuildContext context) {
+  Widget id(BuildContext context, double screenWidth, double screenHeight) {
     return Container(
-      width: 262,
-      height: 58,
+      width: screenWidth * 0.65, // 65% de la largeur de l'écran
+      height: screenHeight * 0.08, // 8% de la hauteur de l'écran
       decoration: const BoxDecoration(
         color: Colors.transparent, // Rendre le fond transparent
         border: Border(
           bottom: BorderSide(
             color: Color.fromARGB(255, 0, 0, 0), // Couleur de la bordure
-            width: 1.0, // Épaisseur de la bordure
+            width: 1.5, // Épaisseur de la bordure
           ),
         ),
       ),
-      child: const Align(
-        alignment: Alignment.centerLeft, // Aligne le texte à gauche
+      child: Align(
+        alignment: Alignment.centerLeft,
         child: Padding(
-          padding: EdgeInsets.only(left: 8.0), // Ajustez la valeur selon vos besoins
+          padding: EdgeInsets.only(left: screenWidth * 0.02), // 2% de la largeur
           child: Row(
             children: [
               Icon(
                 Icons.person,
-                color: Color.fromARGB(127, 0, 0, 0),
-                size: 50, // Taille de l'icône
+                color: const Color.fromARGB(127, 0, 0, 0),
+                size: screenHeight * 0.05, // Taille proportionnelle
               ),
-              SizedBox(width: 20), // Ajustez la valeur selon vos besoins
-              Expanded(child: EmailTextField()),
+              SizedBox(width: screenWidth * 0.05), // 5% de la largeur
+              const Expanded(child: EmailTextField()),
             ],
           ),
         ),
@@ -155,32 +156,32 @@ class PageConnection extends StatelessWidget {
     );
   }
 
-  Widget mdp(BuildContext context) {
+  Widget mdp(BuildContext context, double screenWidth, double screenHeight) {
     return Container(
-      width: 262,
-      height: 58,
+      width: screenWidth * 0.65, // 65% de la largeur de l'écran
+      height: screenHeight * 0.08, // 8% de la hauteur de l'écran
       decoration: const BoxDecoration(
         color: Colors.transparent, // Rendre le fond transparent
         border: Border(
           bottom: BorderSide(
             color: Color.fromARGB(255, 0, 0, 0), // Couleur de la bordure
-            width: 1.0, // Épaisseur de la bordure
+            width: 1.5, // Épaisseur de la bordure
           ),
         ),
       ),
-      child: const Align(
-        alignment: Alignment.centerLeft, // Aligne le texte à gauche
+      child: Align(
+        alignment: Alignment.centerLeft,
         child: Padding(
-          padding: EdgeInsets.only(left: 8.0), // Ajustez la valeur selon vos besoins
+          padding: EdgeInsets.only(left: screenWidth * 0.02), // 2% de la largeur
           child: Row(
             children: [
               Icon(
                 Icons.lock_outlined,
-                color: Color.fromARGB(127, 0, 0, 0),
-                size: 50, // Taille de l'icône
+                color: const Color.fromARGB(127, 0, 0, 0),
+                size: screenHeight * 0.05, // Taille proportionnelle
               ),
-              SizedBox(width: 10), // Ajustez la valeur selon vos besoins
-              Expanded(child: MdpTextField()),
+              SizedBox(width: screenWidth * 0.05), // 5% de la largeur
+              const Expanded(child: MdpTextField()),
             ],
           ),
         ),
@@ -202,7 +203,7 @@ class EmailTextField extends StatelessWidget {
           hintText: 'E-mail',
           hintStyle: TextStyle(
             color: Color.fromARGB(127, 0, 0, 0),
-            fontSize: 24, // Taille de la police pour le texte d'indication
+            fontSize: 18, // Taille adaptée
           ),
           fillColor: Color.fromARGB(0, 0, 0, 0),
           filled: true,
@@ -227,7 +228,7 @@ class MdpTextField extends StatelessWidget {
           hintText: 'Mot de passe',
           hintStyle: TextStyle(
             color: Color.fromARGB(127, 0, 0, 0),
-            fontSize: 24, // Taille de la police pour le texte d'indication
+            fontSize: 18, // Taille adaptée
           ),
           fillColor: Color.fromARGB(0, 0, 0, 0),
           filled: true,
