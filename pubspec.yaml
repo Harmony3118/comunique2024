@@ -29,10 +29,12 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   gsheets: ^0.5.0
+  
+  
+  flutter:
+      sdk: flutter
   googleapis: ^11.4.0
   googleapis_auth: ^1.6.0
-  flutter:
-    sdk: flutter
   sqflite: ^2.0.0+3
   sqflite_common_ffi: ^2.0.0+2
   multi_select_flutter: ^4.1.3

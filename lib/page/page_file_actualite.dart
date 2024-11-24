@@ -5,7 +5,7 @@ import 'bdd/bdd.dart';
 import 'bdd/event.dart';
 import 'bdd/role.dart';
 import 'bdd/organisation.dart';
-
+import 'bdd/utilisateur.dart';
 class FileActualite extends StatefulWidget {
   @override
   _FileActualiteState createState() => _FileActualiteState();
@@ -51,6 +51,9 @@ class FileActualite extends StatefulWidget {
 //     "isPinned": false,
 //   },
 // ];
+
+
+
 class _FileActualiteState extends State<FileActualite> {
   List<String> activeFilters = [];
   bool isPinFilterActive = false;

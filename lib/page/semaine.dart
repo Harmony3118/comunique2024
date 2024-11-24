@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:comunique2024/page/mois.dart';
 import 'package:comunique2024/page/page_navigation.dart';
 import 'package:comunique2024/page/jourselection.dart';
 import 'bdd/bdd.dart';
-import 'bdd/event.dart';
-import 'bdd/organisation.dart';
 import 'package:intl/intl.dart';
+import 'package:comunique2024/page/page_details_event.dart';
 
 
 class SemaineView extends StatefulWidget {
@@ -21,9 +19,6 @@ class _SemaineViewState extends State<SemaineView> {
   late DateTime _selectedDay;
   late DateTime _focusedDay;
 
-
-  Map<DateTime, List<Map<String, dynamic>>> _events = {};
-
   @override
   void initState() {
     super.initState();
@@ -31,7 +26,7 @@ class _SemaineViewState extends State<SemaineView> {
     _selectedDay = _focusedDay;
     _fetchEventsForWeek(_focusedDay);
   } 
-  
+    
 // Charger les événements de la semaine
   Future<List<Map<String, dynamic>>> _fetchEventsForWeek(DateTime weekStart) async {
   final db = await AppDataBase.instance.database;
@@ -221,18 +216,29 @@ return Column(
                        // Afficher à l'heure de début
                        Expanded(
                          child:
-                        Container(
-                          margin: EdgeInsets.only(left: 16, top: 8),
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Color(event['color']),
-                            borderRadius: BorderRadius.circular(8),
+                        GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      BasePage(currentIndex: 4, body:EventDetails(event: event)),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(left: 16, top: 8),
+                              padding: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Color(event['color']),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                event['titre'],
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
                           ),
-                          child: Text(
-                            event['titre'],
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
                        ),
                     
                 ],

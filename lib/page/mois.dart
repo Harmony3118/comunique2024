@@ -31,7 +31,7 @@ Future<List<Widget>> afficherPointEvents() async {
 
     // la couleur que tu dois afficher pour les events
     Color c = Color(o.color);
-
+  
     // pour la date et l'heure des events
     String? date = e.date;
     String? heureDebut = e.hDebut;
@@ -110,8 +110,6 @@ class _MoisViewState extends State<MoisView> {
           if (snapshot.hasError) {
             return Center(child: Text('Erreur: ${snapshot.error}'));
           }
-
-          final eventMarkers = snapshot.data ?? {};
 
           return SingleChildScrollView(
         child: Column(
@@ -220,71 +218,3 @@ Future<Map<DateTime, List<Color>>> _fetchEventMarkers() async {
   print("Event markers: $markers"); 
   return markers;
 }
-
-// class EventPage extends StatelessWidget {
-//   final DateTime selectedDay;
-
-//   EventPage({required this.selectedDay});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Column(
-//       crossAxisAlignment: CrossAxisAlignment.center,
-//       children: [
-//         Padding(
-//           padding: const EdgeInsets.only(top: 16.0), 
-//           child: Center(
-//             child: Text(
-//               "évènements du .... ",
-//               style: TextStyle(
-//                 fontSize: 20, 
-//                 fontWeight: FontWeight.bold,
-//               ),
-//             ),
-//           ),
-//         ),
-//         Expanded(
-//           child: Center(
-//             child: FutureBuilder<List<Event>>(
-//         future: fetchEventsForDay(selectedDay),
-//         builder: (context, snapshot) {
-//           if (snapshot.connectionState == ConnectionState.waiting) {
-//             return Center(child: CircularProgressIndicator());
-//           } else if (snapshot.hasError) {
-//             return Center(child: Text("Erreur : ${snapshot.error}"));
-//           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-//             return Center(child: Text("Aucun événement pour ce jour."));
-//           } else {
-//             return ListView.builder( // a mettre la fonction pour bien afficher un event si possible
-//               itemCount: snapshot.data!.length,
-//               itemBuilder: (context, index) {
-//                 final event = snapshot.data![index];
-//                 return ListTile(
-//                   title: Text(event.titre),
-//                   subtitle: Text("${event.hDebut} - ${event.hFin}"),
-//                 );
-//               },
-//             );
-//           }
-//         },
-//       ),
-//       ),
-//         ),
-//       ],
-//     ),
-//     );
-//   }
-
-//   Future<List<Event>> fetchEventsForDay(DateTime day) async {
-//     final db = await AppDataBase.instance.database;
-//     final String dayString = "${day.year}-${day.month}-${day.day}";
-//     final List<Map<String, dynamic>> maps = await db.query(
-//       'event',
-//       where: 'date = ?',
-//       whereArgs: [dayString],
-//     );
-//     return List.generate(maps.length, (i) => Event.fromMap(maps[i]));
-//   }
-// }
-

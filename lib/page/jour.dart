@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'bdd/bdd.dart';
-import 'bdd/event.dart';
 import 'bdd/organisation.dart';
+import 'package:comunique2024/page/page_details_event.dart';
+import 'package:comunique2024/page/page_navigation.dart';
 
 
 class DateDisplay extends StatelessWidget {
@@ -12,7 +13,7 @@ class DateDisplay extends StatelessWidget {
     final String formattedDate = DateFormat('EEEE d MMMM ', 'fr_FR').format(now);
     
     return Text.rich(
-      TextSpan(
+      TextSpan(  
         children: [
           TextSpan(
             text: '$formattedDate ', // Jour de la semaine
@@ -116,7 +117,7 @@ class JourView extends StatelessWidget {
                 }
 
                 final events = snapshot.data ?? [];
-                return _buildScheduleWithEvents(events);
+                return _buildScheduleWithEvents(context, events);
               },
             ),
           ],
@@ -125,7 +126,7 @@ class JourView extends StatelessWidget {
     );
   }
 
-  Widget _buildScheduleWithEvents(List<Map<String, dynamic>> events) {
+  Widget _buildScheduleWithEvents(BuildContext context, List<Map<String, dynamic>> events) {
     // Convertir les heures de début et fin en objets `DateTime` pour les positions
     Map<int, List<Map<String, dynamic>>> eventsByHour = {};
     for (int hour = 8; hour < 24; hour++) {
@@ -171,18 +172,29 @@ return Column(
                        // Afficher à l'heure de début
                        Expanded(
                          child:
-                        Container(
-                          margin: EdgeInsets.only(left: 16, top: 8),
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Color(event['color']),
-                            borderRadius: BorderRadius.circular(8),
+                        GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      BasePage(currentIndex: 4, body:EventDetails(event: event)),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(left: 16, top: 8),
+                              padding: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Color(event['color']),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                event['titre'],
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
                           ),
-                          child: Text(
-                            event['titre'],
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
                        ),
                     
                 ],

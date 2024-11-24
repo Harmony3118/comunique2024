@@ -5,9 +5,10 @@ import 'page_ajout.dart'; // Pour la redirection en arrière
 import 'page_navigation.dart';
 import 'page_file_actualite.dart';
 import 'bdd/event.dart';
-import 'bdd/organisation.dart';
 import 'bdd/bdd.dart';
 import 'package:intl/intl.dart'; // Importation de DateFormat
+import '../widget/nouvelle_feuille_sheet.dart';
+
 
 Future<List<Map<String, dynamic>>> recupOrga() async {
   final db = await AppDataBase.instance.database;
@@ -534,6 +535,14 @@ class _EventCreationFormState extends State<EventCreationForm> {
               onPressed: () async {
                 saveEvent();
 
+                if (_inscriptionViaApp) {
+                  String sheetTitle = _titreController.text;  // Utiliser le titre de l'info pour nommer la feuille
+                   // Crée une instance de GoogleSheetService avec les informations de tes credentials
+      final googleSheetService = GoogleSheetService();
+
+      // Crée la feuille dans Google Sheets avec le titre fourni
+      await googleSheetService.createSheet(sheetTitle);
+               }
                 // test print
                 final db = await AppDataBase.instance.database;
                 List<Map<String, dynamic>> events = await db.query('event');

@@ -2,12 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'bdd/bdd.dart';
-import 'bdd/event.dart';
 import 'bdd/organisation.dart';
 import 'package:comunique2024/page/page_details_event.dart';
 import 'package:comunique2024/page/page_navigation.dart';
 
-class JourSelection extends StatelessWidget {
+class JourSelection extends StatelessWidget { 
   final DateTime selectedDate;
 
   JourSelection({required this.selectedDate});

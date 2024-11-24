@@ -1,6 +1,9 @@
 // import 'package:comunique2024/page/page_file_actualite.dart';
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
+import 'package:comunique2024/widget/inscription_sheet.dart';
+import 'package:comunique2024/page/bdd/utilisateur.dart';
+
 
 class CardHome extends StatefulWidget {
   final String office;
@@ -58,7 +61,9 @@ class _CardHomeState extends State<CardHome> {
           actionsAlignment: MainAxisAlignment.center,
           actions: <Widget>[
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                UserRegistration registration = UserRegistration(nom: 'prudhommeaux', prenom: 'erwan');// ici a mettre les variables du nom et du prenom 
+                await registration.inscrire();
                 setState(() {
                   isRegistered = true;
                 });
