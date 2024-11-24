@@ -9,7 +9,7 @@ import 'package:comunique2024/page/page_details_event.dart';
 
 class SemaineView extends StatefulWidget {
   final Function(int) onPageChanged;
-
+   
   SemaineView({required this.onPageChanged});
   @override
   _SemaineViewState createState() => _SemaineViewState();

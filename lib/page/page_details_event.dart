@@ -51,6 +51,17 @@ class _EventDetailsState extends State<EventDetails> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Row(
+          children: [
+                IconButton(
+                  icon: Icon(Icons.arrow_back_ios,
+                      color: Color.fromARGB(255, 51, 51, 51)),
+                  onPressed: () {
+                    Navigator.pop(context); // Retourner à la page précédente
+                  },
+                ),
+              ],
+            ),
           Padding(
             padding: const EdgeInsets.only(top: 16.0),
             child: Center(
@@ -64,7 +75,7 @@ class _EventDetailsState extends State<EventDetails> {
               ),
             ),
           ),
-          Expanded(
+          Expanded(  
             child: Center(
               // Afficher l'événement avec l'utilisateur connecté
               child: CardHome(
