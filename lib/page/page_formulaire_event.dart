@@ -37,8 +37,6 @@ class _EventCreationFormState extends State<EventCreationForm> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   DateTime? _selectedDate;
-  DateTime? _selectedStartDate;
-  DateTime? _selectedEndDate;
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
   bool _inscriptionViaApp = false;
@@ -153,11 +151,8 @@ class _EventCreationFormState extends State<EventCreationForm> {
     );
     if (picked != null) {
       setState(() {
-        if (isStartDate) {
-          _selectedStartDate = picked;
-        } else {
-          _selectedEndDate = picked;
-        }
+          _selectedDate = picked;
+        
       });
     }
   }
@@ -444,25 +439,15 @@ class _EventCreationFormState extends State<EventCreationForm> {
             // Champ pour la date de début
             ListTile(
               title: Text(
-                _selectedStartDate == null
-                    ? 'Sélectionner une date de début'
-                    : 'Date de début : ${DateFormat('dd/MM/yyyy').format(_selectedStartDate!)}',
+                _selectedDate == null
+                    ? 'Sélectionner une date'
+                    : 'Date de début : ${DateFormat('dd/MM/yyyy').format(_selectedDate!)}',
                 style: TextStyle(fontSize: 16),
               ),
               trailing: Icon(Icons.calendar_today),
               onTap: () => _selectDate(context, true), // true pour la date de début
             ),
-            // Champ pour la date de fin
-            ListTile(
-              title: Text(
-                _selectedDate == null
-                    ? 'Sélectionner une date'
-                    : 'Date : ${DateFormat('dd/MM/yyyy').format(_selectedDate!)}', // Format de la date
-                style: TextStyle(fontSize: 16),
-              ),
-              trailing: Icon(Icons.calendar_today),
-              onTap: () => _selectDate(context, false), // false pour la date de fin
-            ),
+            
             // Heure de début
             ListTile(
               title: Text(
