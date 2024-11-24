@@ -40,6 +40,7 @@ class EventDetails extends StatelessWidget {
             child: CardHome(
           office: event['office'] ?? "Bureau inconnu",
           role: event['role'] ?? "Rôle inconnu",
+          object: event['object'] ?? "Rôle inconnu",
           eventTitle: event['titre'] ?? "Titre inconnu",
           eventDate: event['date'] ?? "Date inconnue",
           eventTime: formatTimeInterval(event['hDebut'], event['hFin']),

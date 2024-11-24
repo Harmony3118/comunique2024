@@ -93,7 +93,7 @@ class _FileActualiteState extends State<FileActualite> {
     if (activeFilters.isNotEmpty) {
       filteredEvents = filteredEvents.where((card) {
         if (card is CardHome) {
-          return activeFilters.contains(card.office);
+          return activeFilters.contains(card.office) || activeFilters.contains(card.object);
         }
         return false;
       }).toList();
@@ -155,7 +155,7 @@ class _FileActualiteState extends State<FileActualite> {
       // il faut modifier ça, afficher la bonne couleur pour chaque organisation
       // Gérer l'état de l'épingle pour chaque carte
       newCards.add(CardHome(
-        // object: e.object,
+        object: e.objet,
         office: o.nom,
         role: r.nomRole,
         eventTitle: e.titre,
