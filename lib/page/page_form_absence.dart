@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:comunique2024/page/page_contact_admin.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart'; // Pour le formatage des dates et heures
 import 'package:comunique2024/page/page_navigation.dart';
@@ -689,45 +688,14 @@ class _MyFormState extends State<MyForm> {
                           style: TextStyle(
                               color: Color.fromARGB(255, 100, 3, 42))),
                       SizedBox(width: 16.0),
-                      Icon(Icons.attach_file),
-                      SizedBox(width: 16.0),
-                      Container(
-                        height: 20,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          border: Border.all(
-                            color: Color.fromARGB(
-                                255, 100, 3, 42), // Couleur de la bordure
-                            width: 1.5, // Largeur de la bordure
+                      Flexible(
+                        child: Text(
+                          'En cliquant sur "Envoyer", vous serez redirigé vers votre application de messagerie pour envoyer votre mail de justification d\'absence. N\'oubliez pas de mettre en pièce jointe de votre mail la justification (dispense, etc.) de votre absence !\nDe plus, pour faciliter la gestion de votre mail par l\'administration, vérifiez qu\'il y ait bien votre signature de mail.',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black,
                           ),
                         ),
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Color.fromARGB(255, 217, 217, 217),
-                            ),
-                            onPressed: () async {
-                              FilePickerResult? result =
-                                  await FilePicker.platform.pickFiles();
-
-                              if (result != null) {
-                                String fileName = result.files.single.name;
-                                setState(() {
-                                  _nomFichier = fileName;
-                                });
-                              } else {
-                                setState(() {
-                                  _nomFichier = 'Sélectionner un fichier';
-                                });
-                              }
-                            },
-                            child: Text(
-                              _nomFichier,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.black,
-                              ),
-                            )),
                       )
                     ]),
                     Divider(
@@ -784,7 +752,6 @@ class _MyFormState extends State<MyForm> {
                     Je vous prie d’agréer, Madame, Monsieur, l’expression de mes salutations distinguées.
 
                     Cordialement,
-                    INSÉRER NOM ET PRÉNOM
                               """;
 
                               String emailRecipient = _professeur.isNotEmpty
