@@ -6,6 +6,9 @@ import 'page_navigation.dart';
 import 'page_file_actualite.dart';
 import 'bdd/event.dart';
 import 'bdd/bdd.dart';
+import 'package:intl/intl.dart'; // Importation de DateFormat
+import '../widget/nouvelle_feuille_sheet.dart';
+
 
 Future<List<Map<String, dynamic>>> recupOrga() async {
   final db = await AppDataBase.instance.database;
@@ -162,18 +165,20 @@ class _EventCreationFormState extends State<EventCreationForm> {
     }
   }
 
-  // Fonction pour sélectionner une date
-  Future<void> _selectDate(BuildContext context) async {
+   // Fonction pour sélectionner une date (soit de début, soit de fin)
+  Future<void> _selectDate(BuildContext context, bool isStartDate) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2020),
       lastDate: DateTime(2101),
     );
-    if (picked != null && picked != _selectedDate)
+    if (picked != null) {
       setState(() {
-        _selectedDate = picked;
+          _selectedDate = picked;
+        
       });
+    }
   }
 
   // Fonction pour sélectionner une heure
@@ -423,7 +428,7 @@ class _EventCreationFormState extends State<EventCreationForm> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              AjoutPage()), // Redirection vers page_file_actualite.dart
+                             BasePage(currentIndex: 2, body: AjoutPage())), // Redirection vers page_file_actualite.dart
                     );
                   },
                 ),
@@ -455,17 +460,18 @@ class _EventCreationFormState extends State<EventCreationForm> {
               });
             }),
             _buildInputRow("Titre de l'info", _titreController),
-            // Choisir la date
+            // Champ pour la date de début
             ListTile(
               title: Text(
                 _selectedDate == null
                     ? 'Sélectionner une date'
-                    : 'Date : ${_selectedDate!.toLocal()}'.split(' ')[0],
+                    : 'Date de début : ${DateFormat('dd/MM/yyyy').format(_selectedDate!)}',
                 style: TextStyle(fontSize: 16),
               ),
               trailing: Icon(Icons.calendar_today),
-              onTap: () => _selectDate(context),
+              onTap: () => _selectDate(context, true), // true pour la date de début
             ),
+            
             // Heure de début
             ListTile(
               title: Text(
@@ -555,6 +561,14 @@ class _EventCreationFormState extends State<EventCreationForm> {
               onPressed: () async {
                 saveEvent();
 
+                if (_inscriptionViaApp) {
+                  String sheetTitle = _titreController.text;  // Utiliser le titre de l'info pour nommer la feuille
+                   // Crée une instance de GoogleSheetService avec les informations de tes credentials
+      final googleSheetService = GoogleSheetService();
+
+      // Crée la feuille dans Google Sheets avec le titre fourni
+      await googleSheetService.createSheet(sheetTitle);
+               }
                 // test print
                 final db = await AppDataBase.instance.database;
                 List<Map<String, dynamic>> events = await db.query('event');

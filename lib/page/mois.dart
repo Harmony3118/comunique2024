@@ -5,6 +5,8 @@ import 'jour.dart';
 import 'bdd/bdd.dart';
 import 'bdd/event.dart';
 import 'bdd/organisation.dart';
+import 'package:comunique2024/page/page_navigation.dart';
+import 'package:comunique2024/page/jourselection.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -29,7 +31,7 @@ Future<List<Widget>> afficherPointEvents() async {
 
     // la couleur que tu dois afficher pour les events
     Color c = Color(o.color);
-
+  
     // pour la date et l'heure des events
     String? date = e.date;
     String? heureDebut = e.hDebut;
@@ -73,25 +75,43 @@ class MoisView extends StatefulWidget {
 class _MoisViewState extends State<MoisView> {
   late DateTime _selectedDay;
   late DateTime _focusedDay;
+  late Future<Map<DateTime, List<Color>>> _eventMarkers;
 
   void initState() {
     super.initState();
     _focusedDay = DateTime.now();
     _selectedDay = _focusedDay;
+    _eventMarkers = _fetchEventMarkers();
   }
 
-  void _onDaySelected(
-    DateTime selectedDay,
-    DateTime focusedDay,
-  ) {
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+  setState(() {
     _selectedDay = selectedDay;
     _focusedDay = focusedDay;
-  }
+  });
 
+  // Naviguer vers la page JourView avec la date sélectionnée
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => BasePage(currentIndex:4,body:JourSelection(selectedDate: selectedDay),)
+    ),
+  );
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body: FutureBuilder<Map<DateTime, List<Color>>>(
+        future: _eventMarkers,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Erreur: ${snapshot.error}'));
+          }
+
+          return SingleChildScrollView(
         child: Column(
           children: [
             Row(
@@ -160,23 +180,41 @@ class _MoisViewState extends State<MoisView> {
                 ),
               ),
               startingDayOfWeek: StartingDayOfWeek.monday,
-            ),
+              
+      ),
           ],
         ),
+    );
+        },
       ),
     );
   }
 }
 
-// class EventPage extends StatelessWidget {
-//   final DateTime selectedDay;
 
-//   EventPage({required this.selectedDay});
+Future<Map<DateTime, List<Color>>> _fetchEventMarkers() async {
+  final db = await AppDataBase.instance.database;
+  final List<Map<String, dynamic>> events = await db.query('event');
+  Map<DateTime, List<Color>> markers = {};
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: event(),
-//     );
-//   }
-// }
+  for (var event in events) {
+    DateTime eventDate = DateTime.parse(event['date']);
+    final orgaResult = await db.query(
+      'organisation',
+      where: 'idOrga = ?',
+      whereArgs: [event['idOrganisation']],
+    );
+
+    if (orgaResult.isNotEmpty) {
+      Color color = Color(orgaResult.first['color'] as int);
+      if (markers[eventDate] == null) {
+        markers[eventDate] = [color];
+      } else if (!markers[eventDate]!.contains(color)) {
+        markers[eventDate]!.add(color);
+      }
+    }
+  }
+
+  print("Event markers: $markers"); 
+  return markers;
+}

@@ -81,22 +81,25 @@ class _Footer extends State<Footer> {
         });
       },
       items: [
-        _buildIcon(0, Icons.home),
-        _buildIcon(1, Icons.calendar_today),
-        _buildIcon(2, Icons.add_circle),
-        _buildIcon(3, Icons.contacts),
-        _buildIcon(4, Icons.mail),
+        _buildIcon(0, Icons.home, "Accueil"),
+        _buildIcon(1, Icons.calendar_today, "Calendrier"),
+        _buildIcon(2, Icons.add_circle, "Ajout"),
+        _buildIcon(3, Icons.contacts, "Annuaire"),
+        _buildIcon(4, Icons.mail, "Mails"),
       ],
     );
   }
 
-  BottomNavigationBarItem _buildIcon(int index, IconData icon) {
+  BottomNavigationBarItem _buildIcon(int index, IconData icon, String label) {
     return BottomNavigationBarItem(
-      icon: Icon(
+      icon: Tooltip(
+        message: label,  // Le texte à afficher quand l'utilisateur appuie longuement
+        child : Icon(
         icon,
         color: this.currentIndex == index
             ? Color.fromARGB(255, 100, 3, 41)
             : Color.fromARGB(255, 59, 58, 58),
+      ),
       ),
       label: '',
     );

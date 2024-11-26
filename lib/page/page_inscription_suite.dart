@@ -16,6 +16,7 @@ class PageInscriptionSuite extends StatefulWidget {
 class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
   File? _image; // Variable pour stocker l'image sélectionnée
   final ImagePicker _picker = ImagePicker();
+  bool _formSubmitted = false; // Indique si le formulaire a été soumis
 
   // Controller pour récupoérer le champs du form
   final TextEditingController nomController = TextEditingController();
@@ -202,6 +203,11 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
                   icon: const Icon(Icons.camera_alt),
                   onPressed: _takePhoto,
                 ),
+                if (_image != null)
+                  CircleAvatar(
+                    radius: 25,
+                    backgroundImage: FileImage(_image!),
+                  ),
               ],
             ),
           ),
@@ -226,6 +232,7 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
                     child: YearTextField(
                   controller: nomController,
                   type: TextInputType.name,
+                  formSubmitted: _formSubmitted,
                 )),
               ],
             ),
@@ -251,6 +258,7 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
                     child: YearTextField(
                   controller: prenomController,
                   type: TextInputType.name,
+                  formSubmitted: _formSubmitted,
                 )),
               ],
             ),
@@ -276,6 +284,7 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
                     child: YearTextField(
                   controller: promotionController,
                   type: TextInputType.number,
+                  formSubmitted: _formSubmitted,
                 )),
               ],
             ),
@@ -301,6 +310,7 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
                   child: YearTextField(
                     controller: emailController,
                     type: TextInputType.emailAddress,
+                    formSubmitted: _formSubmitted,
                   ),
                 ),
               ],
@@ -313,22 +323,39 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
 
   Widget bulle_bordeaux(BuildContext context) {
     return GestureDetector(
-        onTap: () async {
-          saveUser();
+        onTap: () {
+          setState(() {
+        _formSubmitted = true; // Activer les validations
+      });
 
+      if (formKey.currentState!.validate()) {
+        saveUser(); // Sauvegarder l'utilisateur
+          
+
+/*
           // test print
           final db = await AppDataBase.instance.database;
           List<Map<String, dynamic>> utilisateurs =
               await db.query('utilisateur');
           print(utilisateurs);
           // fin test
+*/
 
           Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) =>
                     BasePage(currentIndex: 0, body: FileActualite()),
-              ));
+              ),);
+              } else {
+        // Afficher un message ou autre si non valide
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Veuillez remplir tous les champs obligatoires."),
+          ),
+        );
+      }
+
         },
         child: Container(
           width: 299,
@@ -351,7 +378,43 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
   }
 
   Widget bulle_claire(BuildContext context) {
-    return Container(
+    return GestureDetector(
+    onTap: () {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Passer cette étape ?"),
+            content: const Text(
+                "Vous n'avez pas rempli vos informations. Êtes-vous sûr de vouloir passer cette étape ?"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Fermer la boîte de dialogue
+                },
+                child: const Text("Annuler"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Fermer la boîte de dialogue
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BasePage(
+                        currentIndex: 0,
+                        body: FileActualite(), // Page d'accueil
+                      ),
+                    ),
+                  );
+                },
+                child: const Text("Confirmer"),
+              ),
+            ],
+          );
+        },
+      );
+    },
+    child: Container(
       width: 299,
       height: 43,
       decoration: BoxDecoration(
@@ -367,8 +430,9 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   // Fonction pour choisir une image à partir de la galerie
   Future<void> _pickImageFromGallery() async {
@@ -429,18 +493,24 @@ class _DropdownExampleState extends State<DropdownExample> {
 class YearTextField extends StatelessWidget {
   TextEditingController controller;
   TextInputType type;
-  YearTextField({super.key, required this.controller, required this.type});
+  final bool formSubmitted;
+
+  YearTextField({super.key, required this.controller, required this.type, required this.formSubmitted,});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 30,
       child: TextFormField(
+        autovalidateMode: formSubmitted
+            ? AutovalidateMode.onUserInteraction
+            : AutovalidateMode.disabled,
         decoration: InputDecoration(
           border: OutlineInputBorder(),
           hintText: '',
           fillColor: Colors.grey[200],
           filled: true,
+          errorStyle: TextStyle(height: 0), // Réduit la hauteur de l'erreur
         ),
         controller: controller,
         keyboardType: type,
@@ -448,7 +518,7 @@ class YearTextField extends StatelessWidget {
           if (value == null || value.isEmpty) {
             return 'Veuillez remplir le champs';
           }
-          return null;
+          return null; // Pas d'erreur
         },
       ),
     );

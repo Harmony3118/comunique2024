@@ -5,7 +5,7 @@ import 'bdd/bdd.dart';
 import 'bdd/event.dart';
 import 'bdd/role.dart';
 import 'bdd/organisation.dart';
-
+import 'bdd/utilisateur.dart';
 class FileActualite extends StatefulWidget {
   @override
   _FileActualiteState createState() => _FileActualiteState();
@@ -51,6 +51,9 @@ class FileActualite extends StatefulWidget {
 //     "isPinned": false,
 //   },
 // ];
+
+
+
 class _FileActualiteState extends State<FileActualite> {
   List<String> activeFilters = [];
   bool isPinFilterActive = false;
@@ -93,7 +96,7 @@ class _FileActualiteState extends State<FileActualite> {
     if (activeFilters.isNotEmpty) {
       filteredEvents = filteredEvents.where((card) {
         if (card is CardHome) {
-          return activeFilters.contains(card.office);
+          return activeFilters.contains(card.office) || activeFilters.contains(card.object);
         }
         return false;
       }).toList();
@@ -108,6 +111,9 @@ class _FileActualiteState extends State<FileActualite> {
         return false;
       }).toList();
     }
+
+    
+
 
     return SafeArea(
       child: Column(
@@ -155,7 +161,7 @@ class _FileActualiteState extends State<FileActualite> {
       // il faut modifier ça, afficher la bonne couleur pour chaque organisation
       // Gérer l'état de l'épingle pour chaque carte
       newCards.add(CardHome(
-        // object: e.object,
+        object: e.objet,
         office: o.nom,
         role: r.nomRole,
         eventTitle: e.titre,
