@@ -5,12 +5,21 @@ import 'page_ajout.dart'; // Pour la redirection en arrière
 import 'page_navigation.dart';
 import 'page_file_actualite.dart';
 import 'bdd/event.dart';
-import 'bdd/organisation.dart';
 import 'bdd/bdd.dart';
 
 Future<List<Map<String, dynamic>>> recupOrga() async {
   final db = await AppDataBase.instance.database;
-  return await db.query('Organisation');
+  return await db.query('organisation');
+}
+
+Future<List<Map<String, dynamic>>> recupDest() async {
+  final db = await AppDataBase.instance.database;
+  return await db.query('grpDiffusion');
+}
+
+Future<List<Map<String, dynamic>>> recupRole() async {
+  final db = await AppDataBase.instance.database;
+  return await db.query('role');
 }
 
 class EventCreationForm extends StatefulWidget {
@@ -48,22 +57,31 @@ class _EventCreationFormState extends State<EventCreationForm> {
   String? _selectedOrganisateur;
 
   // Listes pour les rôles, destinataires et organisateurs (actuellement vides)
-  final List<String> _roles = []; // Ajouter les options nécessaires plus tard
-  final List<String> _destinataires =
+  List<Map<String, dynamic>> _roles = [];
+  List<String> _rolesNames = []; // Ajouter les options nécessaires plus tard
+  List<Map<String, dynamic>> _destinataires = [];
+  List<String> _destinatairesNames =
       []; // Ajouter les options nécessaires plus tard
+
   List<Map<String, dynamic>> _organisateurs = [];
   List<String> _organisateursNames = [];
   @override
   void initState() {
     super.initState();
-    _loadOrganisations();
+    _loadInfos();
   }
 
-  void _loadOrganisations() async {
-    final data = await recupOrga();
+  void _loadInfos() async {
+    final data1 = await recupOrga();
+    final data2 = await recupDest();
+    final data3 = await recupRole();
     setState(() {
-      _organisateurs = data;
-      _organisateursNames = data.map((org) => org['nom'] as String).toList();
+      _organisateurs = data1;
+      _organisateursNames = data1.map((org) => org['nom'] as String).toList();
+      _destinataires = data2;
+      _destinatairesNames = data2.map((dest) => dest['nom'] as String).toList();
+      _roles = data2;
+      _rolesNames = data3.map((role) => role['nom'] as String).toList();
     });
   }
 
@@ -87,57 +105,61 @@ class _EventCreationFormState extends State<EventCreationForm> {
   // insérer un utilisateur
   void saveEvent() async {
     print("ok0");
-    //if (formKey.currentState!.validate()) {
-    print("ok1");
-    // récupérer l'id de l'utilisateur
-    // récupérer l'id du groupe
-    // récupérer l'id du status (du role)
+    if (formKey.currentState!.validate()) {
+      print("ok1");
 
-    int inscripApp = _inscriptionViaApp ? 1 : 0;
-    int inscripHA = _inscriptionViaHelloAsso ? 1 : 0;
-    final selectedOrg = _organisateurs.firstWhere(
-      (org) => org['nom'] == _selectedOrganisateur,
-      orElse: () => {},
-    );
+      int inscripApp = _inscriptionViaApp ? 1 : 0;
+      int inscripHA = _inscriptionViaHelloAsso ? 1 : 0;
+      final selectedOrg = _organisateurs.firstWhere(
+        (org) => org['nom'] == _selectedOrganisateur,
+        orElse: () => {},
+      );
+      final selectedDest = _destinataires.firstWhere(
+        (dest) => dest['nom'] == _selectedDestinataire,
+        orElse: () => {},
+      );
+      final selectedRole = _roles.firstWhere(
+        (dest) => dest['nom'] == _selectedDestinataire,
+        orElse: () => {},
+      );
 
-    final Event evenement = Event(
-      idUtilisateur: 1,
-      status: 1, // c'est le role
-      idGroupe: 1,
-      objet: _objetController.text,
-      idOrganisation: selectedOrg['idOrga'],
-      titre: _titreController.text,
-      // pb avec les types, comment faire la convertion ?
-      date: _selectedDate?.toIso8601String().split('T')[0],
-      hDebut: _startTime?.format(context),
-      hFin: _endTime?.format(context),
-      lieu: "École", //-->  pas de choix du lieu dans le form
-      tarif: double.parse(_tarifController.text),
-      // nb de places
-      commentaire: _infosComplementairesController.text,
-      fichier: _selectedFile,
-      inscriptionAppli: inscripApp,
-      inscriptionHelloAsso: inscripHA,
-    );
+      final Event evenement = Event(
+        idUtilisateur: 1,
+        status: selectedRole['idRole'],
+        idGroupe: selectedDest['idGroupe'],
+        objet: _objetController.text,
+        idOrganisation: selectedOrg['idOrga'],
+        titre: _titreController.text,
+        date: _selectedDate?.toIso8601String().split('T')[0],
+        hDebut: _startTime?.format(context),
+        hFin: _endTime?.format(context),
+        lieu: "École", //-->  pas de choix du lieu dans le form
+        tarif: double.parse(_tarifController.text),
+        // nb de places
+        commentaire: _infosComplementairesController.text,
+        fichier: _selectedFile,
+        inscriptionAppli: inscripApp,
+        inscriptionHelloAsso: inscripHA,
+      );
 
-    await AppDataBase.instance.insertEvent(evenement);
+      await AppDataBase.instance.insertEvent(evenement);
 
-    // Affiche le message de succès
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Évènement ajouté !")),
-    );
+      // Affiche le message de succès
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Évènement ajouté !")),
+      );
 
-    // Réinitialiser les champs
-    _expediteurController.clear();
-    _roleController.clear();
-    _destinataireController.clear();
-    _objetController.clear();
-    _organisateurController.clear();
-    _titreController.clear();
-    _tarifController.clear();
-    _placesController.clear();
-    _infosComplementairesController.clear();
-    //}
+      // Réinitialiser les champs
+      _expediteurController.clear();
+      _roleController.clear();
+      _destinataireController.clear();
+      _objetController.clear();
+      _organisateurController.clear();
+      _titreController.clear();
+      _tarifController.clear();
+      _placesController.clear();
+      _infosComplementairesController.clear();
+    }
   }
 
   // Fonction pour sélectionner une date
@@ -410,13 +432,13 @@ class _EventCreationFormState extends State<EventCreationForm> {
             SizedBox(height: 20),
             _buildCenteredTitle("Nouvelle publication"),
             _buildInputRow("Expéditeur", _expediteurController),
-            _buildDropdownRow("Rôle", _selectedRole, _roles, (newValue) {
+            _buildDropdownRow("Rôle", _selectedRole, _rolesNames, (newValue) {
               setState(() {
                 _selectedRole = newValue;
               });
             }),
             _buildDropdownRow(
-                "Destinataire", _selectedDestinataire, _destinataires,
+                "Destinataire", _selectedDestinataire, _destinatairesNames,
                 (newValue) {
               setState(() {
                 _selectedDestinataire = newValue;
