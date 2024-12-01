@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:comunique2024/page/page_contact_admin.dart';
 import 'package:comunique2024/page/page_navigation.dart';
 import 'package:comunique2024/page/page_reservation_salle_2.dart';
-
 
 void main() {
   runApp(const MyApp());
@@ -13,13 +13,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-      return Scaffold(
-         backgroundColor: Colors.white,
-      body: Body()
-    
-      );
-    
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Body(),
+    );
   }
 }
 
@@ -29,33 +26,31 @@ class Body extends StatelessWidget {
     return Container(
       color: Colors.white,
       child: SingleChildScrollView(
-       
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  children: <Widget>[
-                    fleche(context),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: reserver(context),
-                    ),
-                  ],
-                ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: <Widget>[
+                  fleche(context),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: reserver(context),
+                  ),
+                ],
               ),
-              const SizedBox(height: 10),
-              const Divider(thickness: 1, color: Colors.black),
-              horaire(context),
-              const SizedBox(height: 20),
-              salledispo(context),
-              const SizedBox(height: 20),
-            ],
-          ),
+            ),
+            const SizedBox(height: 10),
+            const Divider(thickness: 1, color: Colors.black),
+            horaire(context),
+            const SizedBox(height: 20),
+            salledispo(context),
+            const SizedBox(height: 20),
+          ],
         ),
-      );
-    
+      ),
+    );
   }
 }
 
@@ -76,10 +71,14 @@ Widget fleche(BuildContext context) {
     icon: const Icon(Icons.arrow_back_ios, size: 20.0),
     onPressed: () {
       Navigator.push(
-               context,
-                   MaterialPageRoute(
-                       builder: (context) => BasePage(
-                         currentIndex: 2, body: ContactPage())));
+        context,
+        MaterialPageRoute(
+          builder: (context) => BasePage(
+            currentIndex: 2,
+            body: ContactPage(),
+          ),
+        ),
+      );
     },
   );
 }
@@ -110,6 +109,8 @@ Widget horaire(BuildContext context) {
           padding: EdgeInsets.only(left: 8.0),
           child: Row(
             children: [
+              Icon(Icons.calendar_today),
+              SizedBox(width: 10),
               Text(
                 "Jour",
                 style: TextStyle(
@@ -117,8 +118,8 @@ Widget horaire(BuildContext context) {
                   fontSize: 21,
                 ),
               ),
-              SizedBox(width: 160),
-              JourTextField(),
+              SizedBox(width: 128),
+              JourPicker(),
             ],
           ),
         ),
@@ -132,15 +133,17 @@ Widget horaire(BuildContext context) {
           padding: EdgeInsets.only(left: 8.0),
           child: Row(
             children: [
+              Icon(Icons.access_time),
+              SizedBox(width: 10),
               Text(
-                "Heure début",
+                "Heure de début",
                 style: TextStyle(
                   color: Color.fromARGB(255, 0, 0, 0),
                   fontSize: 21,
                 ),
               ),
-              SizedBox(width: 8),
-              Expanded(child: HeureTextField()),
+              SizedBox(width: 26),
+              Expanded(child: HeurePicker()),
             ],
           ),
         ),
@@ -154,15 +157,17 @@ Widget horaire(BuildContext context) {
           padding: EdgeInsets.only(left: 8.0),
           child: Row(
             children: [
+              Icon(Icons.access_time),
+              SizedBox(width: 10),
               Text(
-                "Heure fin",
+                "Heure de fin",
                 style: TextStyle(
                   color: Color.fromARGB(255, 0, 0, 0),
                   fontSize: 21,
                 ),
               ),
-              SizedBox(width: 40),
-              Expanded(child: HeureTextField()),
+              SizedBox(width: 56),
+              Expanded(child: HeurePicker()),
             ],
           ),
         ),
@@ -210,20 +215,19 @@ Widget _batimentExpansionTile(String batimentName, Color color, BuildContext con
       ),
       children: <Widget>[
         ListTile(
-  title: const Text(
-    "Salle info",
-    style: TextStyle(color: Color(0xFF640329)),
-  ),
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => (MyApp2()), 
-      ),
-    );
-  },
-),
-        
+          title: const Text(
+            "Salle info",
+            style: TextStyle(color: Color(0xFF640329)),
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MyApp2(),
+              ),
+            );
+          },
+        ),
         ListTile(
           title: const Text(
             "Salle maths",
@@ -238,83 +242,94 @@ Widget _batimentExpansionTile(String batimentName, Color color, BuildContext con
   );
 }
 
-class JourTextField extends StatelessWidget {
-  const JourTextField({super.key});
+class JourPicker extends StatefulWidget {
+  const JourPicker({super.key});
+
+  @override
+  _JourPickerState createState() => _JourPickerState();
+}
+
+class _JourPickerState extends State<JourPicker> {
+  DateTime selectedDate = DateTime.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 100,
-      height: 35,
-      child: TextField(
-        decoration: InputDecoration(
-          contentPadding:const EdgeInsets.symmetric(vertical: 30.0, horizontal: 30.0),
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFF640329)), 
+    return InkWell(
+      onTap: () => _selectDate(context),
+      child: Container(
+        width: 150,
+        height: 35,
+        decoration: BoxDecoration(
+          border: Border.all(color: const Color(0xFF640329)),
+          borderRadius: BorderRadius.circular(5.0),
+          color: Colors.grey[350],
+        ),
+        child: Center(
+          child: Text(
+            DateFormat.yMd().format(selectedDate),
+            style: const TextStyle(color: Colors.black),
           ),
-          focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFF640329)), 
-          ),
-          hintText: '',
-          fillColor: Colors.grey[350],
-          filled: true,
         ),
       ),
     );
   }
 }
 
-class HeureTextField extends StatelessWidget {
-  const HeureTextField({super.key});
+class HeurePicker extends StatefulWidget {
+  const HeurePicker({super.key});
+
+  @override
+  _HeurePickerState createState() => _HeurePickerState();
+}
+
+class _HeurePickerState extends State<HeurePicker> {
+  TimeOfDay selectedTime = TimeOfDay.now();
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: selectedTime,
+    );
+    if (picked != null && picked != selectedTime) {
+      setState(() {
+        selectedTime = picked;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          width: 50,
-          height: 40,
-          child: TextField(
-            decoration: InputDecoration(
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFF640329)),
-              ),
-              focusedBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFF640329)),
-              ),
-              hintText: '',
-              fillColor: Colors.grey[350],
-              filled: true,
-            ),
-            keyboardType: TextInputType.number,
+    return InkWell(
+      onTap: () => _selectTime(context),
+      child: Container(
+        width: 100,
+        height: 35,
+        decoration: BoxDecoration(
+          border: Border.all(color: const Color(0xFF640329)),
+          borderRadius: BorderRadius.circular(5.0),
+          color: Colors.grey[350],
+        ),
+        child: Center(
+          child: Text(
+            selectedTime.format(context),
+            style: const TextStyle(color: Colors.black),
           ),
         ),
-        const SizedBox(width: 4),
-        const Text(
-          ':',
-          style: TextStyle(fontSize: 24),
-        ),
-        const SizedBox(width: 4),
-        Container(
-          width: 50,
-          height: 35,
-          child: TextField(
-            decoration: InputDecoration(
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFF640329)),
-              ),
-              focusedBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFF640329)),
-              ),
-              hintText: '',
-              fillColor: Colors.grey[350],
-              filled: true,
-            ),
-            keyboardType: TextInputType.number,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
