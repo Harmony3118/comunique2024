@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ClickableImagesPage extends StatelessWidget {
+class LienPage extends StatelessWidget {
   final Uri url1 = Uri.parse("https://moodle.bordeaux-inp.fr/");
   final Uri url2 = Uri.parse("https://www.bordeaux-inp.fr/fr");
 

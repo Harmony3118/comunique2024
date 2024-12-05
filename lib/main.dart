@@ -81,17 +81,19 @@ class MyApp extends StatelessWidget {
       // ******************************************************************************
 
       home: const PageConnection(),
-      // home: Scaffold(
-      //   appBar: Header(),
-      //   body: AnnuairePage(),
-      //   bottomNavigationBar: Footer(),
-      // ),
+      /*
+      home: Scaffold(
+        appBar: Header(),
+        body: AnnuairePage(),
+        bottomNavigationBar: Footer(),
+      ),
+      */
 
-    //  home: Scaffold(
+      //  home: Scaffold(
       //  appBar: Header(),
-        //body: CreaGroupe(),
-        //       bottomNavigationBar: Footer(currentIndex: 3),
-     // ),
+      //body: CreaGroupe(),
+      //       bottomNavigationBar: Footer(currentIndex: 3),
+      // ),
     );
   }
 }

@@ -93,13 +93,14 @@ class _Footer extends State<Footer> {
   BottomNavigationBarItem _buildIcon(int index, IconData icon, String label) {
     return BottomNavigationBarItem(
       icon: Tooltip(
-        message: label,  // Le texte à afficher quand l'utilisateur appuie longuement
-        child : Icon(
-        icon,
-        color: this.currentIndex == index
-            ? Color.fromARGB(255, 100, 3, 41)
-            : Color.fromARGB(255, 59, 58, 58),
-      ),
+        message:
+            label, // Le texte à afficher quand l'utilisateur appuie longuement
+        child: Icon(
+          icon,
+          color: this.currentIndex == index
+              ? Color.fromARGB(255, 100, 3, 41)
+              : Color.fromARGB(255, 59, 58, 58),
+        ),
       ),
       label: '',
     );

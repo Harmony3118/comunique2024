@@ -6,14 +6,11 @@ import 'bdd/event.dart';
 import 'bdd/role.dart';
 import 'bdd/organisation.dart';
 import 'bdd/utilisateur.dart';
+
 class FileActualite extends StatefulWidget {
   @override
   _FileActualiteState createState() => _FileActualiteState();
 }
-
-// class _FileActualiteState extends State<FileActualite> {
-//   List<String> activeFilters = [];
-//   bool isPinFilterActive = false;
 
 // Liste statique d'événements
 // final List<Map<String, dynamic>> events = [
@@ -52,8 +49,6 @@ class FileActualite extends StatefulWidget {
 //   },
 // ];
 
-
-
 class _FileActualiteState extends State<FileActualite> {
   List<String> activeFilters = [];
   bool isPinFilterActive = false;
@@ -62,10 +57,11 @@ class _FileActualiteState extends State<FileActualite> {
 
   void initState() {
     super.initState();
-    _loadEvents(); // Charger les événements au démarrage
+    _loadEvents();
   }
 
   void _loadEvents() async {
+    // il faudra modifié pour qu'il n'y ai que ceux dont la date n'est pas dépassée
     List<Widget> newCards = await afficherListEvents();
     setState(() {
       cards = newCards;
@@ -96,7 +92,8 @@ class _FileActualiteState extends State<FileActualite> {
     if (activeFilters.isNotEmpty) {
       filteredEvents = filteredEvents.where((card) {
         if (card is CardHome) {
-          return activeFilters.contains(card.office) || activeFilters.contains(card.object);
+          return activeFilters.contains(card.office) ||
+              activeFilters.contains(card.object);
         }
         return false;
       }).toList();
@@ -111,9 +108,6 @@ class _FileActualiteState extends State<FileActualite> {
         return false;
       }).toList();
     }
-
-    
-
 
     return SafeArea(
       child: Column(
@@ -140,6 +134,7 @@ class _FileActualiteState extends State<FileActualite> {
 
   Future<List<Widget>> afficherListEvents() async {
     final db = await AppDataBase.instance.database;
+    // il faudra modifier pour qu'il n'y ai que les events qui ne sont pas encore dépassés
     final List<Map<String, dynamic>> maps = await db.query('event');
     print("Liste de maps ${maps}");
     List<Event> evenements = List.generate(maps.length, (i) {

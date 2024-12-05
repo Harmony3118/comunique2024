@@ -1,6 +1,8 @@
+import 'page_mes_publications.dart';
 import 'package:flutter/material.dart';
 import 'page_navigation.dart';
 import 'page_modifier_profil.dart';
+import 'page_liens_externes.dart';
 
 class Pageparametre extends StatelessWidget {
   @override
@@ -96,6 +98,42 @@ class Pageparametre extends StatelessWidget {
                           ),
                         ),
                       ),
+                      // SizedBox(height: 16),
+                      // Container(
+                      //   padding: EdgeInsets.symmetric(horizontal: 20),
+                      //   child: ElevatedButton(
+                      //     style: ElevatedButton.styleFrom(
+                      //       backgroundColor: Color.fromARGB(1, 217, 217, 217),
+                      //     ),
+                      //     onPressed: () {},
+                      //     child: Container(
+                      //       child: Row(
+                      //         mainAxisAlignment: MainAxisAlignment.start,
+                      //         children: [
+                      //           // Texte à gauche de la flèche
+                      //           Text(
+                      //             'Mes infos épinglées', // Texte que vous voulez afficher
+                      //             style: TextStyle(
+                      //               color: Colors.black, // Couleur du texte
+                      //               fontSize: 16, // Taille du texte
+                      //             ),
+                      //           ),
+                      //           Spacer(), // Espacement entre le texte et la flèche
+                      //           // Flèche entourée
+                      //           Container(
+                      //             // Espacement autour de l'icône
+                      //             child: Icon(
+                      //               Icons
+                      //                   .arrow_circle_right_outlined, // Icône de la flèche
+                      //               color: Colors.black, // Couleur de l'icône
+                      //               size: 30, // Taille de l'icône
+                      //             ),
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       SizedBox(height: 16),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 20),
@@ -103,49 +141,20 @@ class Pageparametre extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color.fromARGB(1, 217, 217, 217),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BasePage(
+                                      currentIndex: 0, body: MesPublications()),
+                                ));
+                          },
                           child: Container(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 // Texte à gauche de la flèche
-                                Text(
-                                  'Mes infos épinglées', // Texte que vous voulez afficher
-                                  style: TextStyle(
-                                    color: Colors.black, // Couleur du texte
-                                    fontSize: 16, // Taille du texte
-                                  ),
-                                ),
-                                Spacer(), // Espacement entre le texte et la flèche
-                                // Flèche entourée
-                                Container(
-                                  // Espacement autour de l'icône
-                                  child: Icon(
-                                    Icons
-                                        .arrow_circle_right_outlined, // Icône de la flèche
-                                    color: Colors.black, // Couleur de l'icône
-                                    size: 30, // Taille de l'icône
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 16),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(1, 217, 217, 217),
-                          ),
-                          onPressed: () {},
-                          child: Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                // Texte à gauche de la flèche
-                                Text(
+                                const Text(
                                   'Mes infos publiées', // Texte que vous voulez afficher
                                   style: TextStyle(
                                     color: Colors.black, // Couleur du texte
@@ -156,7 +165,7 @@ class Pageparametre extends StatelessWidget {
                                 // Flèche entourée
                                 Container(
                                   // Espacement autour de l'icône
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons
                                         .arrow_circle_right_outlined, // Icône de la flèche
                                     color: Colors.black, // Couleur de l'icône
@@ -175,7 +184,14 @@ class Pageparametre extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color.fromARGB(1, 217, 217, 217),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BasePage(
+                                      currentIndex: 0, body: LienPage()),
+                                ));
+                          },
                           child: Container(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
