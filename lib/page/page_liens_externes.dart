@@ -20,30 +20,29 @@ class LienPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Row(
-            children: [
-              const Padding(padding: EdgeInsets.fromLTRB(20, 0, 0, 0)),
-              const Icon(
-                Icons.arrow_back_ios,
-                color: Colors.black,
-              ),
-              const Center(
-                child: Text(
-                  "Mes Liens",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+      body: SingleChildScrollView( // Wrap the Column with SingleChildScrollView
+        child: Column(
+          children: [
+            Row(
+              children: [
+                const Padding(padding: EdgeInsets.fromLTRB(20, 0, 0, 0)),
+                const Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.black,
                 ),
-              ),
-            ],
-          ),
-          const Divider(thickness: 1, color: Colors.black),
-          Expanded(
-            child: Center(
+                const Center(
+                  child: Text(
+                    "Mes Liens",
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+            const Divider(thickness: 1, color: Colors.black),
+            Center(
               child: Container(
                 padding: const EdgeInsets.all(16.0),
-                height: MediaQuery.of(context).size.height *
-                    0.8, // 80% of screen height
+                height: MediaQuery.of(context).size.height * 0.8, // 80% of screen height
                 width: MediaQuery.of(context).size.width * 0.8,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -58,10 +57,8 @@ class LienPage extends StatelessWidget {
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment:
-                      MainAxisAlignment.center, // Center images vertically
-                  crossAxisAlignment:
-                      CrossAxisAlignment.center, // Center images horizontally
+                  mainAxisAlignment: MainAxisAlignment.center, // Center images vertically
+                  crossAxisAlignment: CrossAxisAlignment.center, // Center images horizontally
                   children: [
                     GestureDetector(
                       onTap: () => _launchURL(url1),
@@ -102,12 +99,13 @@ class LienPage extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
+
 
 // je l'utilise aussi dans page_for_crea_groupe donc c'est peut etre mieux d'importer
 
