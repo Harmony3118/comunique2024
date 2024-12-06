@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-
-// il faut importer le package du widget bouton 
+import 'package:comunique2024/widget/widget_bouton.dart';
 
 //eventuelement mettre class AppData avec le nom des participants dans un autre fichier global
 class AppData {
@@ -88,9 +87,12 @@ class _CreaGroupeState extends State<CreaGroupe> {
             Row(
               children: [
                 Padding(padding: EdgeInsets.fromLTRB(20, 0, 0, 0)),
-                Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.black,
+                IconButton(
+                  icon: Icon(Icons.arrow_back_ios,
+                      color: Color.fromARGB(255, 51, 51, 51)),
+                  onPressed: () {
+                    Navigator.pop(context); // Retourner à la page précédente
+                  },
                 ),
                 const Text(
                   "Nouveau groupe de diffusion",
@@ -195,6 +197,7 @@ class _CreaGroupeState extends State<CreaGroupe> {
                 typeBouton: 3,
                 texte: 'Créer',
                 maFonction: createGroup,
+                tailleText: 17,
               ),
             ),
           ],
@@ -369,47 +372,6 @@ class PetiteBoite extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-
-
-// j'ai copié collé le widget bouton il sera à enlever apres le merge 
-
-
-class WidgetBouton extends StatelessWidget {
-  const WidgetBouton(
-      {Key? key,
-      required this.typeBouton,
-      required this.texte,
-      required this.maFonction})
-      : super(key: key);
-  final int typeBouton;
-  final String texte;
-  final void Function()? maFonction;
-  static Color backgroundColor = const Color.fromRGBO(100, 3, 41, 1);
-  static Color foregroundColor = Colors.white;
-
-  void getCouleur() {
-    if (typeBouton == 2) {
-      backgroundColor = const Color.fromRGBO(215, 215, 215, 1);
-      foregroundColor = Colors.black;
-    } else if (typeBouton == 3) {
-      backgroundColor = const Color.fromRGBO(100, 3, 41, 0.6);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    getCouleur();
-    return ElevatedButton(
-      onPressed: maFonction,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor,
-        foregroundColor: foregroundColor,
-      ),
-      child: Text(texte),
     );
   }
 }
