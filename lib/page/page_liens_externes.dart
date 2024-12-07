@@ -26,9 +26,12 @@ class LienPage extends StatelessWidget {
             Row(
               children: [
                 const Padding(padding: EdgeInsets.fromLTRB(20, 0, 0, 0)),
-                const Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.black,
+                IconButton(
+                  icon: Icon(Icons.arrow_back_ios,
+                      color: Color.fromARGB(255, 51, 51, 51)),
+                  onPressed: () {
+                    Navigator.pop(context); // Retourner à la page précédente
+                  },
                 ),
                 const Center(
                   child: Text(
