@@ -42,7 +42,7 @@ Future<Map<int, Map<int, List<Map<String, dynamic>>>>> _organizeEventsByDay(
         : startHour;
 
     final eventColor = event['color'] ??
-        const Color.fromARGB(255, 163, 12, 12).value; // Couleur par défaut.
+     const Color.fromARGB(255, 163, 12, 12).value; // Couleur par défaut.
 
     // Initialise la structure pour chaque jour et chaque heure
     eventsByDay.putIfAbsent(dayOfWeek, () => {});
@@ -234,7 +234,7 @@ Future<Map<int, Map<int, List<Map<String, dynamic>>>>> _organizeEventsByDay(
                   ),
                   child: eventsByDay[day]?[hour] == null ||
                           eventsByDay[day]![hour]!.isEmpty
-                      ? Divider(color: Colors.grey, thickness: 1)
+                      ? Divider(color: const Color.fromARGB(0, 158, 158, 158), thickness: 1)
                       : Row(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
