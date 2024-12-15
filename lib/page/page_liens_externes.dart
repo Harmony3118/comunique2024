@@ -13,25 +13,22 @@ class LienPage extends StatelessWidget {
         mode: LaunchMode.externalApplication,
       );
     } else {
-      throw 'Could not launch $url';
+      throw 'Impossible d’ouvrir le lien $url';
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView( // Wrap the Column with SingleChildScrollView
+      body: SingleChildScrollView(
         child: Column(
           children: [
             Row(
               children: [
                 const Padding(padding: EdgeInsets.fromLTRB(20, 0, 0, 0)),
                 IconButton(
-                  icon: Icon(Icons.arrow_back_ios,
-                      color: Color.fromARGB(255, 51, 51, 51)),
-                  onPressed: () {
-                    Navigator.pop(context); // Retourner à la page précédente
-                  },
+                  icon: const Icon(Icons.arrow_back_ios, color: Color.fromARGB(255, 51, 51, 51)),
+                  onPressed: () => Navigator.pop(context),
                 ),
                 const Center(
                   child: Text(
@@ -45,7 +42,7 @@ class LienPage extends StatelessWidget {
             Center(
               child: Container(
                 padding: const EdgeInsets.all(16.0),
-                height: MediaQuery.of(context).size.height * 0.8, // 80% of screen height
+                height: MediaQuery.of(context).size.height * 0.8,
                 width: MediaQuery.of(context).size.width * 0.8,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -59,9 +56,8 @@ class LienPage extends StatelessWidget {
                   ],
                 ),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center, // Center images vertically
-                  crossAxisAlignment: CrossAxisAlignment.center, // Center images horizontally
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     GestureDetector(
                       onTap: () => _launchURL(url1),
@@ -72,8 +68,16 @@ class LienPage extends StatelessWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: Image.network(
-                              'https://s3-alpha-sig.figma.com/img/84e0/0b42/f99be8bc653bcdaf0e44c81879958e95?Expires=1733097600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=O5Hvq5adLW65L9UOJHOVSRnelDqGKrcWvXLwWbKJH40lvOG81vGJEBFNt8arvA-lgZk0S8OMj4WIjSv9UhQotglHkJU2uW-SX0qsRDhsbZjEfZRjAvOk-uHFMTDEYGxceLBAeocIs0-sq-ei3maaYq2bdJrDa06hZL1UsixNL~2TLEtdCmlqsF05vNTvUENLaglG1SoYzjc7-AgBQzEHYqgAhCMw4pil24C5K-zjiNnOfacRRHf6IHs23zx6jk7GcpCvxh-6T6PW9CUhpWwAHka02LJAm8RopxsEDOBFf0i70~gozyFPuiw6752DLJcFz1w5r4CJnseYYLojZANapw__',
+                              'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Moodle-logo.svg/1200px-Moodle-logo.svg.png',
+                              height: 100,
                               fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(
+                                  Icons.broken_image,
+                                  color: Colors.red,
+                                  size: 50,
+                                );
+                              },
                             ),
                           ),
                         ),
@@ -90,8 +94,16 @@ class LienPage extends StatelessWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: Image.network(
-                              'https://s3-alpha-sig.figma.com/img/4479/87a0/c4efc8abd9a65349f22f00cbba2a9afb?Expires=1733097600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ZMfNHe9FcykO79upmia1IMRdh2ObfK36kIUBaBdQEitTbfBPTa3khShMgudgHzYNkam3vYe92jocC4-Fpp66N08V7JxHv8Ppouc0VUAuOiWEbY0aDvYAbE8x1ZUkmJndLZGNZJaVWKCKt0tiKH6mT2Dq1gzcjTqRXPJOlUPl8SC7c41ISiBWZmdYdu5sZizF8j~pbC4-Pdidzzm3uOTLaeBL1qrk2fUtBQxTOM6Bdu~UjX7IVAL~NbaXiW6lrkb1yCIqiAfZFG2aTxe9TmFdKXZKPwsjcTwH23pDsVTdDqi3FVMFCW7Dhj7E8PgqFrTyTVWbN-OB9N~2CMwLujXFcA__',
+                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIfhtLpjaia-dLUh_qUwBu3v65_cnJyhwIwg&s',
+                              height: 300,
                               fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(
+                                  Icons.broken_image,
+                                  color: Colors.red,
+                                  size: 50,
+                                );
+                              },
                             ),
                           ),
                         ),
@@ -108,9 +120,6 @@ class LienPage extends StatelessWidget {
     );
   }
 }
-
-
-// je l'utilise aussi dans page_for_crea_groupe donc c'est peut etre mieux d'importer
 
 class Diviseur extends StatelessWidget {
   final double thickness;
