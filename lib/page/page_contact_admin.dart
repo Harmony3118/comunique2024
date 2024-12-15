@@ -31,7 +31,7 @@ class ContactPage extends StatelessWidget {
                       ));
                 },
                 child: const Text(
-                  'Justifier une Absence',
+                  'Justifier une absence',
                   style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
               )),

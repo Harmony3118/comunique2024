@@ -302,7 +302,7 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
               // Promotion et adresse mail
               Row(
                 children: [
-                  Expanded(child: Text("Promotion")),
+                  Expanded(child: Text("Mon année/Ma promotion")),
                   SizedBox(width: 8),
                   Expanded(
                     flex: 2,

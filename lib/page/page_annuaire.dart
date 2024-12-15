@@ -284,7 +284,7 @@ class _AnnuairePageState extends State<AnnuairePage> {
       elevation: 2,
       color: isBlue ? Color.fromRGBO(105, 88, 95, 0.25) : Colors.white,
       child: ExpansionTile(
-        title: Text('Category $category'),
+        title: Text('Catégorie $category'),
         children: [
           Wrap(
             spacing: 16.0,
