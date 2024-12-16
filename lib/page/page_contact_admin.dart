@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:comunique2024/page/page_form_absence.dart';
 import 'package:comunique2024/page/page_navigation.dart';
 import 'package:comunique2024/page/page_reservation_salle_1.dart';
+import 'package:comunique2024/page/page_form_soiree.dart';
 
 class ContactPage extends StatelessWidget {
   const ContactPage({Key? key}) : super(key: key);
@@ -31,7 +32,7 @@ class ContactPage extends StatelessWidget {
                       ));
                 },
                 child: const Text(
-                  'Justifier une Absence',
+                  'Justifier une absence',
                   style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
               )),
@@ -61,8 +62,13 @@ class ContactPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(32),
                 color: const Color.fromARGB(255, 100, 3, 42),
               ),
-              child: TextButton(
-                onPressed: () {},
+                            child: TextButton(
+                onPressed: () {Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            BasePage(currentIndex: 4, body: FormSoiree()),
+                      ));},
                 child: const Text(
                   'Organiser un événement',
                   style: TextStyle(fontSize: 20, color: Colors.white),

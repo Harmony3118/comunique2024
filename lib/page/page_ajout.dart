@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:comunique2024/page/page_navigation.dart';
 import 'package:comunique2024/widget/widget_bouton.dart';
 import 'package:comunique2024/page/page_formulaire_event.dart';
+import 'package:comunique2024/page/page_form_crea_groupe.dart';
 
 class AjoutPage extends StatelessWidget {
   const AjoutPage({Key? key}) : super(key: key);
@@ -18,7 +19,7 @@ class AjoutPage extends StatelessWidget {
             height: 78,
             child: WidgetBouton(
               typeBouton: 1,
-              texte: 'Créer un évènement',
+              texte: 'Créer un événement',
               tailleText: 20,
               maFonction: () {
                 Navigator.push(
@@ -38,12 +39,12 @@ class AjoutPage extends StatelessWidget {
               texte: 'Créer un groupe',
               tailleText: 20,
               maFonction: () {
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //       builder: (context) =>
-                //           BasePage(currentIndex: 2, body: EventCreationForm()),
-                //    ));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          BasePage(currentIndex: 2, body: CreaGroupe()),
+                   ));
               },
             ),
           ),

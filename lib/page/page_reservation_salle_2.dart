@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:comunique2024/page/page_contact_admin.dart';
 import 'package:comunique2024/page/page_navigation.dart';
 import 'package:comunique2024/page/page_reservation_salle_3.dart';
@@ -112,7 +113,7 @@ Widget horaire(BuildContext context) {
       const SizedBox(height: 10),
       _buildField("Pour qui", const HeureTextField()),
       const SizedBox(height: 10),
-      _buildField("Nombre de personnes", const NombrePersonnesTextField()),
+      _buildField("Nombre de personnes", NombrePersonnesTextField()),
     ],
   );
 }
@@ -142,11 +143,27 @@ Widget _buildField(String label, Widget textField) {
 }
 
 class NombrePersonnesTextField extends StatelessWidget {
-  const NombrePersonnesTextField({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return _commonTextField();
+    return TextFormField(
+      keyboardType: TextInputType.number, // Clavier numérique
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly, // Accepter uniquement les chiffres
+      ],
+      decoration: InputDecoration(
+        labelText: "Nombre de personnes",
+        border: OutlineInputBorder(),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Veuillez entrer un nombre';
+        }
+        if (int.tryParse(value) == null) {
+          return 'Veuillez entrer un nombre valide';
+        }
+        return null;
+      },
+    );
   }
 }
 

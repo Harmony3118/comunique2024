@@ -471,16 +471,6 @@ class _MyFormState extends State<MyForm> {
                               ? Container(
                                   height: 41,
                                   width: 206,
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                        255, 217, 217, 217),
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(
-                                      color: const Color.fromARGB(255, 100, 3,
-                                          42), // Couleur de la bordure
-                                      width: 1.5, // Largeur de la bordure
-                                    ),
-                                  ),
                                   child: MultiSelectDialogField(
                                     items: professeurs
                                         .map((e) =>

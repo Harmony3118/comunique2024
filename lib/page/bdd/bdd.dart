@@ -86,15 +86,15 @@ class AppDataBase {
   Future<void> _preRemplirRole(Database db) async {
     List<Map<String, dynamic>> listRole = [
       {'nomRole': 'Président'},
-      {'nomRole': 'Vis-président'},
+      {'nomRole': 'Vice-président'},
       {'nomRole': 'Secrétaire'},
       {'nomRole': 'Trésorier'},
-      {'nomRole': 'Vis-trésorier'},
+      {'nomRole': 'Vice-trésorier'},
       {'nomRole': 'Respo clubs'},
       {'nomRole': 'Respo partenariats'},
-      {'nomRole': 'Pole events'},
-      {'nomRole': 'Pole communications'},
-      {'nomRole': 'Pole logistique'},
+      {'nomRole': 'Pôle events'},
+      {'nomRole': 'Pôle communications'},
+      {'nomRole': 'Pôle logistique'},
       // ajouter les bon rôles : bureaux, club, administration, professeur
     ];
 
