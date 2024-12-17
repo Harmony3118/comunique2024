@@ -272,7 +272,7 @@ class AppDataBase {
   }
 
   // renvoie true si l'indentification est correcte
-  Future<bool> validateUser(String email, String mdp) async {
+  Future<int> validateUser(String email, String mdp) async {
     // Remplacez ceci par votre logique réelle
     final Database db = await database;
     final result = await db.rawQuery(
@@ -282,9 +282,13 @@ class AppDataBase {
     if (result.isNotEmpty) {
       final String userMdp = result.first['mdp'] as String;
 
-      return hashPassword(mdp) == userMdp;
+      if (hashPassword(mdp) == userMdp) {
+        return result.first['idUtilisateur'] as int;
+      } else {
+        return -1;
+      }
     }
-    return false;
+    return -2;
   }
 
   // Modifier un utilisateur

@@ -76,9 +76,6 @@ class PageConnection extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         gestionLogin(context);
-        // if (formKey.currentState!.validate()) {
-
-        // }
       },
       child: Container(
         width: screenWidth * 0.8, // 80% de la largeur de l'écran
@@ -107,18 +104,22 @@ class PageConnection extends StatelessWidget {
 
     final isValidUser = await AppDataBase.instance.validateUser(email, mdp);
 
-    if (isValidUser) {
-      //await saveUserSession(userId);
+    if (isValidUser == -1) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Mot de passe incorrect")),
+      );
+    } else if (isValidUser == -2) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Adresse mail inconnue")),
+      );
+    } else {
+      // await saveUserSession(isValidUser);
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) =>
               BasePage(currentIndex: 0, body: FileActualite()),
         ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Identifiants invalides.")),
       );
     }
   }
