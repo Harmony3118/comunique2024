@@ -1,9 +1,24 @@
 import 'package:comunique2024/page/page_connection.dart';
 import 'package:comunique2024/page/page_inscription_suite.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
+
+String hashPassword(String password) {
+  final bytes = utf8.encode(password);
+  return sha256.convert(bytes).toString();
+}
+
+bool isValidEmail(String email) {
+  final regex = RegExp(r"^[a-zA-Z0-9._%+-]+@ensc\.fr$");
+  return regex.hasMatch(email);
+}
 
 class PageInscription extends StatelessWidget {
-  const PageInscription({super.key});
+  final emailController = TextEditingController();
+  final mdpController = TextEditingController();
+
+  PageInscription({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,20 +34,22 @@ class PageInscription extends StatelessWidget {
             children: <Widget>[
               // Image centrée
               Padding(
-                padding: EdgeInsets.only(top: screenHeight * 0.1), // 10% de l'écran
+                padding:
+                    EdgeInsets.only(top: screenHeight * 0.1), // 10% de l'écran
                 child: Center(
                   child: image(context, screenWidth),
                 ),
               ),
               SizedBox(height: screenHeight * 0.08), // 8% de l'écran
               // ID
-              id(context, screenWidth, screenHeight),
+              id(context, screenWidth, screenHeight, emailController),
               SizedBox(height: screenHeight * 0.02), // 2% de l'écran
               // MDP
-              mdp(context, screenWidth, screenHeight),
+              mdp(context, screenWidth, screenHeight, mdpController),
               SizedBox(height: screenHeight * 0.15), // 15% de l'écran
               // Bulle bordeaux
-              bulle_bordeaux(context, screenWidth, screenHeight),
+              bulle_bordeaux(context, screenWidth, screenHeight,
+                  emailController, mdpController),
               SizedBox(height: screenHeight * 0.03), // 3% de l'écran
               // Bulle claire
               bulle_claire(context, screenWidth, screenHeight),
@@ -53,12 +70,42 @@ class PageInscription extends StatelessWidget {
     );
   }
 
-  Widget bulle_bordeaux(BuildContext context, double screenWidth, double screenHeight) {
+  Widget bulle_bordeaux(
+      BuildContext context,
+      double screenWidth,
+      double screenHeight,
+      TextEditingController emailController,
+      TextEditingController mdpController) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        final email = emailController.text.trim();
+        final mdp = mdpController.text.trim();
+
+        if (!isValidEmail(email)) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Adresse e-mail invalide")),
+          );
+          return;
+        }
+
+        // Validation du mot de passe
+        if (mdp.isEmpty || mdp.length < 8) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text("Mot de passe trop court (min. 8 caractères)")),
+          );
+          return;
+        }
+
+        // Hash du mot de passe
+        final hashedMdp = hashPassword(mdp);
+
+        // Page suivante
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PageInscriptionSuite()),
+          MaterialPageRoute(
+              builder: (context) =>
+                  PageInscriptionSuite(email: email, motDePasse: hashedMdp)),
         );
       },
       child: Container(
@@ -82,7 +129,8 @@ class PageInscription extends StatelessWidget {
     );
   }
 
-  Widget bulle_claire(BuildContext context, double screenWidth, double screenHeight) {
+  Widget bulle_claire(
+      BuildContext context, double screenWidth, double screenHeight) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -110,7 +158,8 @@ class PageInscription extends StatelessWidget {
     );
   }
 
-  Widget id(BuildContext context, double screenWidth, double screenHeight) {
+  Widget id(BuildContext context, double screenWidth, double screenHeight,
+      TextEditingController controller) {
     return Container(
       width: screenWidth * 0.65, // 65% de la largeur de l'écran
       height: screenHeight * 0.08, // 8% de la hauteur de l'écran
@@ -126,7 +175,8 @@ class PageInscription extends StatelessWidget {
       child: Align(
         alignment: Alignment.centerLeft,
         child: Padding(
-          padding: EdgeInsets.only(left: screenWidth * 0.02), // 2% de la largeur
+          padding:
+              EdgeInsets.only(left: screenWidth * 0.02), // 2% de la largeur
           child: Row(
             children: [
               Icon(
@@ -135,7 +185,7 @@ class PageInscription extends StatelessWidget {
                 size: screenHeight * 0.05, // Taille proportionnelle
               ),
               SizedBox(width: screenWidth * 0.05), // 5% de la largeur
-              const Expanded(child: EmailTextField()),
+              Expanded(child: EmailTextField(controller: controller)),
             ],
           ),
         ),
@@ -143,7 +193,8 @@ class PageInscription extends StatelessWidget {
     );
   }
 
-  Widget mdp(BuildContext context, double screenWidth, double screenHeight) {
+  Widget mdp(BuildContext context, double screenWidth, double screenHeight,
+      TextEditingController controller) {
     return Container(
       width: screenWidth * 0.65, // 65% de la largeur de l'écran
       height: screenHeight * 0.08, // 8% de la hauteur de l'écran
@@ -159,7 +210,8 @@ class PageInscription extends StatelessWidget {
       child: Align(
         alignment: Alignment.centerLeft,
         child: Padding(
-          padding: EdgeInsets.only(left: screenWidth * 0.02), // 2% de la largeur
+          padding:
+              EdgeInsets.only(left: screenWidth * 0.02), // 2% de la largeur
           child: Row(
             children: [
               Icon(
@@ -168,7 +220,10 @@ class PageInscription extends StatelessWidget {
                 size: screenHeight * 0.05, // Taille proportionnelle
               ),
               SizedBox(width: screenWidth * 0.05), // 5% de la largeur
-              const Expanded(child: MdpTextField()),
+              Expanded(
+                  child: MdpTextField(
+                controller: controller,
+              )),
             ],
           ),
         ),
@@ -179,14 +234,16 @@ class PageInscription extends StatelessWidget {
 
 // Classe pour le TextField d'email
 class EmailTextField extends StatelessWidget {
-  const EmailTextField({super.key});
+  final TextEditingController controller;
+  const EmailTextField({required this.controller, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 30,
-      child: const TextField(
-        decoration: InputDecoration(
+      child: TextField(
+        controller: controller,
+        decoration: const InputDecoration(
           hintText: 'E-mail',
           hintStyle: TextStyle(
             color: Color.fromARGB(127, 0, 0, 0),
@@ -203,15 +260,17 @@ class EmailTextField extends StatelessWidget {
 
 // Classe pour le TextField du mdp
 class MdpTextField extends StatelessWidget {
-  const MdpTextField({super.key});
+  final TextEditingController controller;
+  const MdpTextField({required this.controller, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 30,
-      child: const TextField(
+      child: TextField(
+        controller: controller,
         obscureText: true,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           hintText: 'Mot de passe',
           hintStyle: TextStyle(
             color: Color.fromARGB(127, 0, 0, 0),
@@ -225,4 +284,3 @@ class MdpTextField extends StatelessWidget {
     );
   }
 }
-

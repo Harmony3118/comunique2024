@@ -6,14 +6,25 @@ import 'package:image_picker/image_picker.dart';
 import 'package:comunique2024/page/page_navigation.dart';
 import 'package:comunique2024/page/page_file_actualite.dart';
 
+import 'page_connection.dart';
+
 class PageInscriptionSuite extends StatefulWidget {
-  const PageInscriptionSuite({super.key});
+  final email;
+  final motDePasse;
+
+  PageInscriptionSuite(
+      {required this.email, required this.motDePasse, super.key});
 
   @override
-  _PageInscriptionSuiteState createState() => _PageInscriptionSuiteState();
+  _PageInscriptionSuiteState createState() =>
+      _PageInscriptionSuiteState(email: email, motDePasse: motDePasse);
 }
 
 class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
+  final email;
+  final motDePasse;
+  _PageInscriptionSuiteState({required this.email, required this.motDePasse});
+
   File? _image; // Variable pour stocker l'image sélectionnée
   final ImagePicker _picker = ImagePicker();
   bool _formSubmitted = false; // Indique si le formulaire a été soumis
@@ -21,7 +32,6 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
   // Controller pour récupoérer le champs du form
   final TextEditingController nomController = TextEditingController();
   final TextEditingController prenomController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
   final TextEditingController promotionController = TextEditingController();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -31,7 +41,6 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
     // libère les controlleurs : qu'est ce que c'est ?
     nomController.dispose();
     prenomController.dispose();
-    emailController.dispose();
     promotionController.dispose();
     super.dispose();
   }
@@ -42,7 +51,8 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
       final Utilisateur utilisateur = Utilisateur(
         nom: nomController.text,
         prenom: prenomController.text,
-        email: emailController.text,
+        email: email,
+        mdp: motDePasse,
         promotion: int.parse(promotionController.text),
       );
 
@@ -50,13 +60,12 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
 
       // Affiche le message de succès
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Utilisateur ajouté !")),
+        const SnackBar(content: Text("Inscription réussie")),
       );
 
       // Réinitialiser les champs
       nomController.clear();
       prenomController.clear();
-      emailController.clear();
       promotionController.clear();
     }
   }
@@ -66,47 +75,50 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
     return Scaffold(
       body: Form(
         key: formKey,
-        child : Container(
-        color: Colors.white,
-        child: SingleChildScrollView( // Permet le défilement
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            // Icône de retour en haut à gauche
-            Padding(
-              padding: const EdgeInsets.only(top: 50, right: 350),
-              child: IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.black),
-                onPressed: () {
-                  Navigator.pop(context); // Action de retour à l'écran précédent
-                },
-              ),
-            ),
-            Center(
-              child: image(context), // Centered image
-            ),
-            const SizedBox(height: 10), // Espace entre l'image et "Mes préférences"
-            
-              // Mes préférences
-              mes_prefs(context),
-              const SizedBox(height: 20), // Espace entre les sections
+        child: Container(
+          color: Colors.white,
+          child: SingleChildScrollView(
+            // Permet le défilement
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                // Icône de retour en haut à gauche
+                Padding(
+                  padding: const EdgeInsets.only(top: 50, right: 350),
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_back, color: Colors.black),
+                    onPressed: () {
+                      Navigator.pop(
+                          context); // Action de retour à l'écran précédent
+                    },
+                  ),
+                ),
+                Center(
+                  child: image(context), // Centered image
+                ),
+                const SizedBox(
+                    height: 10), // Espace entre l'image et "Mes préférences"
 
-              // Mes données
-              mes_donnees(context),
-              const SizedBox(height: 60), // Espace avant les boutons
-              
-              // Bulle bordeaux
-              bulle_bordeaux(context),
-              const SizedBox(height: 30), // Espace entre les deux boutons
-              
-              // Bulle claire
-              bulle_claire(context),
-              const SizedBox(height: 200), // Espace en bas pour le défilement
-            ],
+                // Mes préférences
+                mes_prefs(context),
+                const SizedBox(height: 20), // Espace entre les sections
+
+                // Mes données
+                mes_donnees(context),
+                const SizedBox(height: 60), // Espace avant les boutons
+
+                // Bulle bordeaux
+                bulle_bordeaux(context),
+                const SizedBox(height: 30), // Espace entre les deux boutons
+
+                // Bulle claire
+                bulle_claire(context),
+                const SizedBox(height: 200), // Espace en bas pour le défilement
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 
@@ -273,7 +285,7 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
             child: Row(
               children: [
                 const Text(
-                  "Mon année",
+                  "Ma promotion",
                   style: TextStyle(
                     color: Color.fromARGB(255, 0, 0, 0),
                     fontSize: 21,
@@ -290,72 +302,64 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
             ),
           ),
         ),
-        Container(
-          width: 400,
-          height: 50,
-          color: const Color.fromARGB(0, 255, 255, 255),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: Row(
-              children: [
-                const Text(
-                  "Mail",
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 0, 0, 0),
-                    fontSize: 21,
-                  ),
-                ),
-                const SizedBox(width: 40),
-                Expanded(
-                  child: YearTextField(
-                    controller: emailController,
-                    type: TextInputType.emailAddress,
-                    formSubmitted: _formSubmitted,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        )
       ],
     );
+  }
+
+  void handleInscriptionLogic(BuildContext context) async {
+    setState(() {
+      _formSubmitted = true; // Activer les validations
+    });
+
+    // Vérifiez si l'utilisateur est déjà enregistré
+    final isAlreadyRegistered =
+        await AppDataBase.instance.isUserAlreadyRegistered(
+      email,
+      nomController.text.trim(),
+      prenomController.text.trim(),
+      int.tryParse(promotionController.text.trim()) ?? 0,
+    );
+
+    if (isAlreadyRegistered) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text("Utilisateur déjà enregistré. Redirection...")),
+      );
+
+      // Redirigez vers la page de connexion
+      Future.delayed(const Duration(seconds: 2), () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => PageConnection()),
+        );
+      });
+      return;
+    }
+
+    // Si le formulaire est valide
+    if (formKey.currentState!.validate()) {
+      saveUser();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              BasePage(currentIndex: 0, body: FileActualite()),
+        ),
+      );
+    } else {
+      // Afficher un message si les champs obligatoires ne sont pas remplis
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Veuillez remplir tous les champs obligatoires."),
+        ),
+      );
+    }
   }
 
   Widget bulle_bordeaux(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          setState(() {
-        _formSubmitted = true; // Activer les validations
-      });
-
-      if (formKey.currentState!.validate()) {
-        saveUser(); // Sauvegarder l'utilisateur
-          
-
-/*
-          // test print
-          final db = await AppDataBase.instance.database;
-          List<Map<String, dynamic>> utilisateurs =
-              await db.query('utilisateur');
-          print(utilisateurs);
-          // fin test
-*/
-
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    BasePage(currentIndex: 0, body: FileActualite()),
-              ),);
-              } else {
-        // Afficher un message ou autre si non valide
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Veuillez remplir tous les champs obligatoires."),
-          ),
-        );
-      }
-
+          handleInscriptionLogic(context);
         },
         child: Container(
           width: 299,
@@ -379,60 +383,60 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
 
   Widget bulle_claire(BuildContext context) {
     return GestureDetector(
-    onTap: () {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text("Passer cette étape ?"),
-            content: const Text(
-                "Vous n'avez pas rempli vos informations. Êtes-vous sûr de vouloir passer cette étape ?"),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context); // Fermer la boîte de dialogue
-                },
-                child: const Text("Annuler"),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context); // Fermer la boîte de dialogue
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BasePage(
-                        currentIndex: 0,
-                        body: FileActualite(), // Page d'accueil
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text("Passer cette étape ?"),
+              content: const Text(
+                  "Vous n'avez pas rempli vos informations. Êtes-vous sûr de vouloir passer cette étape ?"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Fermer la boîte de dialogue
+                  },
+                  child: const Text("Annuler"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Fermer la boîte de dialogue
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BasePage(
+                          currentIndex: 0,
+                          body: FileActualite(), // Page d'accueil
+                        ),
                       ),
-                    ),
-                  );
-                },
-                child: const Text("Confirmer"),
-              ),
-            ],
-          );
-        },
-      );
-    },
-    child: Container(
-      width: 299,
-      height: 43,
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 215, 215, 215),
-        borderRadius: BorderRadius.circular(19),
-      ),
-      child: const Center(
-        child: Text(
-          "Passer cette étape",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 24,
+                    );
+                  },
+                  child: const Text("Confirmer"),
+                ),
+              ],
+            );
+          },
+        );
+      },
+      child: Container(
+        width: 299,
+        height: 43,
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 215, 215, 215),
+          borderRadius: BorderRadius.circular(19),
+        ),
+        child: const Center(
+          child: Text(
+            "Passer cette étape",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 24,
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   // Fonction pour choisir une image à partir de la galerie
   Future<void> _pickImageFromGallery() async {
@@ -454,7 +458,6 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
     }
   }
 }
-
 
 // case intéractive calendrier
 
@@ -495,7 +498,12 @@ class YearTextField extends StatelessWidget {
   TextInputType type;
   final bool formSubmitted;
 
-  YearTextField({super.key, required this.controller, required this.type, required this.formSubmitted,});
+  YearTextField({
+    super.key,
+    required this.controller,
+    required this.type,
+    required this.formSubmitted,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -519,35 +527,6 @@ class YearTextField extends StatelessWidget {
             return 'Veuillez remplir le champs';
           }
           return null; // Pas d'erreur
-        },
-      ),
-    );
-  }
-}
-
-// Classe pour le TextField d'email
-class EmailTextField extends StatelessWidget {
-  TextEditingController controller;
-  EmailTextField({super.key, required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 30,
-      child: TextFormField(
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          hintText: '',
-          fillColor: Colors.grey[200],
-          filled: true,
-        ),
-        controller: controller,
-        keyboardType: TextInputType.emailAddress,
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Veuillez remplir le champs';
-          }
-          return null;
         },
       ),
     );

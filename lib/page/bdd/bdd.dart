@@ -35,7 +35,7 @@ class AppDataBase {
       onCreate: (db, version) async {
         // Création des tables si elles n'existent pas encore
         await db.execute(
-            "CREATE TABLE utilisateur (idUtilisateur INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT, prenom TEXT, email TEXT, promotion INTEGER, image BLOB)");
+            "CREATE TABLE utilisateur (idUtilisateur INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT, prenom TEXT, email TEXT, mdp TEXT, promotion INTEGER, image BLOB)");
         await db.execute(
             "CREATE TABLE role (idRole INTEGER PRIMARY KEY AUTOINCREMENT, nomRole TEXT)");
         await db.execute(
@@ -264,6 +264,19 @@ class AppDataBase {
     );
   }
 
+  Future<bool> isUserAlreadyRegistered(String email, String nom, String prenom, int promo) async {
+    final Database db = await database;
+    final result = await db.rawQuery(
+      '''
+      SELECT * FROM utilisateur 
+      WHERE email = ? OR (nom = ? AND prenom = ? AND promotion = ?)
+      ''',
+      [email, nom, prenom, promo],
+    );
+
+    return result.isNotEmpty; // Renvoie true si un utilisateur est trouvé
+  }
+
   // Modifier un utilisateur
   void updateUtilisateur(Utilisateur utilisateur) async {
     final Database db = await database;
@@ -340,6 +353,7 @@ class AppDataBase {
       nom: "Lolie",
       prenom: "Reydellet",
       email: "lreydellet@ensc.fr",
+      mdp: "..",
       promotion: 2025,
     ),
   ];
