@@ -113,7 +113,7 @@ class PageConnection extends StatelessWidget {
         const SnackBar(content: Text("Adresse mail inconnue")),
       );
     } else {
-      // await saveUserSession(isValidUser);
+      await saveUserSession(isValidUser);
       Navigator.push(
         context,
         MaterialPageRoute(
