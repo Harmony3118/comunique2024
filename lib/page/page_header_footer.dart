@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'conservationUtilisateur.dart';
-import 'page_navigation.dart';
 import 'page_parametre.dart';
 
 class Header extends StatefulWidget implements PreferredSizeWidget {
@@ -28,11 +27,9 @@ class _Header extends State<Header> {
         color: const Color.fromARGB(255, 59, 58, 58),
         onPressed: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    BasePage(currentIndex: 0, body: Pageparametre()),
-              ));
+            context,
+            MaterialPageRoute(builder: (context) => Pageparametre()),
+          );
         },
       ),
       actions: <Widget>[
