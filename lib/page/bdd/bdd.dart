@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:comunique2024/page/bdd/utilisateur.dart';
@@ -66,7 +65,6 @@ class AppDataBase {
   }
 
   Future<void> _preRemplirOrganisation(Database db) async {
-    Color c = Color(0xB5D08FBA);
     List<Map<String, dynamic>> organisations = [
       {'nom': 'BDE', 'color': 0xB5DEB5A7},
       {'nom': 'BDS', 'color': 0xB5A7DEDB},
