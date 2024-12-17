@@ -137,8 +137,6 @@ class _FileActualiteState extends State<FileActualite> {
     // il faudra modifier pour qu'il n'y ai que les events qui ne sont pas encore dépassés
     final List<Map<String, dynamic>> maps = await db.query('event');
     print("Liste de maps ${maps}");
-    final List<Map<String, dynamic>> users = await db.query('utilisateur');
-    print("\n\n\n\n\n\nListe de des utilisateurs ${users}\n\n\n\n\n\n");
     List<Event> evenements = List.generate(maps.length, (i) {
       return Event.fromMap(maps[i]);
     });

@@ -42,6 +42,9 @@ void main() async {
       await db.query('organisation');
   print(organisations);
 
+  final List<Map<String, dynamic>> users = await db.query('utilisateur');
+  print("\n\n\n\n\n\nListe de des utilisateurs ${users}\n\n\n\n\n\n");
+
   runApp(const MyApp());
 }
 
@@ -80,7 +83,7 @@ class MyApp extends StatelessWidget {
       // ******************************************************************************
       // ******************************************************************************
 
-      home: const PageConnection(),
+      home: PageConnection(),
       /*
       home: Scaffold(
         appBar: Header(),

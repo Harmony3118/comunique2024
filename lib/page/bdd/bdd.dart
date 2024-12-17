@@ -7,6 +7,8 @@ import 'package:comunique2024/page/bdd/role.dart';
 //import 'package:comunique2024/page/bdd/grpDiffusion.dart';
 //import 'package:comunique2024/page/bdd/inscription.dart';
 import 'package:comunique2024/page/bdd/organisation.dart';
+
+import '../page_inscription.dart';
 //import 'package:comunique2024/page/bdd/status.dart';
 
 class AppDataBase {
@@ -55,6 +57,7 @@ class AppDataBase {
         // pas de doc encore, il faut voir si c'est vraiment utile
 
         // pré remplir les tables
+        await _preRemplirUser(db);
         await _preRemplirOrganisation(db);
         await _preRemplirRole(db);
         await _preRemplirEvent(db);
@@ -211,30 +214,21 @@ class AppDataBase {
     print("fin ajout event");
   }
 
-  // final List<Map<String, dynamic>> events = [
-//   //   {
-//     "office": "BDS",
-//     "role": "Respo WES",
-//     "eventTitle": 'WES',
-//     "eventDate": 'Du 12 au 14 janvier 2024',
-//     "eventTime": '',
-//     "eventLocation": 'Station Pas de la Case, Andorre',
-//     "imageUrl": 'https://via.placeholder.com/150',
-//     "color": const Color.fromRGBO(167, 222, 219, 0.71),
-//     "isPinned": false,
-//   },
-//   {
-//     "office": "BDA",
-//     "role": "Club musique",
-//     "eventTitle": 'Répétition',
-//     "eventDate": 'Le mardi 21 septembre 2023',
-//     "eventTime": 'De 12h30 à 13h30',
-//     "eventLocation": 'Salle S103',
-//     "imageUrl": 'https://via.placeholder.com/150',
-//     "color": const Color.fromRGBO(245, 233, 171, 0.71),
-//     "isPinned": false,
-//   },
-// ];
+  Future<void> _preRemplirUser(Database db) async {
+    List<Map<String, dynamic>> listUser = [
+      {
+        'nom': "Admin",
+        'prenom': "Administrateur",
+        'email': "pprostwater@ensc.fr",
+        'mdp': hashPassword("12345678"),
+        'promotion': 2026
+      },
+    ];
+
+    for (var u in listUser) {
+      await db.insert('utilisateur', u);
+    }
+  }
 
   void insertOrganisation(Organisation orga) async {
     final Database db = await database;
@@ -264,7 +258,9 @@ class AppDataBase {
     );
   }
 
-  Future<bool> isUserAlreadyRegistered(String email, String nom, String prenom, int promo) async {
+  // Renvoie true si un utilisateur est trouvé
+  Future<bool> isUserAlreadyRegistered(
+      String email, String nom, String prenom, int promo) async {
     final Database db = await database;
     final result = await db.rawQuery(
       '''
@@ -274,7 +270,23 @@ class AppDataBase {
       [email, nom, prenom, promo],
     );
 
-    return result.isNotEmpty; // Renvoie true si un utilisateur est trouvé
+    return result.isNotEmpty;
+  }
+
+  // renvoie true si l'indentification est correcte
+  Future<bool> validateUser(String email, String mdp) async {
+    // Remplacez ceci par votre logique réelle
+    final Database db = await database;
+    final result = await db.rawQuery(
+      '''SELECT * FROM utilisateur WHERE email = ? ''',
+      [email],
+    );
+    if (result.isNotEmpty) {
+      final String userMdp = result.first['mdp'] as String;
+
+      return hashPassword(mdp) == userMdp;
+    }
+    return false;
   }
 
   // Modifier un utilisateur
@@ -289,23 +301,6 @@ class AppDataBase {
     final Database db = await database;
     db.delete("utilisateur",
         where: "id = ?", whereArgs: [utilisateur.idUtilisateur]);
-  }
-
-  Future<List<Utilisateur>> utilisateur() async {
-    final Database db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('utilisateur');
-    List<Utilisateur> utilisateur = List.generate(maps.length, (i) {
-      return Utilisateur.fromMap(maps[i]);
-    });
-
-    if (utilisateur.isEmpty) {
-      for (Utilisateur utilisateur in defaultUtilisateur) {
-        insertUtilisateur(utilisateur);
-      }
-      utilisateur = defaultUtilisateur;
-    }
-
-    return utilisateur;
   }
 
   // Méthodes pour la table "event"
@@ -350,40 +345,11 @@ class AppDataBase {
   final List<Utilisateur> defaultUtilisateur = [
     Utilisateur(
       idUtilisateur: 1,
-      nom: "Lolie",
-      prenom: "Reydellet",
-      email: "lreydellet@ensc.fr",
-      mdp: "..",
-      promotion: 2025,
+      nom: "Admin",
+      prenom: "Administrateur",
+      email: "pprostwater@ensc.fr",
+      mdp: hashPassword("12345678"),
+      promotion: 2026,
     ),
   ];
-/*
-  final Event defaultEvent = Event(
-    1,
-    //utilisateur,
-    1,
-    "Objet par défaut",
-    "Titre par défaut",
-    "Statut par défaut", //status par défault
-    "Date par défaut",
-    "Heure de début par défaut",
-    "Heure de fin par défaut",
-    "Lieu par défaut",
-    2, //tarif
-    "Commentaire par défaut",
-    "Fichier par défaut",
-    false,
-  );
-  
-
-// Méthode pour initialiser un événement par défaut
-  Future<void> initializeDefaultEvent() async {
-    final Database db = await database;
-    final List<Map<String, dynamic>> events = await db.query('event');
-
-    if (events.isEmpty) {
-      insertEvent(defaultEvent);
-    }
-  }
- */
 }
