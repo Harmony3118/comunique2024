@@ -3,6 +3,7 @@ class Utilisateur {
   String nom;
   String prenom;
   String email;
+  String mdp;
   int promotion;
   // photo ;
 
@@ -12,6 +13,7 @@ class Utilisateur {
     required this.nom,
     required this.prenom,
     required this.email,
+    required this.mdp,
     required this.promotion,
   });
 
@@ -21,6 +23,7 @@ class Utilisateur {
       'nom': nom,
       'prenom': prenom,
       'email': email,
+      'mdp': mdp,
       'promotion': promotion,
     };
   }
@@ -31,5 +34,7 @@ class Utilisateur {
       nom: map['nom'],
       prenom: map['prenom'],
       email: map['email'],
+      mdp: map['mdp'],
       promotion: map['promotion']);
 }
+

@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:comunique2024/page/page_inscription.dart';
 import 'package:comunique2024/page/page_navigation.dart';
 import 'package:comunique2024/page/page_file_actualite.dart';
+import 'bdd/bdd.dart';
+import 'conservationUtilisateur.dart';
 
 class PageConnection extends StatelessWidget {
-  const PageConnection({super.key});
+  PageConnection({super.key});
+
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +26,8 @@ class PageConnection extends StatelessWidget {
             children: <Widget>[
               // Image centrée
               Padding(
-                padding: EdgeInsets.only(top: screenHeight * 0.1), // 10% de l'écran
+                padding:
+                    EdgeInsets.only(top: screenHeight * 0.1), // 10% de l'écran
                 child: Center(
                   child: image(context, screenWidth),
                 ),
@@ -64,15 +71,11 @@ class PageConnection extends StatelessWidget {
     );
   }
 
-  Widget bulle_bordeaux(BuildContext context, double screenWidth, double screenHeight) {
+  Widget bulle_bordeaux(
+      BuildContext context, double screenWidth, double screenHeight) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BasePage(currentIndex: 0, body: FileActualite()),
-          ),
-        );
+        gestionLogin(context);
       },
       child: Container(
         width: screenWidth * 0.8, // 80% de la largeur de l'écran
@@ -95,7 +98,35 @@ class PageConnection extends StatelessWidget {
     );
   }
 
-  Widget bulle_claire(BuildContext context, double screenWidth, double screenHeight) {
+  void gestionLogin(BuildContext context) async {
+    final email = emailController.text.trim();
+    final mdp = passwordController.text.trim();
+
+    final isValidUser =
+        await AppDataBase.instance.validerUtilisateur(email, mdp);
+
+    if (isValidUser == -1) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Mot de passe incorrect")),
+      );
+    } else if (isValidUser == -2) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Adresse mail inconnue")),
+      );
+    } else {
+      await saveUserSession(isValidUser);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              BasePage(currentIndex: 0, body: FileActualite()),
+        ),
+      );
+    }
+  }
+
+  Widget bulle_claire(
+      BuildContext context, double screenWidth, double screenHeight) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -139,7 +170,8 @@ class PageConnection extends StatelessWidget {
       child: Align(
         alignment: Alignment.centerLeft,
         child: Padding(
-          padding: EdgeInsets.only(left: screenWidth * 0.02), // 2% de la largeur
+          padding:
+              EdgeInsets.only(left: screenWidth * 0.02), // 2% de la largeur
           child: Row(
             children: [
               Icon(
@@ -148,7 +180,10 @@ class PageConnection extends StatelessWidget {
                 size: screenHeight * 0.05, // Taille proportionnelle
               ),
               SizedBox(width: screenWidth * 0.05), // 5% de la largeur
-              const Expanded(child: EmailTextField()),
+              Expanded(
+                  child: EmailTextField(
+                emailController: emailController,
+              )),
             ],
           ),
         ),
@@ -172,7 +207,8 @@ class PageConnection extends StatelessWidget {
       child: Align(
         alignment: Alignment.centerLeft,
         child: Padding(
-          padding: EdgeInsets.only(left: screenWidth * 0.02), // 2% de la largeur
+          padding:
+              EdgeInsets.only(left: screenWidth * 0.02), // 2% de la largeur
           child: Row(
             children: [
               Icon(
@@ -181,7 +217,8 @@ class PageConnection extends StatelessWidget {
                 size: screenHeight * 0.05, // Taille proportionnelle
               ),
               SizedBox(width: screenWidth * 0.05), // 5% de la largeur
-              const Expanded(child: MdpTextField()),
+              Expanded(
+                  child: MdpTextField(passwordController: passwordController)),
             ],
           ),
         ),
@@ -192,14 +229,16 @@ class PageConnection extends StatelessWidget {
 
 // Classe pour le TextField d'email
 class EmailTextField extends StatelessWidget {
-  const EmailTextField({super.key});
+  final emailController;
+  const EmailTextField({required this.emailController, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 30,
-      child: const TextField(
-        decoration: InputDecoration(
+      child: TextFormField(
+        controller: emailController,
+        decoration: const InputDecoration(
           hintText: 'E-mail',
           hintStyle: TextStyle(
             color: Color.fromARGB(127, 0, 0, 0),
@@ -209,6 +248,15 @@ class EmailTextField extends StatelessWidget {
           filled: true,
           border: InputBorder.none,
         ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Veuillez entrer votre e-mail.';
+          }
+          if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+            return 'Entrez un e-mail valide.';
+          }
+          return null;
+        },
       ),
     );
   }
@@ -216,15 +264,17 @@ class EmailTextField extends StatelessWidget {
 
 // Classe pour le TextField du mdp
 class MdpTextField extends StatelessWidget {
-  const MdpTextField({super.key});
+  final passwordController;
+  const MdpTextField({required this.passwordController, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 30,
-      child: const TextField(
+      child: TextFormField(
+        controller: passwordController,
         obscureText: true,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           hintText: 'Mot de passe',
           hintStyle: TextStyle(
             color: Color.fromARGB(127, 0, 0, 0),
@@ -234,6 +284,12 @@ class MdpTextField extends StatelessWidget {
           filled: true,
           border: InputBorder.none,
         ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Veuillez entrer votre mot de passe.';
+          }
+          return null;
+        },
       ),
     );
   }

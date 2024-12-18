@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'page_navigation.dart';
+import 'conservationUtilisateur.dart';
 import 'page_parametre.dart';
 
 class Header extends StatefulWidget implements PreferredSizeWidget {
@@ -10,6 +10,7 @@ class Header extends StatefulWidget implements PreferredSizeWidget {
   Size get preferredSize => AppBar().preferredSize;
 }
 
+// icon logout
 class _Header extends State<Header> {
   @override
   Widget build(BuildContext context) {
@@ -21,19 +22,23 @@ class _Header extends State<Header> {
           )),
       centerTitle: true,
       backgroundColor: Colors.white,
+      leading: IconButton(
+        icon: Icon(Icons.settings),
+        color: const Color.fromARGB(255, 59, 58, 58),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Pageparametre()),
+          );
+        },
+      ),
       actions: <Widget>[
         IconButton(
-          icon: Icon(Icons.settings),
-          color: const Color.fromARGB(255, 59, 58, 58),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      BasePage(currentIndex: 0, body: Pageparametre()),
-                ));
-          },
-        ),
+            icon: const Icon(Icons.logout),
+            color: const Color.fromARGB(255, 59, 58, 58),
+            onPressed: () {
+              logoutUser(context);
+            })
       ],
       elevation: 0.0, // supprime l'ombre
     );
@@ -76,8 +81,6 @@ class _Footer extends State<Footer> {
         setState(() {
           currentIndex = newIndex;
           changePage(newIndex);
-
-          // A ajouter ...
         });
       },
       items: [
