@@ -97,6 +97,7 @@ class AppDataBase {
       {'nomRole': 'Pôle communications'},
       {'nomRole': 'Pôle logistique'},
       // ajouter les bon rôles : bureaux, club, administration, professeur
+      {'nomRole': 'Professeur'}
     ];
 
     for (var r in listRole) {
@@ -221,10 +222,171 @@ class AppDataBase {
         'mdp': hashPassword("12345678"),
         'promotion': 2026
       },
+      {
+        'nom': 'Andre',
+        'prenom': 'Jean-Marc',
+        'email': 'Jean-Marc.Andre@bordeaux-inp.fr',
+        'mdp': hashPassword("0"),
+        'promotion': '0',
+      },
+      {
+        'nom': 'Chaniaud',
+        'prenom': 'Noemie',
+        'email': 'Noemie.Chaniaud@bordeaux-inp.fr',
+        'mdp': hashPassword("0"),
+        'promotion': '0',
+      },
+      {
+        'nom': 'Eyraud-Dubois',
+        'prenom': 'Coralie',
+        'email': 'Coralie.Dubois@bordeaux-inp.fr',
+        'mdp': hashPassword("0"),
+        'promotion': '0',
+      },
+      {
+        'nom': 'Favier',
+        'prenom': 'Pierre-Alexandre',
+        'email': 'Pierre-Alexandre.Favier@bordeaux-inp.fr',
+        'mdp': hashPassword("0"),
+        'promotion': '0',
+      },
+      {
+        'nom': 'Jauze',
+        'prenom': 'Christophe',
+        'email': 'Christophe.Jauze@bordeaux-inp.fr',
+        'mdp': hashPassword("0"),
+        'promotion': '0',
+      },
+      {
+        'nom': 'Le Blanc',
+        'prenom': 'Benoit',
+        'email': 'Benoit.Leblanc@bordeaux-inp.fr',
+        'mdp': hashPassword("0"),
+        'promotion': '0',
+      },
+      {
+        'nom': 'Legrand',
+        'prenom': 'Pierrick',
+        'email': 'Pierrick.Legrand@bordeaux-inp.fr',
+        'mdp': hashPassword("0"),
+        'promotion': '0',
+      },
+      {
+        'nom': 'Najib',
+        'prenom': 'Veronique',
+        'email': 'Veronique.Lespinet@bordeaux-inp.fr',
+        'mdp': hashPassword("0"),
+        'promotion': '0',
+      },
+      {
+        'nom': 'Pesquet',
+        'prenom': 'Baptiste',
+        'email': 'Baptiste.Pesquet@bordeaux-inp.fr',
+        'mdp': hashPassword("0"),
+        'promotion': '0',
+      },
+      {
+        'nom': 'Placin,',
+        'prenom': 'Frederic',
+        'email': 'Frederic.Placin@bordeaux-inp.fr',
+        'mdp': hashPassword("0"),
+        'promotion': '0',
+      },
+      {
+        'nom': 'Salotti',
+        'prenom': 'Jean-Marc',
+        'email': 'Jean-Marc.Salotti@bordeaux-inp.fr',
+        'mdp': hashPassword("0"),
+        'promotion': '0',
+      },
+      {
+        'nom': 'Saracco',
+        'prenom': 'Jerome',
+        'email': 'Jerome.Saracco@bordeaux-inp.fr',
+        'mdp': hashPassword("0"),
+        'promotion': '0',
+      },
+      {
+        'nom': 'Semal',
+        'prenom': 'Catherine',
+        'email': 'Catherine.Semal@bordeaux-inp.fr',
+        'mdp': hashPassword("0"),
+        'promotion': '0',
+      },
+      {
+        'nom': 'Unrein',
+        'prenom': 'Helene',
+        'email': 'Helene.Unrein@bordeaux-inp.fr',
+        'mdp': hashPassword("0"),
+        'promotion': '0',
+      },
+      {
+        'nom': 'Leveneur',
+        'prenom': 'Sandrine',
+        'email': 'Sandrine.Leveneur@bordeaux-inp.fr',
+        'mdp': hashPassword("0"),
+        'promotion': '0',
+      },
+      {
+        'nom': 'Sese',
+        'prenom': 'Isabelle',
+        'email': 'Isabelle.Sese@bordeaux-inp.fr',
+        'mdp': hashPassword("0"),
+        'promotion': '0',
+      },
+      {
+        'nom': 'Grall',
+        'prenom': 'Christelle',
+        'email': 'Christelle.Grall@bordeaux-inp.fr',
+        'mdp': hashPassword("0"),
+        'promotion': '0',
+      },
+      {
+        'nom': 'Rodier',
+        'prenom': 'Marc',
+        'email': 'Marc.Rodier@bordeaux-inp.fr',
+        'mdp': hashPassword("0"),
+        'promotion': '0',
+      },
+      {
+        'nom': 'Rodriguez',
+        'prenom': 'Nadege',
+        'email': 'Nadege.Rodriguez@bordeaux-inp.fr',
+        'mdp': hashPassword("0"),
+        'promotion': '0',
+      },
+      {
+        'nom': 'Cayere',
+        'prenom': 'Jean-Paul',
+        'email': 'Jean-Paul.Cayere@bordeaux-inp.fr',
+        'mdp': hashPassword("0"),
+        'promotion': '0',
+      },
     ];
 
     for (var u in listUtilisateur) {
       await db.insert('utilisateur', u);
+    }
+  }
+
+  Future<void> _preRemplirStatut(Database db) async {
+    List<Map<String, dynamic>> listRole = [
+      {'nomRole': 'Président'},
+      {'nomRole': 'Vice-président'},
+      {'nomRole': 'Secrétaire'},
+      {'nomRole': 'Trésorier'},
+      {'nomRole': 'Vice-trésorier'},
+      {'nomRole': 'Respo clubs'},
+      {'nomRole': 'Respo partenariats'},
+      {'nomRole': 'Pôle events'},
+      {'nomRole': 'Pôle communications'},
+      {'nomRole': 'Pôle logistique'},
+      // ajouter les bon rôles : bureaux, club, administration, professeur
+      {'nomRole': 'Professeur'}
+    ];
+
+    for (var r in listRole) {
+      await db.insert('role', r);
     }
   }
 
