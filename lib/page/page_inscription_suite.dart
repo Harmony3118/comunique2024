@@ -5,6 +5,7 @@ import 'package:comunique2024/page/bdd/bdd.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:comunique2024/page/page_navigation.dart';
 import 'package:comunique2024/page/page_file_actualite.dart';
+import 'conservationUtilisateur.dart';
 
 import 'page_connection.dart';
 
@@ -36,6 +37,8 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  int? idUtilisateur;
+
   @override
   void dispose() {
     // libère les controlleurs : qu'est ce que c'est ?
@@ -46,7 +49,7 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
   }
 
   // insérer un utilisateur
-  void saveUser() async {
+  Future<void> saveUser() async {
     if (formKey.currentState!.validate()) {
       final Utilisateur utilisateur = Utilisateur(
         nom: nomController.text,
@@ -57,6 +60,9 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
       );
 
       await AppDataBase.instance.insertUtilisateur(utilisateur);
+      // il faut récupérer l'id de l'utilisateur rajouté
+      idUtilisateur = await AppDataBase.instance.insertUtilisateur(utilisateur);
+      print("idUtilisateur1 : ${idUtilisateur}");
 
       // Affiche le message de succès
       ScaffoldMessenger.of(context).showSnackBar(
@@ -338,7 +344,9 @@ class _PageInscriptionSuiteState extends State<PageInscriptionSuite> {
 
     // Si le formulaire est valide
     if (formKey.currentState!.validate()) {
-      saveUser();
+      await saveUser();
+      print("idUtilisateur2 : ${idUtilisateur}");
+      await saveUserSession(idUtilisateur as int);
       Navigator.push(
         context,
         MaterialPageRoute(

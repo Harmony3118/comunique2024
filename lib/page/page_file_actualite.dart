@@ -134,6 +134,10 @@ class _FileActualiteState extends State<FileActualite> {
 
   Future<List<Widget>> afficherListEvents() async {
     final db = await AppDataBase.instance.database;
+
+    final List<Map<String, dynamic>> users = await db.query('utilisateur');
+    print("\n\n\n\n\n\nListe de des utilisateurs ${users}\n\n\n\n\n\n");
+
     // il faudra modifier pour qu'il n'y ai que les events qui ne sont pas encore dépassés
     final List<Map<String, dynamic>> maps = await db.query('event');
     print("Liste de maps ${maps}");
