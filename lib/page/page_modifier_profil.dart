@@ -170,9 +170,29 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
     }
   }
 
-  // String anneeActuelle(int promotion) {
+  String anneeActuelle(int promotion) {
+    DateTime now = DateTime.now();
 
-  // }
+    if (now.month >= 9) {
+      print("1now.month ${now.month}");
+      print("1now.year ${now.year}");
+      int an = now.year - promotion + 4;
+      if (an <= 0) {
+        return "Tu n'es pas encore inscrit";
+      } else {
+        return "${an}A";
+      }
+    } else {
+      print("2now.month ${now.month}");
+      print("2now.year ${now.year}");
+      int an = now.year - promotion + 3;
+      if (an <= 0) {
+        return "Tu n'es pas encore inscrit";
+      } else {
+        return "${an}A";
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -203,19 +223,21 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                   Expanded(
                     flex: 2,
                     child: TextFormField(
+                      //initialValue:
+                      //    anneeActuelle(int.parse(_promotion as String)),
+                      enabled: false,
                       decoration: InputDecoration(
-                        //labelText:
-                        //    anneeActuelle(int.parse(_promotion as String)),
+                        labelText:
+                            anneeActuelle(int.parse(_promotion as String)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
                           borderSide: BorderSide(color: customPurple),
                         ),
-                        enabledBorder: OutlineInputBorder(
+                        disabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
                           borderSide: BorderSide(color: customPurple),
                         ),
                       ),
-                      onChanged: (value) => anneeEtude = value,
                     ),
                   ),
                 ],
