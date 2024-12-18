@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:comunique2024/widget/inscription_sheet.dart';
 import 'package:comunique2024/page/bdd/utilisateur.dart';
 
-
 class CardHome extends StatefulWidget {
   final String office;
   final String role;
@@ -46,6 +45,12 @@ class _CardHomeState extends State<CardHome> {
   bool isRegistered = false;
   bool isDetailled = false;
 
+  @override
+  void initState() {
+    super.initState();
+    isPinned = widget.isPinned; // Initialiser à partir de la valeur transmise
+  }
+
   void _showConfirmationDialog() {
     showDialog(
       context: context,
@@ -64,7 +69,10 @@ class _CardHomeState extends State<CardHome> {
           actions: <Widget>[
             ElevatedButton(
               onPressed: () async {
-                UserRegistration registration = UserRegistration(nom: 'prudhommeaux', prenom: 'erwan');// ici a mettre les variables du nom et du prenom 
+                UserRegistration registration = UserRegistration(
+                    nom: 'prudhommeaux',
+                    prenom:
+                        'erwan'); // ici a mettre les variables du nom et du prenom
                 await registration.inscrire();
                 setState(() {
                   isRegistered = true;
@@ -133,17 +141,13 @@ class _CardHomeState extends State<CardHome> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
-                      mainAxisSize: MainAxisSize
-                          .min, // Ensures the avatar and text take up minimum space
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         CircleAvatar(
-                          // backgroundImage: NetworkImage(widget.imageUrl),
                           radius: 25.0,
                           backgroundImage: widget.imageData != null
                               ? MemoryImage(widget.imageData as Uint8List)
                               : null,
-                          // child: widget.imageData == null ? Text(${widget.office[0].toUpperCase()}${widget.office.split(' ')[1][0].toUpperCase()}',
-                          // style: TextStyle(fontSize: 20.0, color: Colors.white),)
                         ),
                         const SizedBox(width: 8.0),
                         Container(
@@ -167,11 +171,16 @@ class _CardHomeState extends State<CardHome> {
                     IconButton(
                       icon: Icon(
                         Icons.push_pin,
-                        color: widget.isPinned
+                        color: isPinned
                             ? const Color.fromRGBO(100, 3, 41, 1)
                             : Colors.grey,
                       ),
-                      onPressed: widget.onPinToggle,
+                      onPressed: () {
+                        setState(() {
+                          isPinned = !isPinned; // Mettre à jour l'état local
+                        });
+                        widget.onPinToggle(); // Appeler le callback
+                      },
                     ),
                   ],
                 ),

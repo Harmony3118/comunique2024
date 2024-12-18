@@ -135,12 +135,12 @@ class _FileActualiteState extends State<FileActualite> {
   Future<List<Widget>> afficherListEvents() async {
     final db = await AppDataBase.instance.database;
 
-    final List<Map<String, dynamic>> users = await db.query('utilisateur');
-    print("\n\n\n\n\n\nListe de des utilisateurs ${users}\n\n\n\n\n\n");
+    // final List<Map<String, dynamic>> users = await db.query('utilisateur');
+    // print("\n\n\n\n\n\nListe de des utilisateurs ${users}\n\n\n\n\n\n");
 
     // il faudra modifier pour qu'il n'y ai que les events qui ne sont pas encore dépassés
     final List<Map<String, dynamic>> maps = await db.query('event');
-    print("Liste de maps ${maps}");
+    // print("Liste de maps ${maps}");
     List<Event> evenements = List.generate(maps.length, (i) {
       return Event.fromMap(maps[i]);
     });
@@ -169,7 +169,6 @@ class _FileActualiteState extends State<FileActualite> {
         eventLocation: e.lieu,
         imageData: o.imageData,
         color: Color(o.color),
-        // il faut modifier ça, afficher la bonne couleur pour chaque organisation
         price: e.tarif,
         moreInfo: e.commentaire,
         // Gérer l'état de l'épingle pour chaque carte
