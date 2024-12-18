@@ -56,7 +56,7 @@ class AppDataBase {
         // pas de doc encore, il faut voir si c'est vraiment utile
 
         // pré remplir les tables
-        await _preRemplirUser(db);
+        await _preRemplirUtilisateur(db);
         await _preRemplirOrganisation(db);
         await _preRemplirRole(db);
         await _preRemplirEvent(db);
@@ -212,8 +212,8 @@ class AppDataBase {
     print("fin ajout event");
   }
 
-  Future<void> _preRemplirUser(Database db) async {
-    List<Map<String, dynamic>> listUser = [
+  Future<void> _preRemplirUtilisateur(Database db) async {
+    List<Map<String, dynamic>> listUtilisateur = [
       {
         'nom': "Admin",
         'prenom': "Administrateur",
@@ -223,7 +223,7 @@ class AppDataBase {
       },
     ];
 
-    for (var u in listUser) {
+    for (var u in listUtilisateur) {
       await db.insert('utilisateur', u);
     }
   }
@@ -272,7 +272,7 @@ class AppDataBase {
   }
 
   // renvoie true si l'indentification est correcte
-  Future<int> validateUser(String email, String mdp) async {
+  Future<int> validerUtilisateur(String email, String mdp) async {
     // Remplacez ceci par votre logique réelle
     final Database db = await database;
     final result = await db.rawQuery(
@@ -280,9 +280,9 @@ class AppDataBase {
       [email],
     );
     if (result.isNotEmpty) {
-      final String userMdp = result.first['mdp'] as String;
+      final String utilisateurMdp = result.first['mdp'] as String;
 
-      if (hashPassword(mdp) == userMdp) {
+      if (hashPassword(mdp) == utilisateurMdp) {
         return result.first['idUtilisateur'] as int;
       } else {
         return -1;
@@ -292,17 +292,17 @@ class AppDataBase {
   }
 
   // Modifier un utilisateur
-  void updateUtilisateur(Utilisateur utilisateur) async {
+  Future<void> updateUtilisateur(Utilisateur utilisateur) async {
     final Database db = await database;
     await db.update("utilisateur", utilisateur.toMap(),
-        where: "id = ?", whereArgs: [utilisateur.idUtilisateur]);
+        where: "idUtilisateur = ?", whereArgs: [utilisateur.idUtilisateur]);
   }
 
   // Supprimer un utilisateur
-  void deleteUtilisateur(Utilisateur utilisateur) async {
+  Future<void> deleteUtilisateur(Utilisateur utilisateur) async {
     final Database db = await database;
     db.delete("utilisateur",
-        where: "id = ?", whereArgs: [utilisateur.idUtilisateur]);
+        where: "idUtilisateur = ?", whereArgs: [utilisateur.idUtilisateur]);
   }
 
   // Méthodes pour la table "event"

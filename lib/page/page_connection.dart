@@ -102,7 +102,8 @@ class PageConnection extends StatelessWidget {
     final email = emailController.text.trim();
     final mdp = passwordController.text.trim();
 
-    final isValidUser = await AppDataBase.instance.validateUser(email, mdp);
+    final isValidUser =
+        await AppDataBase.instance.validerUtilisateur(email, mdp);
 
     if (isValidUser == -1) {
       ScaffoldMessenger.of(context).showSnackBar(

@@ -48,11 +48,11 @@ class PageInscription extends StatelessWidget {
               mdp(context, screenWidth, screenHeight, mdpController),
               SizedBox(height: screenHeight * 0.15), // 15% de l'écran
               // Bulle bordeaux
-              bulle_bordeaux(context, screenWidth, screenHeight,
-                  emailController, mdpController),
+              bulleBordeaux(context, screenWidth, screenHeight, emailController,
+                  mdpController),
               SizedBox(height: screenHeight * 0.03), // 3% de l'écran
               // Bulle claire
-              bulle_claire(context, screenWidth, screenHeight),
+              bulleClaire(context, screenWidth, screenHeight),
               SizedBox(height: screenHeight * 0.15), // 15% de l'écran
             ],
           ),
@@ -70,7 +70,7 @@ class PageInscription extends StatelessWidget {
     );
   }
 
-  Widget bulle_bordeaux(
+  Widget bulleBordeaux(
       BuildContext context,
       double screenWidth,
       double screenHeight,
@@ -129,7 +129,7 @@ class PageInscription extends StatelessWidget {
     );
   }
 
-  Widget bulle_claire(
+  Widget bulleClaire(
       BuildContext context, double screenWidth, double screenHeight) {
     return GestureDetector(
       onTap: () {
@@ -239,7 +239,7 @@ class EmailTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 30,
       child: TextField(
         controller: controller,

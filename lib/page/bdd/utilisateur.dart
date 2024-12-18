@@ -37,3 +37,4 @@ class Utilisateur {
       mdp: map['mdp'],
       promotion: map['promotion']);
 }
+

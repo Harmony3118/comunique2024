@@ -1,9 +1,22 @@
+import 'package:comunique2024/page/bdd/utilisateur.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';  // Importation nécessaire pour ImagePicker
-import 'package:file_picker/file_picker.dart';    // Importation nécessaire pour FilePicker
-import 'dart:io';  // Pour utiliser la classe File
+import 'package:image_picker/image_picker.dart'; // Importation nécessaire pour ImagePicker
+import 'package:file_picker/file_picker.dart'; // Importation nécessaire pour FilePicker
+import 'dart:io';
+import 'bdd/bdd.dart';
+import 'conservationUtilisateur.dart';
+import 'page_parametre.dart'; // Pour utiliser la classe File
+
+Future<Map<String, Object?>> recupUser(int? id) async {
+  final db = await AppDataBase.instance.database;
+  final user = await db
+      .query('utilisateur', where: 'idUtilisateur = ?', whereArgs: [id]);
+  return user.first;
+}
 
 class ProfileEditForm extends StatefulWidget {
+  const ProfileEditForm({super.key});
+
   @override
   _ProfileEditFormState createState() => _ProfileEditFormState();
 }
@@ -12,15 +25,35 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
   final _formKey = GlobalKey<FormState>();
   final ImagePicker _picker = ImagePicker();
 
+  int? idUtilisateur;
+
   // Variables pour stocker les informations du formulaire
   String? anneeEtude;
   String? roleEcole;
+  String? _promotion;
+  String? _email;
   String? promotion;
   String? email;
   bool stage2A_etranger = false;
   bool stage3A_etranger = false;
 
-  final Color customPurple = Color.fromRGBO(155, 3, 63, 1);
+  @override
+  void initState() {
+    super.initState();
+    _loadInfos();
+  }
+
+  void _loadInfos() async {
+    int? id = await getUserId();
+    final data = await recupUser(id);
+    setState(() {
+      idUtilisateur = id;
+      _email = data['email'] as String;
+      _promotion = data['promotion'].toString();
+    });
+  }
+
+  final Color customPurple = const Color.fromRGBO(155, 3, 63, 1);
 
   // Variable pour stocker la photo de profil sélectionnée
   XFile? _profileImage;
@@ -31,16 +64,16 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
       context: context,
       builder: (BuildContext context) {
         return Container(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 "Changer la photo de profil",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, color: customPurple),
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: customPurple),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               GridView.count(
                 crossAxisCount: 2,
                 shrinkWrap: true,
@@ -49,14 +82,15 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                 childAspectRatio: 2.5,
                 children: [
                   _buildPhotoOption("Prendre une photo", _takePhoto),
-                  _buildPhotoOption("Choisir dans la photothèque", _chooseFromGallery),
+                  _buildPhotoOption(
+                      "Choisir dans la photothèque", _chooseFromGallery),
                   _buildPhotoOption("Choisir un fichier", _chooseFromFile),
                   _buildPhotoOption("Alumnis", () {}),
                   _buildPhotoOption("Doctorants", () {}),
                   _buildPhotoOption("Bordeaux INP", () {}),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -85,14 +119,16 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 16.0),
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
         decoration: BoxDecoration(
           border: Border.all(color: customPurple),
           borderRadius: BorderRadius.circular(5.0),
           color: Colors.grey.shade300,
         ),
         child: Center(
-          child: Text(label, style: TextStyle(color: customPurple), textAlign: TextAlign.center),
+          child: Text(label,
+              style: TextStyle(color: customPurple),
+              textAlign: TextAlign.center),
         ),
       ),
     );
@@ -134,11 +170,17 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
     }
   }
 
+  // String anneeActuelle(int promotion) {
+
+  // }
+
   @override
   Widget build(BuildContext context) {
+    print('2 : $email');
+    print('2 : $promotion');
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Mon profil")),
+        title: const Center(child: Text("Mon profil")),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -147,21 +189,23 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
           child: ListView(
             children: [
               // Section "Année scolaire en cours"
-              Center(
+              const Center(
                 child: Text(
                   "Année scolaire en cours",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(
                 children: [
-                  Expanded(child: Text("Année d'étude")),
-                  SizedBox(width: 8),
+                  const Expanded(child: Text("Année d'étude")),
+                  const SizedBox(width: 8),
                   Expanded(
                     flex: 2,
                     child: TextFormField(
                       decoration: InputDecoration(
+                        labelText:
+                            anneeActuelle(int.parse(_promotion as String)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
                           borderSide: BorderSide(color: customPurple),
@@ -176,12 +220,12 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(
                 children: [
-                  Expanded(child: Text("Rôle dans l'école")),
+                  const Expanded(child: Text("Rôle dans l'école")),
                   IconButton(
-                    icon: Icon(Icons.add_circle_outline),
+                    icon: const Icon(Icons.add_circle_outline),
                     onPressed: () {
                       // Action pour ajouter un rôle
                     },
@@ -189,16 +233,16 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                   ),
                 ],
               ),
-              Divider(color: customPurple),  // Barre horizontale
+              Divider(color: customPurple), // Barre horizontale
 
               // Section "Photo de profil"
-              Center(
+              const Center(
                 child: Text(
                   "Photo de profil (portrait de toi)",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Center(
                 child: GestureDetector(
                   onTap: _showPhotoOptions,
@@ -207,25 +251,25 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                     backgroundColor: Colors.grey.shade300,
                     backgroundImage: _profileImage != null
                         ? FileImage(File(_profileImage!.path))
-                        : null,  // Affiche la photo sélectionnée
+                        : null, // Affiche la photo sélectionnée
                     child: _profileImage == null
-                        ? Icon(Icons.person, size: 50, color: Colors.grey)
-                        : null,  // Affiche une icône si pas d'image
+                        ? const Icon(Icons.person, size: 50, color: Colors.grey)
+                        : null, // Affiche une icône si pas d'image
                   ),
                 ),
               ),
-              Divider(color: customPurple),  // Barre horizontale
+              Divider(color: customPurple), // Barre horizontale
 
               // Section "Autres informations"
-              Center(
+              const Center(
                 child: Text(
                   "Autres informations",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(height: 10),
-              Text("Stages", style: TextStyle(fontSize: 16)),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
+              const Text("Stages", style: TextStyle(fontSize: 16)),
+              const SizedBox(height: 10),
 
               // Champs pour les stages 2A et 3A avec checkbox "À l'étranger"
               Row(
@@ -249,7 +293,7 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                       },
                     ),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Checkbox(
                     value: stage2A_etranger,
                     onChanged: (value) {
@@ -259,10 +303,10 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                     },
                     activeColor: customPurple,
                   ),
-                  Text("À l'étranger"),
+                  const Text("À l'étranger"),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(
                 children: [
                   Expanded(
@@ -284,7 +328,7 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                       },
                     ),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Checkbox(
                     value: stage3A_etranger,
                     onChanged: (value) {
@@ -294,20 +338,21 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                     },
                     activeColor: customPurple,
                   ),
-                  Text("À l'étranger"),
+                  const Text("À l'étranger"),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Promotion et adresse mail
               Row(
                 children: [
-                  Expanded(child: Text("Mon année/Ma promotion")),
-                  SizedBox(width: 8),
+                  const Expanded(child: Text("Ma promotion")),
+                  const SizedBox(width: 8),
                   Expanded(
                     flex: 2,
                     child: TextFormField(
                       decoration: InputDecoration(
+                        labelText: _promotion,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
                           borderSide: BorderSide(color: customPurple),
@@ -322,15 +367,16 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(
                 children: [
-                  Expanded(child: Text("Adresse mail")),
-                  SizedBox(width: 8),
+                  const Expanded(child: Text("Adresse mail")),
+                  const SizedBox(width: 8),
                   Expanded(
                     flex: 2,
                     child: TextFormField(
                       decoration: InputDecoration(
+                        labelText: _email,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
                           borderSide: BorderSide(color: customPurple),
@@ -345,11 +391,11 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Bouton Enregistrer
               Center(
-                child: Container(
+                child: SizedBox(
                   width: MediaQuery.of(context).size.width * 0.5,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -359,8 +405,34 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                         side: BorderSide(color: customPurple),
                       ),
                     ),
-                    onPressed: () {
-                      // Action pour enregistrer
+                    onPressed: () async {
+                      if (idUtilisateur != null) {
+                        final data = await recupUser(idUtilisateur);
+                        Utilisateur u = Utilisateur.fromMap(data);
+                        if (email != null) {
+                          final regex = RegExp(r"^[a-zA-Z0-9._%+-]+@ensc\.fr$");
+                          if (regex.hasMatch(email as String)) {
+                            u.email = email as String;
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text("Adresse e-mail invalide")),
+                            );
+                            email = null;
+                          }
+                        }
+                        if (promotion != null) {
+                          u.promotion = int.parse(promotion as String);
+                        }
+                        if (email != null || promotion != null) {
+                          await AppDataBase.instance.updateUtilisateur(u);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Pageparametre()),
+                          );
+                        }
+                      }
                     },
                     child: Text(
                       "Enregistrer",
