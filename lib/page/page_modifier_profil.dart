@@ -204,8 +204,8 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                     flex: 2,
                     child: TextFormField(
                       decoration: InputDecoration(
-                        labelText:
-                            anneeActuelle(int.parse(_promotion as String)),
+                        //labelText:
+                        //    anneeActuelle(int.parse(_promotion as String)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
                           borderSide: BorderSide(color: customPurple),
