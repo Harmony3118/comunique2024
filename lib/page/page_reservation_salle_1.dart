@@ -103,7 +103,7 @@ Widget horaire(BuildContext context) {
       const SizedBox(height: 50),
       Container(
         width: 400,
-        height: 35,
+        height: 40,
         color: const Color.fromARGB(0, 255, 255, 255),
         child: const Padding(
           padding: EdgeInsets.only(left: 8.0),
@@ -119,7 +119,7 @@ Widget horaire(BuildContext context) {
                 ),
               ),
               SizedBox(width: 128),
-              JourPicker(),
+              Expanded(child: JourPicker()),
             ],
           ),
         ),
@@ -127,7 +127,7 @@ Widget horaire(BuildContext context) {
       const SizedBox(height: 10),
       Container(
         width: 400,
-        height: 35,
+        height: 40,
         color: const Color.fromARGB(0, 255, 255, 255),
         child: const Padding(
           padding: EdgeInsets.only(left: 8.0),
@@ -151,7 +151,7 @@ Widget horaire(BuildContext context) {
       const SizedBox(height: 10),
       Container(
         width: 400,
-        height: 35,
+        height: 40,
         color: const Color.fromARGB(0, 255, 255, 255),
         child: const Padding(
           padding: EdgeInsets.only(left: 8.0),
@@ -234,7 +234,12 @@ Widget _batimentExpansionTile(String batimentName, Color color, BuildContext con
             style: TextStyle(color: Color(0xFF640329)),
           ),
           onTap: () {
-            Navigator.of(context).pop();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MyApp2(),
+              ),
+            );
           },
         ),
       ],
@@ -280,7 +285,7 @@ class _JourPickerState extends State<JourPicker> {
         ),
         child: Center(
           child: Text(
-            DateFormat.yMd().format(selectedDate),
+            DateFormat("dd/MM/yyyy").format(selectedDate),
             style: const TextStyle(color: Colors.black),
           ),
         ),
