@@ -13,20 +13,15 @@ class MyApp2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   
-      return Scaffold(
-         backgroundColor: Colors.white,
-      body: Body()
-      
-    
-      );
-    
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Body(),
+    );
   }
 }
 
-
 class Body extends StatelessWidget {
-  const Body({super.key}); // Ajoutez le constructeur ici
+  const Body({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -83,10 +78,11 @@ Widget fleche(BuildContext context) {
     icon: const Icon(Icons.arrow_back_ios, size: 20.0),
     onPressed: () {
       Navigator.push(
-               context,
-                   MaterialPageRoute(
-                       builder: (context) => BasePage(
-                         currentIndex: 4, body: ContactPage())));
+        context,
+        MaterialPageRoute(
+          builder: (context) => BasePage(currentIndex: 4, body: ContactPage()),
+        ),
+      );
     },
   );
 }
@@ -113,7 +109,7 @@ Widget horaire(BuildContext context) {
       const SizedBox(height: 10),
       _buildField("Pour qui", const HeureTextField()),
       const SizedBox(height: 10),
-      _buildField("Nombre de personnes", NombrePersonnesTextField()),
+      _buildField("Nombre de personnes", const NombrePersonnesTextField()),
     ],
   );
 }
@@ -143,26 +139,31 @@ Widget _buildField(String label, Widget textField) {
 }
 
 class NombrePersonnesTextField extends StatelessWidget {
+  const NombrePersonnesTextField({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      keyboardType: TextInputType.number, // Clavier numérique
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly, // Accepter uniquement les chiffres
-      ],
-      decoration: InputDecoration(
-        labelText: "Nombre de personnes",
-        border: OutlineInputBorder(),
+    return Container(
+      width: 200,
+      height: 50,
+      child: TextField(
+        keyboardType: TextInputType.number,
+        inputFormatters: [
+          FilteringTextInputFormatter.digitsOnly, // Accepter uniquement les chiffres
+        ],
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFF640329)),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFF640329)),
+          ),
+          hintText: '',
+          fillColor: Colors.grey[350],
+          filled: true,
+        ),
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Veuillez entrer un nombre';
-        }
-        if (int.tryParse(value) == null) {
-          return 'Veuillez entrer un nombre valide';
-        }
-        return null;
-      },
     );
   }
 }
@@ -202,7 +203,7 @@ Widget _commonTextField() {
         fillColor: Colors.grey[350],
         filled: true,
       ),
-      keyboardType: TextInputType.number,
+      keyboardType: TextInputType.text,
     ),
   );
 }
@@ -221,7 +222,7 @@ Widget envoyerButton(BuildContext context) {
             );
           },
           child: Text(
-            'Envoyer',
+            'Envoyer un mail',
             style: const TextStyle(
               color: Color(0xFF640329),
               fontWeight: FontWeight.bold,

@@ -193,16 +193,46 @@ Widget salledispo(BuildContext context) {
         ),
       ),
       const SizedBox(height: 50),
-      _batimentExpansionTile("Bâtiment Ouest", Colors.grey[350]!, context),
-      _batimentExpansionTile("Bâtiment Nord", Colors.white, context),
-      _batimentExpansionTile("Bâtiment Sud", Colors.grey[350]!, context),
-      _batimentExpansionTile("Bâtiment Est", Colors.white, context),
+      _batimentExpansionTile("Bâtiment Ouest", Colors.grey[350]!, context, [
+        _salle("O108", "Amphithéâtre, avec vidéo-projecteur - 99 places (dont 16 strapontins) + 5 places pour PMR", Colors.orange, context),
+        _salle("O201", "Salle visioconférence (accès restreint) - 15 places", Colors.orange, context),
+        _salle("O202", "Salle informatique, avec vidéo-projecteur - 27 places", Colors.orange, context),
+        _salle("O203", "Salle, avec vidéo-projecteur - 25 places", Colors.orange, context),
+        _salle("O204", "Salle, avec vidéo-projecteur - 28 places", Colors.orange, context),
+        _salle("O205", "Salle informatique, avec vidéo-projecteur - 27 places", Colors.orange, context),
+        _salle("O207", "Salle avec vidéo-projecteur - 24 places", Colors.orange, context),
+      ]),
+      _batimentExpansionTile("Bâtiment Nord", Colors.white, context, [
+        _salle("N103", "Amphithéâtre, avec équipement visio - 85 places avec tables (120 chaises)", Colors.blue[900]!, context),
+        _salle("N201", "Salle du Conseil (accès restreint), salle avec vidéo-projecteur - 22 places", Colors.blue[900]!, context),
+        _salle("N208", "Salle de formation continue (accès restreint), avec vidéo-projecteur - 21 places", Colors.blue[900]!, context),
+      ]),
+      _batimentExpansionTile("Bâtiment Sud", Colors.grey[350]!, context, [
+        _salle("Bibliothèque", "14 places", Colors.red, context),
+        _salle("S101", "Grande salle, avec vidéo-projecteur, modulable avec S103 - 102 places", Colors.red, context),
+        _salle("S103", "Grande salle, avec vidéo-projecteur, modulable avec S101 - 80 places", Colors.red, context),
+        _salle("S110", "Salle informatique, avec vidéo-projecteur - 25 places", Colors.red, context),
+        _salle("S111", "Salle informatique, avec vidéo-projecteur – Accès 24/24 - 30 places", Colors.red, context),
+        _salle("S112", "Salle informatique, avec vidéo-projecteur - 40 places", Colors.red, context),
+      ]),
+      _batimentExpansionTile("Bâtiment Est", Colors.white, context, [
+        _salle("E101", "Laboratoire Human Monitoring & Laboratoire Handicap", Colors.green[900]!, context),
+        _salle("E102", "Simulateur Airbus A 320", Colors.green[900]!, context),
+        _salle("E103", "Atelier avec imprimante 3D (interdit aux élèves)", Colors.green[900]!, context),
+        _salle("E104", "Studio (accès au Club Photo)", Colors.green[900]!, context),
+        _salle("E105", "Cobotique et Comportement", Colors.green[900]!, context),
+        _salle("E106", "Simulateur voiture autonome", Colors.green[900]!, context),
+        _salle("E107", "Laboratoire Human Monitoring et Laboratoire Handicap", Colors.green[900]!, context),
+        _salle("E108", "Simulateur avion de combat", Colors.green[900]!, context),
+        _salle("E204", "Méta Simu (7 postes équipés)", Colors.green[900]!, context),
+        _salle("E206", "Régie", Colors.green[900]!, context),
+      ]),
       const SizedBox(height: 20),
     ],
   );
 }
 
-Widget _batimentExpansionTile(String batimentName, Color color, BuildContext context) {
+Widget _batimentExpansionTile(String batimentName, Color color, BuildContext context, List<Widget> salles) {
   return Container(
     color: color,
     child: ExpansionTile(
@@ -213,37 +243,29 @@ Widget _batimentExpansionTile(String batimentName, Color color, BuildContext con
           fontSize: 21,
         ),
       ),
-      children: <Widget>[
-        ListTile(
-          title: const Text(
-            "Salle info",
-            style: TextStyle(color: Color(0xFF640329)),
-          ),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MyApp2(),
-              ),
-            );
-          },
-        ),
-        ListTile(
-          title: const Text(
-            "Salle maths",
-            style: TextStyle(color: Color(0xFF640329)),
-          ),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MyApp2(),
-              ),
-            );
-          },
-        ),
-      ],
+      children: salles,
     ),
+  );
+}
+
+Widget _salle(String nom, String description, Color color, BuildContext context) {
+  return ListTile(
+    title: Text(
+      nom,
+      style: TextStyle(color: color),
+    ),
+    subtitle: Text(description),
+    onTap: () {
+      // Sauvegarde le nom de la salle
+      // Implémentez ici une logique pour stocker le nom de la salle si nécessaire
+      print("Salle sélectionnée : $nom");
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MyApp2(),
+        ),
+      );
+    },
   );
 }
 
@@ -321,7 +343,7 @@ class _HeurePickerState extends State<HeurePicker> {
     return InkWell(
       onTap: () => _selectTime(context),
       child: Container(
-        width: 100,
+        width: 150,
         height: 35,
         decoration: BoxDecoration(
           border: Border.all(color: const Color(0xFF640329)),
