@@ -5,23 +5,27 @@ import 'package:comunique2024/page/page_navigation.dart';
 import 'package:comunique2024/page/page_reservation_salle_3.dart';
 
 void main() {
-  runApp(const MyApp2());
+  runApp(const MyApp2(salleNom: '',));
 }
 
 class MyApp2 extends StatelessWidget {
-  const MyApp2({super.key});
+  final String salleNom;
+
+  const MyApp2({super.key, required this.salleNom});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Body(),
+      body: Body(salleNom: salleNom),
     );
   }
 }
 
 class Body extends StatelessWidget {
-  const Body({super.key});
+  final String salleNom;
+
+  const Body({super.key, required this.salleNom});
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +49,14 @@ class Body extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 5), // Espacement après le texte
-                  const Divider(thickness: 2, color: Colors.black), // Ligne
+                  const SizedBox(height: 5),
+                  const Divider(thickness: 2, color: Colors.black),
                 ],
               ),
             ),
             const SizedBox(height: 20),
-            horaire(context),
-            const SizedBox(height: 20), // Espacement entre la dernière section et le bouton
+            horaire(context, salleNom), // Passez le nom de la salle ici
+            const SizedBox(height: 20),
             envoyerButton(context),
           ],
         ),
@@ -87,16 +91,16 @@ Widget fleche(BuildContext context) {
   );
 }
 
-Widget horaire(BuildContext context) {
+Widget horaire(BuildContext context, String salleNom) {
   return Column(
     children: [
       Container(
         width: 400,
         height: 50,
-        child: const Center(
+        child: Center(
           child: Text(
-            "Salle O205",
-            style: TextStyle(
+            salleNom,
+            style: const TextStyle(
               color: Color(0xFF640329), // Changer la couleur du texte
               fontSize: 30, // Augmenter la taille du texte
             ),
@@ -104,7 +108,7 @@ Widget horaire(BuildContext context) {
           ),
         ),
       ),
-      const SizedBox(height: 10), // Ajuster l'espacement entre le titre et les champs
+      const SizedBox(height: 10),
       _buildField("Objet de la réservation", const JourTextField()),
       const SizedBox(height: 10),
       _buildField("Pour qui", const HeureTextField()),

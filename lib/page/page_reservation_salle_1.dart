@@ -256,13 +256,10 @@ Widget _salle(String nom, String description, Color color, BuildContext context)
     ),
     subtitle: Text(description),
     onTap: () {
-      // Sauvegarde le nom de la salle
-      // Implémentez ici une logique pour stocker le nom de la salle si nécessaire
-      print("Salle sélectionnée : $nom");
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => MyApp2(),
+          builder: (context) => MyApp2(salleNom: nom),
         ),
       );
     },
