@@ -1,0 +1,159 @@
+digraph G {
+    rankdir=TB;
+    node [shape=box];
+
+    subgraph cluster_bdd {
+        label = "BDD";
+        "bdd.dart";
+        "utilisateur.dart";
+        "event.dart";
+        "role.dart";
+        "organisation.dart";
+        "grpDiffusion.dart";
+        "inscription.dart";
+        "status.dart";
+    }
+
+    subgraph cluster_pages {
+        label = "Pages";
+        "page_connection.dart";
+        "page_inscription.dart";
+        "page_navigation.dart";
+        "page_file_actualite.dart";
+        "conservationUtilisateur.dart";
+        "page_inscription_suite.dart";
+        "page_annuaire.dart";
+        "page_contact_admin.dart";
+        "page_header_footer.dart";
+        "page_ajout.dart";
+        "mois.dart";
+        "page_form_absence.dart";
+        "page_reservation_salle_1.dart";
+        "page_parametre.dart";
+        "semaine.dart";
+        "jour.dart";
+        "jourselection.dart";
+        "page_reservation_salle_2.dart";
+        "page_mes_publications.dart";
+        "page_modifier_profil.dart";
+        "page_details_event.dart";
+        "page_reservation_salle_3.dart";
+        "page_formulaire_event.dart";
+        "page_form_crea_groupe.dart";
+        "page_form_soiree.dart";
+    }
+
+    subgraph cluster_widget {
+        label = "Widget";
+        "card_annuaire.dart";
+        "card_home.dart";
+        "filter_homeScreen.dart";
+        "inscription_sheet.dart";
+        "nouvelle_feuille_sheet.dart";
+        "widget_bouton.dart";
+    }
+
+    "main.dart" -> "bdd.dart";
+    "main.dart" -> "page_connection.dart";
+
+    "page_connection.dart" -> "page_inscription.dart";
+    "page_connection.dart" -> "page_navigation.dart";
+    "page_connection.dart" -> "page_file_actualite.dart";
+    "page_connection.dart" -> "conservationUtilisateur.dart";
+    "page_connection.dart" -> "bdd.dart";
+    "page_inscription.dart" -> "page_connection.dart";
+    "page_inscription.dart" -> "page_inscription_suite.dart";
+    "page_navigation.dart" -> "page_annuaire.dart";
+    "page_navigation.dart" -> "page_file_actualite.dart";
+    "page_navigation.dart" -> "page_contact_admin.dart";
+    "page_navigation.dart" -> "page_header_footer.dart";
+    "page_navigation.dart" -> "page_ajout.dart";
+    "page_navigation.dart" -> "mois.dart";
+    "page_file_actualite.dart" -> "filter_homeScreen.dart";
+    "page_file_actualite.dart" -> "card_home.dart";
+    "page_file_actualite.dart" -> "bdd.dart";
+    "page_file_actualite.dart" -> "event.dart";
+    "page_file_actualite.dart" -> "role.dart";
+    "page_file_actualite.dart" -> "organisation.dart";
+    "conservationUtilisateur.dart" -> "page_connection.dart";
+    "page_inscription_suite.dart" -> "utilisateur.dart";
+    "page_inscription_suite.dart" -> "bdd.dart";
+    "page_inscription_suite.dart" -> "page_navigation.dart";
+    "page_inscription_suite.dart" -> "page_file_actualite.dart";
+    "page_inscription_suite.dart" -> "conservationUtilisateur.dart";
+    "page_inscription_suite.dart" -> "page_connection.dart";
+    "page_annuaire.dart" -> "card_annuaire.dart";
+    "page_contact_admin.dart" -> "page_form_absence.dart";
+    "page_contact_admin.dart" -> "page_navigation.dart";
+    "page_contact_admin.dart" -> "page_reservation_salle_1.dart";
+    "page_contact_admin.dart" -> "page_form_soiree.dart";
+    "page_header_footer.dart" -> "conservationUtilisateur.dart";
+    "page_header_footer.dart" -> "page_parametre.dart";
+    "page_ajout.dart" -> "page_navigation.dart";
+    "page_ajout.dart" -> "widget_bouton.dart";
+    "page_ajout.dart" -> "page_formulaire_event.dart";
+    "page_ajout.dart" -> "page_form_crea_groupe.dart";
+    "mois.dart" -> "semaine.dart";
+    "mois.dart" -> "jour.dart";
+    "mois.dart" -> "bdd.dart";
+    "mois.dart" -> "event.dart";
+    "mois.dart" -> "organisation.dart";
+    "mois.dart" -> "page_navigation.dart";
+    "mois.dart" -> "jourselection.dart";
+    "page_form_absence.dart" -> "page_contact_admin.dart";
+    "page_form_absence.dart" -> "page_navigation.dart";
+    "page_form_absence.dart" -> "bdd.dart";
+    "page_reservation_salle_1.dart" -> "page_contact_admin.dart";
+    "page_reservation_salle_1.dart" -> "page_navigation.dart";
+    "page_reservation_salle_1.dart" -> "page_reservation_salle_2.dart";
+    "page_parametre.dart" -> "page_mes_publications.dart";
+    "page_parametre.dart" -> "page_modifier_profil.dart";
+    "page_parametre.dart" -> "page_liens_externes.dart";
+    "semaine.dart" -> "page_navigation.dart";
+    "semaine.dart" -> "jourselection.dart";
+    "semaine.dart" -> "bdd.dart";
+    "semaine.dart" -> "page_details_event.dart";
+    "jour.dart" -> "bdd.dart";
+    "jour.dart" -> "organisation.dart";
+    "jour.dart" -> "page_details_event.dart";
+    "jour.dart" -> "page_navigation.dart";
+    "jourselection.dart" -> "bdd.dart";
+    "jourselection.dart" -> "organisation.dart";
+    "jourselection.dart" -> "page_details_event.dart";
+    "jourselection.dart" -> "page_navigation.dart";
+    "page_reservation_salle_2.dart" -> "page_contact_admin.dart";
+    "page_reservation_salle_2.dart" -> "page_navigation.dart";
+    "page_reservation_salle_2.dart" -> "page_reservation_salle_3.dart";
+    "page_mes_publications.dart" -> "filter_homeScreen.dart";
+    "page_mes_publications.dart" -> "card_home.dart";
+    "page_mes_publications.dart" -> "bdd.dart";
+    "page_mes_publications.dart" -> "event.dart";
+    "page_mes_publications.dart" -> "role.dart";
+    "page_mes_publications.dart" -> "organisation.dart";
+    "page_modifier_profil.dart" -> "utilisateur.dart";
+    "page_modifier_profil.dart" -> "bdd.dart";
+    "page_modifier_profil.dart" -> "conservationUtilisateur.dart";
+    "page_modifier_profil.dart" -> "page_parametre.dart";
+    "page_details_event.dart" -> "utilisateur.dart";
+    "page_details_event.dart" -> "card_home.dart";
+    "page_reservation_salle_3.dart" -> "page_contact_admin.dart";
+    "page_reservation_salle_3.dart" -> "page_navigation.dart";
+    "page_formulaire_event.dart" -> "page_ajout.dart";
+    "page_formulaire_event.dart" -> "page_navigation.dart";
+    "page_formulaire_event.dart" -> "page_file_actualite.dart";
+    "page_formulaire_event.dart" -> "event.dart";
+    "page_formulaire_event.dart" -> "bdd.dart";
+    "page_formulaire_event.dart" -> "nouvelle_feuille_sheet.dart";
+    "page_form_crea_groupe.dart" -> "widget_bouton.dart";
+
+    "bdd.dart" -> "utilisateur.dart";
+    "bdd.dart" -> "event.dart";
+    "bdd.dart" -> "role.dart";
+    "bdd.dart" -> "organisation.dart";
+    "bdd.dart" -> "grpDiffusion.dart";
+    "bdd.dart" -> "inscription.dart";
+    "bdd.dart" -> "status.dart";
+    "bdd.dart" -> "page_inscription.dart";
+
+    "card_home.dart" -> "inscription_sheet.dart";
+}

@@ -6,7 +6,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:comunique2024/page/page_navigation.dart';
 import 'package:comunique2024/page/page_file_actualite.dart';
 import 'conservationUtilisateur.dart';
-
 import 'page_connection.dart';
 
 class PageInscriptionSuite extends StatefulWidget {

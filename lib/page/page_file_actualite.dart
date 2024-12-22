@@ -5,7 +5,7 @@ import '../bdd/bdd.dart';
 import '../bdd/event.dart';
 import '../bdd/role.dart';
 import '../bdd/organisation.dart';
-import '../bdd/utilisateur.dart';
+// import '../bdd/utilisateur.dart';
 
 class FileActualite extends StatefulWidget {
   @override
