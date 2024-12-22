@@ -4,6 +4,7 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart'; // Pour le formatage des dates et heures
 import 'package:comunique2024/page/page_navigation.dart';
+import '../bdd/bdd.dart';
 
 class Absence extends StatelessWidget {
   @override
@@ -31,7 +32,7 @@ class VerifAbsence extends StatelessWidget {
       required this.startTime,
       required this.endTime,
       required this.motif,
-      required this.nomFichier}); 
+      required this.nomFichier});
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +162,8 @@ class VerifAbsence extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(19),
-                                                color: const Color.fromARGB(255, 100, 3, 42),
+                                                color: const Color.fromARGB(
+                                                    255, 100, 3, 42),
                                               ),
                                               child: TextButton(
                                                   onPressed: () {
@@ -328,11 +330,36 @@ class MyForm extends StatefulWidget {
 class _MyFormState extends State<MyForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<String> _professeur = [];
-  List<String> professeurs = [
-    "Professeur1@ensc.fr",
-    "Professeur2@ensc.fr",
-    "Professeur3@ensc.fr"
-  ];
+  // List<String> professeurs = [
+  //   "Professeur1@ensc.fr",
+  //   "Professeur2@ensc.fr",
+  //   "Professeur3@ensc.fr"
+  // ];
+  List<String> professeurs = [];
+
+  void getProf() async {
+    final db = await AppDataBase.instance.database;
+    final idProf = await db.rawQuery(
+      '''SELECT idRole FROM role WHERE nomRole = ?''',
+      ['Professeur'],
+    );
+    final test1 = await db.rawQuery('''SELECT idUtilisateur FROM statuts''');
+    print(test1);
+    final result = await db.rawQuery(
+      '''SELECT email
+      FROM utilisateur JOIN statuts ON utilisateur.id = statuts.idUtilisateur
+      WHERE idRole = ?''',
+      [idProf.first['idRole']],
+    );
+    setState(() {
+      // professeurs = result.map((row) => row['email'] as String).toList();
+      professeurs = result
+          .skip(1) // Ignorer le premier élément
+          .map((row) => row['email'] as String)
+          .toList();
+    });
+  }
+
   final _startDateController = TextEditingController();
   final _endDateController = TextEditingController();
   DateTime? _startDate;
@@ -349,6 +376,7 @@ class _MyFormState extends State<MyForm> {
   @override
   void initState() {
     super.initState();
+    getProf();
     _startDateController.text = 'jj/mm/aaaa';
     _endDateController.text = 'jj/mm/aaaa';
     _startTimeController.text = '00h00';
@@ -701,10 +729,13 @@ class _MyFormState extends State<MyForm> {
 
                               // Formatage de la date
                               String formatDate(String? date) {
-                                if (date == null || date.isEmpty) return 'Non renseignée';
+                                if (date == null || date.isEmpty)
+                                  return 'Non renseignée';
                                 try {
-                                  DateTime parsedDate = DateFormat('yyyy-MM-dd').parse(date);
-                                  return DateFormat('dd-MM-yyyy').format(parsedDate);
+                                  DateTime parsedDate =
+                                      DateFormat('yyyy-MM-dd').parse(date);
+                                  return DateFormat('dd-MM-yyyy')
+                                      .format(parsedDate);
                                 } catch (e) {
                                   return date; // Si le parsing échoue, retourne la chaîne brute.
                                 }
@@ -712,12 +743,14 @@ class _MyFormState extends State<MyForm> {
 
                               // Formatage de l'heure
                               String formatTime(String? time) {
-                                if (time == null || time.isEmpty) return 'Non renseignée';
+                                if (time == null || time.isEmpty)
+                                  return 'Non renseignée';
                                 try {
                                   final timeParts = time.split(':');
                                   final hour = int.parse(timeParts[0]);
                                   final minute = int.parse(timeParts[1]);
-                                  return TimeOfDay(hour: hour, minute: minute).format(context);
+                                  return TimeOfDay(hour: hour, minute: minute)
+                                      .format(context);
                                 } catch (e) {
                                   return time; // Si le parsing échoue, retourne la chaîne brute.
                                 }
@@ -755,7 +788,8 @@ class _MyFormState extends State<MyForm> {
 
                               // Ajout de la pièce jointe si elle existe
                               if (_nomFichier != 'Sélectionner un fichier') {
-                                uriString += '&attachment=${Uri.encodeComponent(_nomFichier)}';
+                                uriString +=
+                                    '&attachment=${Uri.encodeComponent(_nomFichier)}';
                               }
 
                               final Uri emailUri = Uri.parse(uriString);
