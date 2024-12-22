@@ -1,13 +1,13 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:comunique2024/page/bdd/utilisateur.dart';
-import 'package:comunique2024/page/bdd/event.dart';
-import 'package:comunique2024/page/bdd/role.dart';
+import 'package:comunique2024/bdd/utilisateur.dart';
+import 'package:comunique2024/bdd/event.dart';
+import 'package:comunique2024/bdd/role.dart';
 //import 'package:comunique2024/page/bdd/grpDiffusion.dart';
 //import 'package:comunique2024/page/bdd/inscription.dart';
-import 'package:comunique2024/page/bdd/organisation.dart';
+import 'package:comunique2024/bdd/organisation.dart';
 
-import '../page_inscription.dart';
+import '../page/page_inscription.dart';
 //import 'package:comunique2024/page/bdd/status.dart';
 
 class AppDataBase {
@@ -36,7 +36,7 @@ class AppDataBase {
       onCreate: (db, version) async {
         // Création des tables si elles n'existent pas encore
         await db.execute(
-            "CREATE TABLE utilisateur (idUtilisateur INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT, prenom TEXT, email TEXT, mdp TEXT, promotion INTEGER, image BLOB)");
+            "CREATE TABLE utilisateur (id INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT, prenom TEXT, email TEXT, mdp TEXT, promotion INTEGER, image BLOB)");
         await db.execute(
             "CREATE TABLE role (idRole INTEGER PRIMARY KEY AUTOINCREMENT, nomRole TEXT)");
         await db.execute(
@@ -44,7 +44,7 @@ class AppDataBase {
         await db.execute(
             "CREATE TABLE statuts (idUtilisateur INTEGER, idOrganisation INTEGER, idRole INTEGER, annee INTEGER, PRIMARY KEY (idUtilisateur, idOrganisation, idRole), FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur), FOREIGN KEY (idOrganisation) REFERENCES organisation(idOrga), FOREIGN KEY (idRole) REFERENCES role(idRole))");
         await db.execute(
-            "CREATE TABLE event (idPost INTEGER PRIMARY KEY AUTOINCREMENT, idUtilisateur INTEGER, idOrganisation INTEGER, status INTEGER, idGroupe INTEGER, objet TEXT, titre TEXT, date TEXT, hDebut TEXT, hFin TEXT, lieu TEXT, tarif DOUBLE, commentaire TEXT, fichier TEXT, inscriptionAppli INTEGER, inscriptionHelloAsso INTEGER, FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur), FOREIGN KEY (idGroupe) REFERENCES grpDiffusion(idGroupe), FOREIGN KEY (status) REFERENCES role(idRole))");
+            "CREATE TABLE event (idPost INTEGER PRIMARY KEY AUTOINCREMENT, idUtilisateur INTEGER, idOrganisation INTEGER, status INTEGER, idGroupe INTEGER, objet TEXT, titre TEXT, date TEXT, hDebut TEXT, hFin TEXT, lieu TEXT, tarif DOUBLE, commentaire TEXT, fichier TEXT, inscriptionAppli INTEGER, inscriptionHelloAsso INTEGER, FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(id), FOREIGN KEY (idGroupe) REFERENCES grpDiffusion(idGroupe), FOREIGN KEY (status) REFERENCES role(idRole))");
         await db.execute(
             "CREATE TABLE inscription (idPost INTEGER, idUtilisateur INTEGER, nbPlaces INTEGER, PRIMARY KEY (idPost, idUtilisateur), FOREIGN KEY (idPost) REFERENCES event(idPost), FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur))");
         // pour l'instant le nb de place n'est pas utilisé
@@ -60,6 +60,7 @@ class AppDataBase {
         await _preRemplirOrganisation(db);
         await _preRemplirRole(db);
         await _preRemplirEvent(db);
+        await _preRemplirStatut(db);
       },
     );
   }
@@ -370,23 +371,34 @@ class AppDataBase {
   }
 
   Future<void> _preRemplirStatut(Database db) async {
-    List<Map<String, dynamic>> listRole = [
-      {'nomRole': 'Président'},
-      {'nomRole': 'Vice-président'},
-      {'nomRole': 'Secrétaire'},
-      {'nomRole': 'Trésorier'},
-      {'nomRole': 'Vice-trésorier'},
-      {'nomRole': 'Respo clubs'},
-      {'nomRole': 'Respo partenariats'},
-      {'nomRole': 'Pôle events'},
-      {'nomRole': 'Pôle communications'},
-      {'nomRole': 'Pôle logistique'},
-      // ajouter les bon rôles : bureaux, club, administration, professeur
-      {'nomRole': 'Professeur'}
-    ];
+    final data1 = await db.rawQuery(
+      '''SELECT id FROM utilisateur WHERE promotion = ?''',
+      [0],
+    );
+    final data2 = await db.rawQuery(
+      '''SELECT idRole FROM role WHERE nomRole = ?''',
+      ['Professeur'],
+    );
+    final data3 = await db.rawQuery(
+      '''SELECT idOrga FROM organisation WHERE nom = ?''',
+      ['Professeur'],
+    );
+    print('\n\n******************************${data3.first}');
+    print('\n\n******************************${data2.first}');
+    List<Map<String, dynamic>> listRole = [];
+
+    for (var u in data1) {
+      listRole.add(
+        {
+          'idUtilisateur': u['id'],
+          'idOrganisation': data3.first['idOrga'],
+          'idRole': data2.first['idRole'],
+        },
+      );
+    }
 
     for (var r in listRole) {
-      await db.insert('role', r);
+      await db.insert('statuts', r);
     }
   }
 
@@ -445,7 +457,7 @@ class AppDataBase {
       final String utilisateurMdp = result.first['mdp'] as String;
 
       if (hashPassword(mdp) == utilisateurMdp) {
-        return result.first['idUtilisateur'] as int;
+        return result.first['id'] as int;
       } else {
         return -1;
       }
@@ -457,14 +469,13 @@ class AppDataBase {
   Future<void> updateUtilisateur(Utilisateur utilisateur) async {
     final Database db = await database;
     await db.update("utilisateur", utilisateur.toMap(),
-        where: "idUtilisateur = ?", whereArgs: [utilisateur.idUtilisateur]);
+        where: "id = ?", whereArgs: [utilisateur.id]);
   }
 
   // Supprimer un utilisateur
   Future<void> deleteUtilisateur(Utilisateur utilisateur) async {
     final Database db = await database;
-    db.delete("utilisateur",
-        where: "idUtilisateur = ?", whereArgs: [utilisateur.idUtilisateur]);
+    db.delete("utilisateur", where: "id = ?", whereArgs: [utilisateur.id]);
   }
 
   // Méthodes pour la table "event"
@@ -508,7 +519,7 @@ class AppDataBase {
   // Liste d'utilisateurs par défaut
   final List<Utilisateur> defaultUtilisateur = [
     Utilisateur(
-      idUtilisateur: 1,
+      id: 1,
       nom: "Admin",
       prenom: "Administrateur",
       email: "pprostwater@ensc.fr",

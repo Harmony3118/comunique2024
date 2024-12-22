@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:comunique2024/widget/filter_homeScreen.dart';
 import 'package:comunique2024/widget/card_home.dart';
-import 'bdd/bdd.dart';
-import 'bdd/event.dart';
-import 'bdd/role.dart';
-import 'bdd/organisation.dart';
-import 'bdd/utilisateur.dart';
+import '../bdd/bdd.dart';
+import '../bdd/event.dart';
+import '../bdd/role.dart';
+import '../bdd/organisation.dart';
+import '../bdd/utilisateur.dart';
 
 class MesPublications extends StatefulWidget {
   @override

@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:comunique2024/page/bdd/utilisateur.dart';
-import 'package:comunique2024/page/bdd/bdd.dart';
+import 'package:comunique2024/bdd/utilisateur.dart';
+import 'package:comunique2024/bdd/bdd.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:comunique2024/page/page_navigation.dart';
 import 'package:comunique2024/page/page_file_actualite.dart';

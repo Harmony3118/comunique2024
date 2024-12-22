@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'package:comunique2024/widget/inscription_sheet.dart';
-import 'package:comunique2024/page/bdd/utilisateur.dart';
+import 'package:comunique2024/bdd/utilisateur.dart';
 
 class CardHome extends StatefulWidget {
   final String office;

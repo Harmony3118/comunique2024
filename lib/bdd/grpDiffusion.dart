@@ -1,4 +1,4 @@
-import 'package:comunique2024/page/bdd/utilisateur.dart';
+import 'package:comunique2024/bdd/utilisateur.dart';
 
 class GrpDiffusion {
   int? idGroupe;

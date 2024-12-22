@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:comunique2024/page/page_inscription.dart';
 import 'package:comunique2024/page/page_navigation.dart';
 import 'package:comunique2024/page/page_file_actualite.dart';
-import 'bdd/bdd.dart';
+import '../bdd/bdd.dart';
 import 'conservationUtilisateur.dart';
 
 class PageConnection extends StatelessWidget {

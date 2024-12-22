@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:comunique2024/widget/card_home.dart';
-import 'bdd/utilisateur.dart';
+import '../bdd/utilisateur.dart';
 
 class EventDetails extends StatefulWidget {
   final Map<String, dynamic> event;
@@ -30,7 +30,7 @@ class _EventDetailsState extends State<EventDetails> {
 //   final db = await AppDataBase.instance.database;
   
 //   // Suppose que vous avez une table utilisateur et que vous souhaitez récupérer l'utilisateur avec un ID spécifique ou un autre critère.
-//   List<Map<String, dynamic>> maps = await db.query('utilisateur', where: 'idUtilisateur = ?', whereArgs: [1]);
+//   List<Map<String, dynamic>> maps = await db.query('utilisateur', where: 'id = ?', whereArgs: [1]);
 
 //   if (maps.isNotEmpty) {
 //     return Utilisateur.fromMap(maps.first);

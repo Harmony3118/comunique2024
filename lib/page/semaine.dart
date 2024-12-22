@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:comunique2024/page/page_navigation.dart';
 import 'package:comunique2024/page/jourselection.dart';
-import 'bdd/bdd.dart';
+import '../bdd/bdd.dart';
 import 'package:intl/intl.dart';
 import 'package:comunique2024/page/page_details_event.dart';
 

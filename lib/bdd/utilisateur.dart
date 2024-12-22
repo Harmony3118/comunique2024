@@ -1,5 +1,5 @@
 class Utilisateur {
-  int? idUtilisateur;
+  int? id;
   String nom;
   String prenom;
   String email;
@@ -9,7 +9,7 @@ class Utilisateur {
 
   // Constructeur avec des valeurs par défaut pour les paramètres facultatifs
   Utilisateur({
-    this.idUtilisateur,
+    this.id,
     required this.nom,
     required this.prenom,
     required this.email,
@@ -30,11 +30,10 @@ class Utilisateur {
 
   // Pour créer une instance à partir d'un Map
   factory Utilisateur.fromMap(Map<String, dynamic> map) => Utilisateur(
-      idUtilisateur: map['idUtilisateur'],
+      id: map['id'],
       nom: map['nom'],
       prenom: map['prenom'],
       email: map['email'],
       mdp: map['mdp'],
       promotion: map['promotion']);
 }
-
