@@ -4,11 +4,10 @@ import 'package:flutter/services.dart'; // Pour utiliser FilteringTextInputForma
 import 'page_ajout.dart'; // Pour la redirection en arrière
 import 'page_navigation.dart';
 import 'page_file_actualite.dart';
-import 'bdd/event.dart';
-import 'bdd/bdd.dart';
+import '../bdd/event.dart';
+import '../bdd/bdd.dart';
 import 'package:intl/intl.dart'; // Importation de DateFormat
 import '../widget/nouvelle_feuille_sheet.dart';
-
 
 Future<List<Map<String, dynamic>>> recupOrga() async {
   final db = await AppDataBase.instance.database;
@@ -165,7 +164,7 @@ class _EventCreationFormState extends State<EventCreationForm> {
     }
   }
 
-   // Fonction pour sélectionner une date (soit de début, soit de fin)
+  // Fonction pour sélectionner une date (soit de début, soit de fin)
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -175,8 +174,7 @@ class _EventCreationFormState extends State<EventCreationForm> {
     );
     if (picked != null) {
       setState(() {
-          _selectedDate = picked;
-        
+        _selectedDate = picked;
       });
     }
   }
@@ -427,8 +425,10 @@ class _EventCreationFormState extends State<EventCreationForm> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                             BasePage(currentIndex: 2, body: AjoutPage())), // Redirection vers page_file_actualite.dart
+                          builder: (context) => BasePage(
+                              currentIndex: 2,
+                              body:
+                                  AjoutPage())), // Redirection vers page_file_actualite.dart
                     );
                   },
                 ),
@@ -469,9 +469,10 @@ class _EventCreationFormState extends State<EventCreationForm> {
                 style: TextStyle(fontSize: 16),
               ),
               trailing: Icon(Icons.calendar_today),
-              onTap: () => _selectDate(context, true), // true pour la date de début
+              onTap: () =>
+                  _selectDate(context, true), // true pour la date de début
             ),
-            
+
             // Heure de début
             ListTile(
               title: Text(
@@ -562,13 +563,14 @@ class _EventCreationFormState extends State<EventCreationForm> {
                 saveEvent();
 
                 if (_inscriptionViaApp) {
-                  String sheetTitle = _titreController.text;  // Utiliser le titre de l'info pour nommer la feuille
-                   // Crée une instance de GoogleSheetService avec les informations de tes credentials
-      final googleSheetService = GoogleSheetService();
+                  String sheetTitle = _titreController
+                      .text; // Utiliser le titre de l'info pour nommer la feuille
+                  // Crée une instance de GoogleSheetService avec les informations de tes credentials
+                  final googleSheetService = GoogleSheetService();
 
-      // Crée la feuille dans Google Sheets avec le titre fourni
-      await googleSheetService.createSheet(sheetTitle);
-               }
+                  // Crée la feuille dans Google Sheets avec le titre fourni
+                  await googleSheetService.createSheet(sheetTitle);
+                }
                 // test print
                 final db = await AppDataBase.instance.database;
                 List<Map<String, dynamic>> events = await db.query('event');
