@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:comunique2024/page/page_form_absence.dart';
 import 'package:comunique2024/page/page_navigation.dart';
-import 'package:comunique2024/page/page_reservation_salle_1.dart';
+import 'package:comunique2024/page/page_reservation_salle.dart';
 import 'package:comunique2024/page/page_form_soiree.dart';
 
 class ContactPage extends StatelessWidget {
@@ -48,7 +48,7 @@ class ContactPage extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            BasePage(currentIndex: 4, body: MyApp()),
+                            BasePage(currentIndex: 4, body: ReservationSallePage()),
                       ));},
                 child: const Text(
                   'Réserver une salle',

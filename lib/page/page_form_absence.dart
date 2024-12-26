@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:comunique2024/page/page_contact_admin.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:intl/intl.dart'; // Pour le formatage des dates et heures
+import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:comunique2024/page/page_contact_admin.dart';
 import 'package:comunique2024/page/page_navigation.dart';
 import '../bdd/bdd.dart';
 
@@ -177,7 +177,7 @@ class VerifAbsence extends StatelessWidget {
                                                                     body:
                                                                         ConfirmationAbsence())));
                                                   },
-                                                  child: Text('Envoyer',
+                                                  child: Text('Envoyer un mail',
                                                       style: TextStyle(
                                                           color: Colors.white,
                                                           fontSize: 15))),
@@ -803,7 +803,7 @@ class _MyFormState extends State<MyForm> {
                             }
                           },
                           child: Text(
-                            'Envoyer',
+                            'Envoyer un mail',
                             style: TextStyle(
                                 color: Color.fromARGB(255, 100, 3, 42),
                                 fontWeight: FontWeight.bold,
