@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../bdd/bdd.dart';
-import '../bdd/organisation.dart';
 import 'package:comunique2024/page/page_details_event.dart';
 import 'package:comunique2024/page/page_navigation.dart';
 

@@ -1,21 +1,9 @@
 import 'package:flutter/material.dart';
-// import 'package:comunique2024/page/page_header_footer.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:comunique2024/bdd/bdd.dart';
-// import 'package:comunique2024/page/page_header_footer.dart';
-// import 'package:comunique2024/page/page_annuaire.dart';
-// import 'package:comunique2024/page/page_navigation.dart';
-// import 'package:comunique2024/page/page_file_actualite.dart';
-// import 'package:comunique2024/page/page_form_crea_groupe.dart';
-// import 'package:comunique2024/page/page_form_absence.dart';
-// import 'package:comunique2024/page/page_annuaire.dart';
-// import 'package:comunique2024/page/page_liens_externes.dart'; //rajouté par pascal
 import 'package:comunique2024/page/page_connection.dart';
-// import 'package:comunique2024/page/page_header_footer.dart';
-// import 'package:comunique2024/page/page_inscription.dart';
-// import 'package:comunique2024/page/page_parametre.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {

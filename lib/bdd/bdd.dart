@@ -3,12 +3,20 @@ import 'package:path/path.dart';
 import 'package:comunique2024/bdd/utilisateur.dart';
 import 'package:comunique2024/bdd/event.dart';
 import 'package:comunique2024/bdd/role.dart';
-import 'package:comunique2024/bdd/grpDiffusion.dart';
-import 'package:comunique2024/bdd/inscription.dart';
+// import 'package:comunique2024/bdd/grpDiffusion.dart';
+// import 'package:comunique2024/bdd/inscription.dart';
 import 'package:comunique2024/bdd/organisation.dart';
-import 'package:comunique2024/bdd/status.dart';
+// import 'package:comunique2024/bdd/status.dart';
 
 import '../page/page_inscription.dart';
+
+export 'utilisateur.dart';
+export 'event.dart';
+export 'role.dart';
+export 'grpDiffusion.dart';
+export 'inscription.dart';
+export 'organisation.dart';
+export 'status.dart';
 
 class AppDataBase {
   AppDataBase._(); // Constructeur privé

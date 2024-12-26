@@ -4,7 +4,6 @@ import 'package:flutter/services.dart'; // Pour utiliser FilteringTextInputForma
 import 'page_ajout.dart'; // Pour la redirection en arrière
 import 'page_navigation.dart';
 import 'page_file_actualite.dart';
-import '../bdd/event.dart';
 import '../bdd/bdd.dart';
 import 'package:intl/intl.dart'; // Importation de DateFormat
 import '../widget/nouvelle_feuille_sheet.dart';

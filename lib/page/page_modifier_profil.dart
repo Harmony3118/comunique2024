@@ -1,4 +1,3 @@
-import 'package:comunique2024/bdd/utilisateur.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart'; // Importation nécessaire pour ImagePicker
 import 'package:file_picker/file_picker.dart'; // Importation nécessaire pour FilePicker
@@ -9,8 +8,7 @@ import 'page_parametre.dart'; // Pour utiliser la classe File
 
 Future<Map<String, Object?>> recupUser(int? id) async {
   final db = await AppDataBase.instance.database;
-  final user = await db
-      .query('utilisateur', where: 'id = ?', whereArgs: [id]);
+  final user = await db.query('utilisateur', where: 'id = ?', whereArgs: [id]);
   return user.first;
 }
 
